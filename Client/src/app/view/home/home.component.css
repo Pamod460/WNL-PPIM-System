@@ -1,0 +1,111 @@
+.home-video-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.home-video {
+
+  background-color: #fefefe;
+  height: 600px;
+  margin-right: 0;
+
+  h1 {
+    position: absolute;
+    background-color: #ffffff;
+    padding-bottom: 50px;
+    width: 100%;
+    height: 20px;
+    z-index: 10;
+  }
+
+  h2 {
+    position: absolute;
+
+    background-color: #ffffff;
+    margin-top: -30px;
+    width: 100%;
+    height: 30px;
+    z-index: 20;
+  }
+
+  vedio {
+    z-index: 0;
+  }
+}
+
+mat-grid-tile {
+  overflow: hidden;
+}
+
+mat-grid-tile, mat-grid-list {
+  background: transparent
+}
+
+.vision-card {
+  /*background-color: #343a40;*/
+  /*background-color: rgba(33, 53, 85, 0.5);*/
+  background-color: rgba(119, 81, 36, 0.65);
+
+
+  margin: 10px;
+  font-size: 12pt;
+  width: 300px;
+  padding: 15px;
+  color: white;
+
+}
+
+.mission-card {
+  /*background-color: #343a40;*/
+  background-color: #d3983d;
+
+  /*background-color: rgba(15, 16, 16, 0.5);*/
+  /*background-color: rgba(33, 53, 85, 0.5);*/
+
+
+  /*width: 500px;*/
+  font-size: 12pt;
+  color: white;
+  margin: 10px 20px 10px 10px;
+  padding: 15px;
+  width: 300px;
+}
+
+mat-grid-list {
+  /*padding: 10% 20% 10% 20% !important;*/
+  margin: 8px;
+}
+
+mat-grid-tile:nth-child(1) mat-card {
+  /*padding-top: 20px;*/
+  align-items: center;
+  /*background-color: darkslategray;*/
+}
+
+
+.heading-card {
+  height: 99% !important;
+  width: 85%;
+  margin: 5px;
+  overflow: auto;
+  border-radius: 12px;
+
+  background-color: rgba(52, 58, 64, 0.8);
+  /*background-color: rgba(33, 53, 85, 0.8);*/
+
+
+}
+
+.heading-card #headImg {
+  height: 100%;
+}
+
+
+
+
+
+
+
+

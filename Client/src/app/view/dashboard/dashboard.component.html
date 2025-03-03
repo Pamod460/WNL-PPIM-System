@@ -1,0 +1,173 @@
+<!-- inventory-dashboard.component.html -->
+<div class="dashboard-container">
+  <header class="dashboard-header d-flex justify-content-center">
+    <h1>Dashboard</h1>
+  </header>
+
+  <section class="dashboard-summary ">
+    <div class="summary-card total-items">
+      <h3>Total Items</h3>
+      <p class="large-number">{{ totalItems }}</p>
+    </div>
+    <div class="summary-card low-stock">
+      <h3>Low Stock Items</h3>
+      <p class="large-number">{{ lowStockItems }}</p>
+    </div>
+    <div class="summary-card out-of-stock">
+      <h3>Out of Stock</h3>
+      <p class="large-number">{{ outOfStockItems }}</p>
+    </div>
+    <div class="summary-card total-value">
+      <h3>Total Inventory Value</h3>
+      <p class="large-number">${{ totalInventoryValue.toLocaleString() }}</p>
+    </div>
+  </section>
+
+  <section class="dashboard-charts">
+    <div class="chart-container">
+      <canvas id="inventoryStatusChart"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="categoryDistributionChart"></canvas>
+    </div>
+  </section>
+
+  <section class="stock-alerts">
+    <h2>Stock Alerts</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>Item Name</th>
+        <th>Current Stock</th>
+        <th>Minimum Threshold</th>
+        <th>Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let alert of stockAlerts">
+        <td>{{ alert.itemName }}</td>
+        <td>{{ alert.currentStock }}</td>
+        <td>{{ alert.minimumThreshold }}</td>
+        <td>
+            <span class="badge"
+                  [ngClass]="{
+                    'badge-danger': alert.currentStock === 0,
+                    'badge-warning': alert.currentStock > 0 && alert.currentStock < alert.minimumThreshold
+                  }">
+              {{ alert.currentStock === 0 ? 'Out of Stock' : 'Low Stock' }}
+            </span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="recent-inventory">
+    <h2>Recent Inventory</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>Item Name</th>
+        <th>Category</th>
+        <th>Quantity</th>
+        <th>Status</th>
+        <th>Last Updated</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let item of inventoryItems">
+        <td>{{ item.name }}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>
+            <span class="badge"
+                  [ngClass]="{
+                    'badge-success': item.status === 'In Stock',
+                    'badge-warning': item.status === 'Low Stock',
+                    'badge-danger': item.status === 'Out of Stock'
+                  }">
+              {{ item.status }}
+            </span>
+        </td>
+        <td>{{ item.lastUpdated | date:'mediumDate' }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+
+
+
+
+<!--<mat-grid-list gutterSize="7" [cols]="4" rowHeight="4rem">-->
+
+<!--  <mat-grid-tile [colspan]="4" [rowspan]="2" >-->
+<!--    <mat-card  style="background-image: url('assets/header2img.png')"><img id="headImg" src="assets/logo_.png"></mat-card>-->
+<!--  </mat-grid-tile>-->
+
+
+<!--  <mat-grid-tile [colspan]="4" [rowspan]="4" id="quicklinks">-->
+<!--    <mat-card>-->
+<!--      <mat-card-content><img  src="assets/payment.png"></mat-card-content>-->
+<!--      <mat-card-footer ><a routerLink="payments">Payments</a></mat-card-footer>-->
+<!--    </mat-card>-->
+
+<!--    <mat-card>-->
+<!--      <mat-card-content><img  src="assets/register.png"></mat-card-content>-->
+<!--      <mat-card-footer ><a routerLink="batchregistration" >Register</a></mat-card-footer>-->
+<!--    </mat-card>-->
+
+<!--    <mat-card>-->
+<!--      <mat-card-content><img  src="assets/studnet.png"></mat-card-content>-->
+<!--      <mat-card-footer ><a routerLink="students">Student</a></mat-card-footer>-->
+<!--    </mat-card>-->
+
+<!--    <mat-card>-->
+<!--      <mat-card-content><img  src="assets/classshedule.png"></mat-card-content>-->
+<!--      <mat-card-footer ><a routerLink="classes">Classes</a></mat-card-footer>-->
+<!--    </mat-card>-->
+
+<!--    <mat-card>-->
+<!--      <mat-card-content><img  src="assets/tutes.png"></mat-card-content>-->
+<!--      <mat-card-footer ><a routerLink="books">Books</a></mat-card-footer>-->
+<!--    </mat-card>-->
+
+<!--    <mat-card>-->
+<!--      <mat-card-content><img  src="assets/attendence.png"></mat-card-content>-->
+<!--      <mat-card-footer ><a routerLink="attendance">Attendance</a></mat-card-footer>-->
+<!--    </mat-card>-->
+<!--  </mat-grid-tile>-->
+
+<!--  <mat-grid-tile [colspan]="2" [rowspan]="4" >-->
+<!--    <mat-card>-->
+<!--      <mat-card-title style="background-image: url('assets/header2img.png')">User Specific Messages</mat-card-title>-->
+<!--      <mat-card-content >-->
+<!--        <mat-list>-->
+<!--          <mat-list-item *ngFor="let message of userspecmessages">-->
+<!--            <mat-icon matListItemIcon> email</mat-icon>-->
+<!--            <div matListItemTitle >{{message.name}}</div>-->
+<!--            <div matListItemLine>{{message.updated | date}}</div>-->
+<!--          </mat-list-item>-->
+<!--        </mat-list>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+<!--  </mat-grid-tile>-->
+
+
+<!--  <mat-grid-tile [colspan]="2" [rowspan]="4" >-->
+<!--    <mat-card>-->
+<!--      <mat-card-title style="background-image: url('assets/header2img.png')">General Messages</mat-card-title>-->
+<!--      <mat-card-content >-->
+<!--        <mat-list>-->
+<!--          <mat-list-item *ngFor="let message of generalmessages">-->
+<!--            <mat-icon matListItemIcon> email</mat-icon>-->
+<!--            <div matListItemTitle >{{message.name}}</div>-->
+<!--            <div matListItemLine>{{message.updated | date}}</div>-->
+<!--          </mat-list-item>-->
+<!--        </mat-list>-->
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+<!--  </mat-grid-tile>-->
+
+<!--</mat-grid-list>-->

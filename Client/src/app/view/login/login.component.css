@@ -1,0 +1,286 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+:host {
+  height: 100vh;
+  background: linear-gradient(135deg, #4b6cb7, #182848);
+  color: white;
+}
+
+.background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: circularMotion 10s infinite linear, moveCircle 20s infinite alternate ease-in-out;
+}
+
+.circle:nth-child(1) {
+  width: 200px;
+  height: 200px;
+  top: 10%;
+  left: 20%;
+}
+
+.circle:nth-child(2) {
+  width: 300px;
+  height: 300px;
+  top: 50%;
+  left: 60%;
+  animation-delay: 3s;
+}
+
+.circle:nth-child(3) {
+  width: 150px;
+  height: 150px;
+  top: 80%;
+  left: 10%;
+  animation-delay: 5s;
+}
+
+@keyframes circularMotion {
+  0% {
+    transform: rotate(0deg) translateX(200px);
+  }
+  25% {
+    transform: rotate(90deg) translateX(200px);
+  }
+  50% {
+    transform: rotate(180deg) translateX(200px);
+  }
+  75% {
+    transform: rotate(270deg) translateX(200px);
+  }
+  100% {
+    transform: rotate(360deg) translateX(200px);
+  }
+}
+
+@keyframes moveCircle {
+  0% {
+    top: 0;
+    left: 0;
+  }
+  50% {
+    top: 50%;
+    left: 75%;
+  }
+  100% {
+    top: 100%;
+    left: 0;
+  }
+}
+
+.side-image {
+  width: 100%;
+}
+
+.side-image-card {
+  background: rgba(255, 255, 255, .15);
+  max-width: 444px;
+  height: 566px;
+  border-bottom-right-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.side-image-card mat-card-content {
+  padding: 20px;
+  border-radius: 10px;
+  height: 520px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  text-align: center;
+  align-content: center;
+  justify-content: center;
+  font-size: 16pt;
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+.login-container {
+  max-width: 535px;
+  text-align: center;
+  border-bottom-left-radius: 0;
+  border-top-left-radius: 0;
+  background: rgba(255, 255, 255, .15);
+}
+
+.login-box {
+  /*backdrop-filter: blur(5px);*/
+  border-radius: 10px;
+  height: 520px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 0 20px 20px;
+
+  margin: auto;
+}
+
+a {
+  color: navy !important;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.login-box button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 5px;
+  background: #4b6cb7;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login-box button:hover {
+  background: #182848;
+}
+
+.login-box a {
+  color: #82b1ff;
+  text-decoration: none;
+}
+
+.login-box a:hover {
+  text-decoration: underline;
+}
+
+.mat-form-field.appearance-outline {
+  background-color: transparent !important; /* Remove background */
+  border: none !important; /* Optional: Change border color */
+}
+
+.mat-form-field .mat-input-element, .mat-form-field .mat-select-value, .mat-form-field .mat-select-arrow, .mat-form-field .mat-datepicker-toggle .mat-icon {
+  background-color: transparent !important; /* Transparent background */
+  color: white; /* Text color (optional) */
+}
+
+.mat-form-field-focused .mat-form-field-outline {
+  border-color: black; /* Change border color on focus */
+}
+
+.mat-form-field .mat-input-element:focus, .mat-form-field .mat-select:focus, .mat-form-field .mat-datepicker-toggle:focus {
+  background-color: transparent !important;
+  color: white; /* Optional: Text color for focus state */
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: transparent !important;
+}
+
+.mdc-select--filled:not(.mdc-select--disabled) .mdc-select__anchor {
+  background-color: transparent !important;
+}
+
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input,
+.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__icon {
+  background-color: transparent !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+}
+
+mat-card-actions {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0.5rem;
+}
+
+button {
+  color: white !important;
+}
+
+button[btn-a] {
+  background: #00dfc2 !important;
+}
+
+button[btn-b] {
+  background: #01b399 !important;
+}
+
+.remember {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+:host ::ng-deep .mat-checkbox .mat-checkbox-frame {
+  border-color: #ffffff; /* Scoped border color */
+}
+
+:host ::ng-deep .mat-checkbox-checked .mat-checkbox-background {
+  background-color: #4caf50 !important; /* Scoped fill color */
+}
+
+:host ::ng-deep .mat-mdc-checkbox .mdc-form-field label {
+  color: white !important;
+  border: white;
+
+}
+
+mat-form-field {
+  margin-bottom: 10px !important;
+}
+
+.error-text {
+  color: #cc1b1b;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.left-lg {
+  /*background: red;*/
+  width: 100%;
+  display: flex;
+  justify-content: left;
+
+}
+
+.left-sm {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+  margin-bottom: auto;
+}
+
+.right-lg {
+
+  width: 100%;
+  display: flex;
+  justify-content: right;
+}
+
+.right-sm {
+  width: 100%;
+  display: flex;
+  margin-top: auto;
+  margin-bottom: 0;
+  justify-content: center;
+}

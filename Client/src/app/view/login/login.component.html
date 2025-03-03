@@ -1,0 +1,98 @@
+<div class="background">
+    <div class="wave"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+<!--    <div class="sine-wave-container">-->
+<!--      <div class="sine-wave"></div>-->
+<!--        <div class="snake-container">-->
+<!--          <div class="snake-part"></div>-->
+<!--          <div class="snake-part"></div>-->
+<!--          <div class="snake-part"></div>-->
+<!--          <div class="snake-part"></div>-->
+<!--          <div class="snake-part"></div>-->
+<!--        </div>-->
+
+<!--      </div>-->
+
+<!--  <div class="water-container">-->
+<!--    <div class="water"></div>-->
+<!--  </div>-->
+
+</div>
+
+<!--</div>-->
+<mat-grid-list [cols]="gridColumns" rowHeight="7.25rem">
+  <mat-grid-tile [colspan]="tile1Cols" [rowspan]="tile1Rows">
+    <div [ngClass]="isHandset?'right-sm':'right-lg'">
+    <mat-card class="side-image-card">
+      <mat-card-header *ngIf="isHandset" class="title">
+        purchase , production process <br>
+        and <br>inventory management system</mat-card-header>
+      <mat-card-content>
+        <img src="assets/4016257.png" class="side-image">
+      </mat-card-content>
+      <mat-card-footer *ngIf="!isHandset" class="title">
+
+        purchase , production process <br>
+          and <br>inventory management system
+      </mat-card-footer>
+    </mat-card>
+    </div>
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="tile2Cols" [rowspan]="tile2Rows">
+<div [ngClass]="isHandset?'left-sm':'left-lg'">
+
+
+    <mat-card class="login-container">
+      <mat-card-header style="color: #ffffff ;text-align: center;display: flex;justify-content: center; padding-bottom: -500px" >
+        <mat-card-title >
+
+          Sign In To Your Account
+        </mat-card-title>
+
+      </mat-card-header>
+      <mat-card-content class="p-0">
+        <div class="login-box">
+
+
+        <form [formGroup]="loginform" autocomplete="off">
+          <mat-form-field appearance="outline">
+            <mat-label>User Name</mat-label>
+            <input matInput formControlName="username" autocomplete="off">
+            <mat-error *ngIf="loginform.get('username')?.hasError('required') && loginform.get('username')?.touched" class="error-text">
+              Username is required
+            </mat-error>
+
+            <mat-error *ngIf="loginform.get('username')?.hasError('minlength') && loginform.get('username')?.touched">
+              Username must be less than 10 characters long
+            </mat-error>
+
+            <mat-error *ngIf="loginform.get('username')?.hasError('maxlength') && loginform.get('username')?.touched">
+              Username must be no more than 10 characters long
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" autocomplete="new-password">
+          </mat-form-field>
+          <div class="remember">
+
+
+            <mat-checkbox color="primary" class="custom-checkbox">Remember Me</mat-checkbox>
+          </div>
+          <mat-card-actions align="end">
+            <button btn-a mat-raised-button (click)="authenticate()">Login</button>
+            <button btn-b mat-raised-button (click)="signup()">Sign Up</button>
+          </mat-card-actions>
+        </form></div>
+      </mat-card-content>
+
+    </mat-card>
+</div>
+  </mat-grid-tile>
+</mat-grid-list>
+
+
+

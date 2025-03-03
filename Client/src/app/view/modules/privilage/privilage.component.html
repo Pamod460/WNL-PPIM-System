@@ -1,0 +1,122 @@
+<!--<mat-grid-list cols="12" rowHeight="6rem" gutterSize="5px">-->
+<!--  <mat-grid-tile [colspan]="4" rowspan="5" >-->
+<!--    <mat-card id="privilageform">-->
+<!--      <mat-card-title>-->
+<!--        <mat-card-header><mat-card-title>Privilege</mat-card-title></mat-card-header>-->
+<!--      </mat-card-title>-->
+<!--      <mat-card-content>-->
+
+
+<!--      </mat-card-content>-->
+<!--    </mat-card>-->
+<!--  </mat-grid-tile>-->
+
+<!--  <mat-grid-tile [colspan]="4" [rowspan]="4">-->
+<!--      <mat-card id="ssearch">-->
+<!--        <mat-card-header><mat-card-title>Search Privilege</mat-card-title></mat-card-header>-->
+<!--        <mat-card-content>-->
+
+<!--        </mat-card-content>-->
+<!--      </mat-card>-->
+<!--  </mat-grid-tile>-->
+
+<!--  <mat-grid-tile colspan="4" rowspan="4">-->
+<!--    <mat-card>-->
+<!--      <mat-card-header>-->
+<!--        <mat-card-title>Privilege Table</mat-card-title>-->
+<!--        <div id="loading">-->
+<!--          <img [src]="imageurl">-->
+<!--        </div>-->
+<!--      </mat-card-header>-->
+<!--&lt;!&ndash;      <mat-card-content class="responsive-table">&ndash;&gt;-->
+
+<!--<mat-card-footer>-->
+<!--  <mat-paginator [length]="20" [pageSize]="3" [pageSizeOptions]="[3,5,10,20]"></mat-paginator>-->
+<!--</mat-card-footer>-->
+
+<!--&lt;!&ndash;  </mat-grid-tile>&ndash;&gt;-->
+<!--</mat-grid-list>-->
+<app-common-layout>
+  <div search>
+    <form [formGroup]="ssearch" class="form-container">
+      <div class="input-group mb-3">
+
+        <select formControlName="ssrole" class="form-select drop-down" style="border-radius: 8px 0 0 8px">
+          <option [value]="null" selected disabled>Role</option>
+          <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
+        </select>
+
+        <select formControlName="ssmodule" class="form-select drop-down">
+          <option [value]="null" selected disabled>Module</option>
+          <option *ngFor="let module of modules" [value]="module.id">{{module.name}}</option>
+        </select>
+
+        <select formControlName="ssoperation" class="form-select drop-down">
+          <option [value]="null" selected disabled>Operations</option>
+          <option *ngFor="let operation of operations" [value]="operation.id">{{operation.name}}</option>
+        </select>
+
+        <button class="btn btn-primary" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
+          <mat-icon style="padding-top: 7px">search</mat-icon>
+        </button>
+        <button class="btn btn-primary" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
+          Clear &nbsp; &nbsp;
+        </button>
+      </div>
+    </form>
+
+  </div>
+  <div form>
+            <form [formGroup]="form">
+
+              <mat-form-field appearance="outline">
+                <mat-label>Role</mat-label>
+                <mat-select [value]="null" selected formControlName="role">
+                  <mat-option *ngFor="let role of roles " [value]="role">{{role.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Module</mat-label>
+                <mat-select [value]="null" formControlName="module">
+                  <mat-option *ngFor="let module of modules" [value]="module">{{module.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Operation</mat-label>
+                <mat-select [value]="null" formControlName="operation" (selectionChange)="onOperationSelectionChange()">
+                  <mat-option *ngFor="let operation of operations" [value]="operation">{{operation.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                  <mat-label>Authority</mat-label>
+                  <input matInput readonly formControlName="authority">
+                </mat-form-field>
+
+              <div id="butpanel">
+                <button  class="btn btn-dark" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
+                <button class="btn btn-dark" (click)="clear()">Clear</button>
+                <button class="btn btn-dark" (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority)">Update</button>
+                <button class="btn btn-dark" (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority)">Delete</button>
+              </div>
+
+            </form>
+  </div>
+  <div view>
+
+    <mat-table [dataSource]="data" >
+
+      <ng-container *ngFor="let column of columns;let i = index;" [matColumnDef]="column">
+        <mat-header-cell *matHeaderCellDef> {{headers[i]}} </mat-header-cell>
+        <mat-cell *matCellDef="let element">{{ uiassist.getProperty(element, binders[i]) }} </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columns;" (click)="fillForm(row)" [ngClass]="{'selected-row': row === selectedrow}"  ></mat-row>
+    </mat-table>
+    <mat-paginator [length]="20" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]"></mat-paginator>
+
+  </div>
+</app-common-layout>

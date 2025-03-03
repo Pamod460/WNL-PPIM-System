@@ -1,0 +1,95 @@
+/* You can add global styles to this file, and also import other style files */
+@import '../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+html, body {
+  height: 100%;
+  /*background-color: #7ff0e6*/
+  background-color: rgba(33, 53, 85, 0.8);
+
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+mat-form-field {
+  margin: -5px !important;
+  width: 100%;
+}
+
+.mat-mdc-form-field-infix {
+  min-height: 28px !important;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+.mat-mdc-form-field .mat-mdc-floating-label.mdc-floating-label {
+  padding-bottom: 15px;
+  font-size: 14px !important;
+}
+
+mat-form-field input {
+  font-size: 14px !important;
+}
+
+
+.mdc-text-field--invalid:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: darkred !important;
+}
+
+
+.mdc-text-field--valid:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: darkgreen !important;
+}
+
+.dark-mode {
+  filter: invert(100%) hue-rotate(180deg);
+}
+
+
+/* Target the menu using overlay container */
+.cdk-overlay-container .side-sub-menu {
+  width: 200px !important;
+  background-color: #4caf50 !important;
+  margin-left: 240px !important;
+}
+
+/* Optional: Target mat-menu-item to add more styles */
+.cdk-overlay-container .side-sub-menu .mat-menu-item {
+  /*color: #fff; !* Text color for menu items *!*/
+  font-weight: bold;
+}
+/* Target the custom class */
+/*.custom-side-menu {*/
+/*  width: 200px !important;*/
+/*  background-color: #4caf50 !important;*/
+/*}*/
+
+/*.custom-side-menu .mat-menu-item {*/
+/*  color: white !important;*/
+/*  font-weight: bold;*/
+/*}*/
+::ng-deep .mat-list-item:hover {
+  background-color: transparent !important;
+}
+.text-success-light {
+  color: #02a86f; /* Light green */
+}
+
+.text-info-light {
+  color: #5db1e3; /* Light blue */
+}
+
+.text-danger-light {
+  color: #ff5865; /* Light red */
+}
+
+.text-warning-light {
+  color: #eec04f; /* Light yellow */
+}
+
+.text-secondary-light {
+  color: #a2a3a9; /* Light gray */
+}

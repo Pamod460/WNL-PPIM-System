@@ -1,0 +1,36 @@
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {LoginComponent} from "./view/login/login.component";
+import {MainwindowComponent} from "./view/mainwindow/mainwindow.component";
+import {EmployeeComponent} from "./view/modules/employee/employee.component";
+import {HomeComponent} from "./view/home/home.component";
+import {UserComponent} from "./view/modules/user/user.component";
+import {ArrearsByProgramComponent} from "./report/view/arrearsbyprogram/arrearsbyprogram.component";
+import {PrivilageComponent} from "./view/modules/privilage/privilage.component";
+import {DashboardComponent} from "./view/dashboard/dashboard.component";
+import {ProfileComponent} from "./view/profile/profile.component";
+import {AuthGuard} from "./guard/auth.guard";
+
+const routes: Routes = [
+  {path: "login", component: LoginComponent},
+  {path: "", redirectTo: 'login', pathMatch: 'full'},
+  {
+    path: "main",
+    component: MainwindowComponent,
+    children: [
+      {path: "home", component: HomeComponent},
+      {path: "dashboard", component: DashboardComponent},
+      {path: "profile", component: ProfileComponent},
+      {path: "employee", component: EmployeeComponent},
+      {path: "user", component: UserComponent},
+      {path: "privilege", component: PrivilageComponent},
+      {path: "reports", component: ArrearsByProgramComponent},
+    ],canActivate:[AuthGuard]
+  }];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule {
+}

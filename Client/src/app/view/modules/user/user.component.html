@@ -1,0 +1,194 @@
+
+
+
+<!--</mat-grid-list>-->
+<app-common-layout  [formCol]="4" [viewCol]="8" [statusImageUrl]="imageurl" >
+  <div form>
+
+    <form [formGroup]="form">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Employee</mat-label>
+        <mat-select formControlName="employee" >
+          <mat-option [value]="null" selected disabled>Not Selected</mat-option>
+          <mat-option *ngFor="let employee of employees" [value]="employee">{{employee.callingname}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" autocomplete="off" [readonly]="isUserNameReadOnly">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="pwdhide  ? 'password' : 'text'" formControlName="password" autocomplete="new-password">
+        <button mat-icon-button matSuffix (click)="pwdhide = !pwdhide" [attr.aria-label]="'Hide password'" [disabled]="!isPwViewable" [attr.aria-pressed]="pwdhide">
+          <mat-icon>{{pwdhide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput [type]="pwdconfhide  ? 'password' : 'text'" formControlName="confirmpassword">
+        <button mat-icon-button matSuffix (click)="pwdconfhide = !pwdconfhide" [attr.aria-label]="'Hide password'" [disabled]="!isConfPwViewable" [attr.aria-pressed]="pwdconfhide">
+          <mat-icon>{{pwdconfhide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
+
+      <div id="listtrnasfer">
+
+        <div class="list">
+          <mat-selection-list  #availablelist>
+            <mat-list-option  multiple  *ngFor="let role of roles" [value]="role" >{{role.name}}</mat-list-option>
+          </mat-selection-list>
+        </div>
+
+        <div id="pnlmiddle">
+          <button mat-raised-button (click)="rightSelected()">&gt;</button>
+          <button mat-raised-button (click)="leftSelected()">&lt;</button>
+          <button mat-raised-button (click)="rightAll()">&gt;&gt;</button>
+          <button mat-raised-button (click)="leftAll()">&lt;&lt;</button>
+        </div>
+
+        <div class="list">
+          <mat-selection-list  formControlName="userroles" #selectedlist>
+            <mat-list-option  *ngFor="let userrole of userroles" [value]="userrole">{{userrole.role.name}}</mat-list-option>
+          </mat-selection-list>
+        </div>
+
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Time of Created</mat-label>
+        <input matInput readonly formControlName="tocreated">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Create Date</mat-label>
+        <input matInput [matDatepicker]="crdate" [readonly]="true" formControlName="docreated">
+        <mat-datepicker-toggle matIconSuffix [for]="crdate" [disabled]="true"></mat-datepicker-toggle>
+        <mat-datepicker #crdate></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>User Status</mat-label>
+        <mat-select formControlName="usestatus">
+          <mat-option selected >Not Selected</mat-option>
+          <mat-option  *ngFor="let userstatus of userstatues" [value]="userstatus">{{userstatus.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>User Type</mat-label>
+        <mat-select formControlName="usetype">
+          <mat-option selected >Not Selected</mat-option>
+          <mat-option  *ngFor="let usertype of usertypes" [value]="usertype">{{usertype.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div id="butpanel">
+
+        <button type="button" class="btn btn-secondary btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
+        <button type="button" class="btn btn-secondary btn-lg" (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update</button>
+        <button type="button" class="btn btn-secondary btn-lg" (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete</button>
+        <button type="button" class="btn btn-secondary btn-lg" (click)="clear()">Clear</button>
+
+      </div>
+    </form>
+
+
+  </div>
+  <div view>
+    <mat-table [dataSource]="data">
+
+      <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+        <mat-header-cell *matHeaderCellDef class="table-header"> {{ headers[i] }}</mat-header-cell>
+
+        <mat-cell *matCellDef="let element">
+          <ng-container *ngIf="column === 'photo'; else checkStatus ">
+            <img
+              [src]="uiassist.getProperty(element, binders[i]) ? uiassist.getProperty(element, binders[i]) : defaultProfile" class="m-2 rounded-circle"
+              width="50" height="50" alt="Photo"/>
+          </ng-container>
+
+          <ng-template #checkStatus>
+            <ng-container *ngIf="column === 'userstatus'; else textCell">
+                  <span class="pt-2 mt-1">
+                    <mat-icon style="font-size: medium" [ngClass]= "checkEmpStatus(uiassist.getProperty(element, binders[i]))">fiber_manual_record</mat-icon>
+                  </span>
+              {{ uiassist.getProperty(element, binders[i]) }}
+            </ng-container>
+          </ng-template>
+          <ng-template #textCell>
+            {{ uiassist.getProperty(element, binders[i]) }}
+          </ng-template>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Modify Button Column -->
+      <ng-container matColumnDef="modify">
+        <mat-header-cell *matHeaderCellDef class="table-header"> Actions</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="fillForm(row)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              data-slot="icon"
+              class="w-5 h-5 mr-3"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+              />
+            </svg>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="columns.concat(['modify'])"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columns.concat(['modify']);"
+               [ngClass]="{'selected-row': row === selectedrow}">
+      </mat-row>
+
+    </mat-table>
+
+    <mat-paginator [length]="20" [pageSize]="5" [pageSizeOptions]="[3,5,10,20]" ></mat-paginator>
+
+  </div>
+
+  <div search>
+    <form [formGroup]="ssearch" class="form-container">
+      <div class="input-group mb-3">
+        <input type="text" formControlName="ssemployee" class="form-control" placeholder="Employee Name" style="border-radius: 8px 0 0 8px">
+        <input type="text" formControlName="ssusername" class="form-control" placeholder="Username">
+        <select formControlName="ssrole" class="form-select role-drop-down">
+          <option [value]="null" selected disabled>Roles</option>
+          <option *ngFor="let role of roles" [value]="role.id">{{ role.name }}</option>
+        </select>
+        <select formControlName="ssrusrstatus" class="form-select usstatus-drop-down">
+          <option [value]="null" selected disabled>User Status</option>
+          <option *ngFor="let userstatus of userstatues" [value]="userstatus.id">{{ userstatus.name }}</option>
+        </select>
+
+        <button class="btn btn-primary" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
+          <mat-icon style="padding-top: 7px">search</mat-icon>
+        </button>
+        <button class="btn btn-primary" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
+          Clear &nbsp; &nbsp;
+        </button>
+      </div>
+    </form>
+  </div>
+</app-common-layout>
+
+

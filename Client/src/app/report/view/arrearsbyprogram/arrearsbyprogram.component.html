@@ -1,0 +1,50 @@
+<mat-grid-list [cols]="1" rowHeight="13rem">
+
+  <mat-grid-tile [colspan]="1" [rowspan]="1">
+    <mat-card>
+      <mat-card-header><mat-card-title>Arrears By Program</mat-card-title></mat-card-header>
+      <mat-card-content><p></p><h3>Static Report - No Interactive Panel Available</h3></mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+    <mat-card>
+      <mat-card-header><mat-card-title>Table View</mat-card-title></mat-card-header>
+      <mat-card-content>
+
+            <mat-table [dataSource]="data">
+              <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+                <mat-header-cell *matHeaderCellDef> {{ headers[i] }} </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{ element[binders[i]] }} </mat-cell>
+                <!--<mat-footer-cell *matFooterCellDef *ngIf="i === 0"> {{total[i]}} </mat-footer-cell>-->
+                <ng-container *matFooterCellDef>
+                  <mat-footer-cell *ngIf="i === 0"> {{ ftext }}</mat-footer-cell>
+                  <mat-footer-cell *ngIf="i === 1"> </mat-footer-cell>
+                  <mat-footer-cell *ngIf="i > 1"> {{ total[i-2] }}</mat-footer-cell>
+                </ng-container>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+              <mat-footer-row *matFooterRowDef="columns"></mat-footer-row>
+            </mat-table>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="1" [rowspan]="2">
+
+        <mat-card>
+          <mat-card-header><mat-card-title>Column Chart</mat-card-title></mat-card-header>
+          <mat-card-content><div #columnchart></div></mat-card-content>
+        </mat-card>
+
+    <mat-card>
+      <mat-card-header><mat-card-title>Pie Chart View</mat-card-title></mat-card-header>
+      <mat-card-content><div #piechart></div></mat-card-content>
+    </mat-card>
+
+  </mat-grid-tile>
+
+</mat-grid-list>

@@ -1,0 +1,273 @@
+
+/*mat-card {  width: 100%;  height:100%;  margin: 10px 10px -10px 10px ; }*/
+
+/*mat-card-content { overflow: auto; height: 100%; }*/
+
+/*mat-card-header { background: #c0d9c3; }*/
+
+/*#loading img{ width: 30px; height: 25px; margin-left: 200px;}*/
+
+/*.csearch{   height: 40px;   width: 100%;  margin-top: 5px;    }*/
+
+/*!*#ssearch mat-card-content{   padding-top: 30px; }*!*/
+/*#ssearch { display: flex;flex-direction: row;  padding-top: 30px; }*/
+
+/*!*#ssearch mat-form-field { padding-left: 15px; width: 200px; }*!*/
+
+/*!*#ssearch button{ width: 195px; margin-left:10px; margin-top: 5px; background-color: #435f3b; color: white}*!*/
+
+/*#ssearch mat-form-field { padding-left: 15px; width: 150px;*/
+/*  height: 35px; }*/
+
+/*#ssearch button{ width: 50px; margin-left:10px; margin-top: 0px; padding-top: 0; background-color: #435f3b;   }*/
+
+/*#userform { padding-top: 20px; }*/
+
+/*#butpanel button{ width: 82px;margin:3px;background-color: #435f3b;color: white;}*/
+
+/*#listtrnasfer {display: inline-flex; margin-bottom: 30px;margin-left: 10px}*/
+
+/*#pnlmiddle button{ margin: 8px; display: block!important;}*/
+
+/*.list{ border: solid gray; border-radius: 5px; max-height: 160px; width: 180px;margin-top: 10px; overflow: auto}*/
+
+/*.list mat-list-option{ height: 27px;}*/
+
+/*.list .mat-mdc-list-item .mdc-list-item__primary-text{ font-size: 14px!important;}*/
+
+/*.selected-row{ background-color: #c9e6ff!important; }*/
+
+/*.mat-row:hover { background-color: inherit!important; }*/
+
+/*#userform mat-form-field .ng-dirty{*/
+/*  background-color: gold;*/
+/*}*/
+
+
+/*button:disabled {*/
+/*  opacity: 0.5;*/
+/*}*/
+
+/*#btnPwdGenerate{*/
+/*  margin-top: -5px;*/
+/*  margin-bottom: 17px;*/
+/*  padding-left: 350px;*/
+/*  position: inherit;*/
+/*}*/
+/*#btnPwdGenerate button{*/
+/*  background-color: #435f3b;color: white;*/
+/*}*/
+
+
+
+mat-card{
+  width: 99%;
+  height:100%;
+  margin: 10px 10px 10px 10px;
+
+  /*related to breadcrumb bar*/
+  background-color: white;
+  border-radius: 10px 10px 0 0;
+}
+
+.custom-mat-card {
+  height: 80% !important;
+  width: 98.5%;
+  margin-left: 8px;
+  box-shadow: 0 5px 10px 1px #00000026 !important;
+  background-color: white;
+  border-radius: 10px;
+}
+
+mat-card-content{
+  overflow: auto;
+  height: 100%;
+}
+
+mat-card-header{
+  background: #1e4263;
+
+  /*related to breadcrumb bar*/
+  color: white;
+  padding: 10px;
+  border-radius: 5px 5px 0 0;
+}
+
+mat-card-title{
+  padding-left: 10px;
+}
+
+#loading img{
+  width: 30px;
+  height: 25px;
+  margin-left: 200px;
+}
+
+.csearch{
+  height: 40px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+#ssearch mat-card-content{
+  padding-top: 30px;
+}
+
+#ssearch mat-form-field {
+  padding-left: 15px;
+  width: 200px;
+}
+
+#ssearch button{
+  width: 195px;
+  margin-left:10px;
+  margin-top: 5px;
+  background-color: #435f3b;
+  color: white;
+}
+
+#userform {
+  padding-top: 20px;
+}
+
+#butpanel{
+  width: auto;
+  height: auto;
+  margin: 10px 0 20px -5px;
+  display: flex;
+}
+
+#butpanel button{
+  width: 118px;
+  padding: 10px 20px 10px 20px;
+  margin: 2px;
+  font-size: 16px;
+  color: white;
+}
+
+#listtrnasfer {
+  display: inline-flex;
+  margin-bottom: 30px;
+  margin-left: 10px;
+}
+
+#pnlmiddle button{
+  margin: 8px;
+  display: block!important;
+}
+
+.list{
+  border: solid gray;
+  border-radius: 5px;
+  max-height: 160px;
+  width: 180px;
+  margin-top: 10px;
+  overflow: auto;
+}
+
+.list mat-list-option{
+  height: 27px;
+}
+
+.list .mat-mdc-list-item .mdc-list-item__primary-text{
+  font-size: 14px!important;
+}
+
+.selected-row{
+  background-color: #c9e6ff!important;
+}
+
+.mat-row:hover {
+  background-color: inherit!important;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+#btnPwdGenerate{
+  margin-top: -5px;
+  margin-bottom: 17px;
+  padding-left: 350px;
+  position: inherit;
+}
+#btnPwdGenerate button{
+  background-color: #435f3b;color: white;
+}
+
+/*related to breadcrumb bar*/
+.custom-breadcrumb{
+  width: 8rem;
+  height: 3rem;
+  margin: 15px 15px 0 30px;
+}
+
+.custom-breadcrumb div{
+  font-weight: bold;
+  font-size: x-large;
+  margin-bottom: 10px;
+}
+
+mat-icon{
+  font-size: 20px;
+}
+
+a{
+  text-decoration: none;
+  color: black;
+}
+
+::placeholder {
+  color: gray; /* Change placeholder text color */
+  font-style: normal; /* Make it italic */
+  font-size: 0.9rem; /* Adjust font size */
+}
+
+input{
+  height: 45px;
+  width: 10% !important;
+}
+
+input[matInput] {
+  width: 100% !important;
+}
+
+
+.custom-card-content{
+  display: flex;
+  justify-content: space-between; /* Breadcrumb on the left, form on the right */
+  align-items: center; /* Vertically align both breadcrumb and form */
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 80%;
+  overflow: hidden;
+}
+
+.input-group {
+  margin-top: 30px;
+  margin-right: 30px; /* Align the form to the far right with padding */
+  /*background-color: lightgreen;*/
+}
+
+.form-container {
+  margin-right: 20px;
+  width: auto;
+}
+
+mat-paginator{
+  margin-top: 15px;
+}
+
+.usstatus-drop-down{
+  font-style: normal !important; /* Make it italic */
+  font-size: 0.9rem !important; /* Adjust font size */
+  width: 50px;
+}
+
+.role-drop-down{
+  font-style: normal !important; /* Make it italic */
+  font-size: 0.9rem !important; /* Adjust font size */
+}
+
+
+

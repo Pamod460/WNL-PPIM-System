@@ -1,0 +1,43 @@
+<!-- profile.component.html -->
+<div class="profile-container">
+  <div class="profile-header">
+    <img [src]="profile.avatar" alt="{{ profile.name }}" class="profile-avatar">
+    <h1>{{ profile.name }}</h1>
+    <h2>{{ profile.title }}</h2>
+  </div>
+
+  <div class="profile-body">
+    <section class="profile-bio">
+      <h3>About Me</h3>
+      <p>{{ profile.bio }}</p>
+      <div class="profile-contact">
+        <p><strong>Location:</strong> {{ profile.location }}</p>
+        <p><strong>Email:</strong> {{ profile.email }}</p>
+      </div>
+    </section>
+
+    <section class="profile-skills">
+      <h3>Skills</h3>
+      <div class="skills-grid">
+        <div *ngFor="let skill of skills" class="skill-item">
+          <div class="skill-name">{{ skill.name }}</div>
+          <div class="skill-bar">
+            <div class="skill-level" [style.width.%]="skill.level"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-social">
+      <h3>Connect</h3>
+      <div class="social-links">
+        <a *ngFor="let social of socialLinks"
+           [href]="social.link"
+           target="_blank"
+           class="social-link">
+          {{ social.platform }}
+        </a>
+      </div>
+    </section>
+  </div>
+</div>

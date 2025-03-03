@@ -1,0 +1,39 @@
+<div class="content-header">
+
+  <div class="mb-2">
+
+    <div class=" ms-0 d-flex  flex-row  ">
+      <div class="d-flex m-0 p-0 flex-column w-100">
+        <div>
+
+
+          <h1 class="m-0 " *ngFor="let i of item">
+          <span *ngIf="i==matchedNavItem">
+            {{ i |capitalize }}
+          </span>
+          </h1></div>
+
+          <ol class="breadcrumb mt-1">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <ng-container *ngFor="let i of item">
+              <!-- Parent breadcrumb item, if it exists -->
+              <li class="breadcrumb-item" *ngIf="i!=matchedNavItem && i!=''">
+                <a href="#" [routerLink]="'/'+i">{{ i | capitalize }}</a>
+              </li>
+              <!-- Active breadcrumb item -->
+              <li class="breadcrumb-item " *ngIf="i==matchedNavItem">{{ i | capitalize }}</li>
+            </ng-container>
+
+          </ol>
+
+      </div>
+      <div class="mt-3">
+
+
+      <span class="clock mx-auto">
+<!--              {{ currentTime | date: 'hh:mm:ss dd/MM/YYYY' }}-->
+            </span>
+      </div>
+    </div>
+  </div>
+</div>
