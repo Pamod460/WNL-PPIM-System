@@ -35,13 +35,13 @@ export class LoginComponent implements OnInit, AfterViewInit {
   loginform: FormGroup;
   isHandset = false;
   // Responsive grid properties
-  gridColumns: number = 12;
-  tile1Cols: number = 6;
-  tile1Rows: number = 6;
-  tile2Cols: number = 6;
-  tile2Rows: number = 6;
-  tile3Cols: number = 6;
-  tile3Rows: number = 8;
+  gridColumns = 12;
+  tile1Cols = 6;
+  tile1Rows = 6;
+  tile2Cols = 6;
+  tile2Rows = 6;
+  tile3Cols = 6;
+  tile3Rows = 8;
 
   constructor(
     private fb: FormBuilder,

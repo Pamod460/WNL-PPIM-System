@@ -94,10 +94,10 @@
 
       <div id="butpanel">
 
-        <button type="button" class="btn btn-secondary btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
-        <button type="button" class="btn btn-secondary btn-lg" (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update</button>
-        <button type="button" class="btn btn-secondary btn-lg" (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete</button>
-        <button type="button" class="btn btn-secondary btn-lg" (click)="clear()">Clear</button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update</button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete</button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="clear()">Clear</button>
 
       </div>
     </form>
@@ -180,10 +180,10 @@
           <option *ngFor="let userstatus of userstatues" [value]="userstatus.id">{{ userstatus.name }}</option>
         </select>
 
-        <button class="btn btn-primary" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
+        <button class="btn btn-dark" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
           <mat-icon style="padding-top: 7px">search</mat-icon>
         </button>
-        <button class="btn btn-primary" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
+        <button class="btn btn-dark" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
           Clear &nbsp; &nbsp;
         </button>
       </div>
