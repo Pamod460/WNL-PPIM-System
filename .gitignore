@@ -52,3 +52,4 @@ typings/
 .DS_Store
 Thumbs.db
 Assets/wnl-v1-v3.mwb.bak
+Client/app.py
