@@ -6,7 +6,7 @@ import {Operation} from "../entity/operation";
   providedIn: 'root'
 })
 
-export class Operationservice {
+export class OperationService {
 
   constructor(private http: HttpClient) {  }
 

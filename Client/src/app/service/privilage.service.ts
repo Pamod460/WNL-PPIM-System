@@ -8,7 +8,7 @@ import {Privilege} from "../entity/privilege";
   providedIn: 'root'
 })
 
-export class Privilageservice {
+export class PrivilageService {
 
   constructor(private http: HttpClient) {  }
 

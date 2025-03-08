@@ -8,7 +8,7 @@ import {Role} from "../entity/role";
   providedIn: 'root'
 })
 
-export class Roleservice{
+export class RoleService {
 
   constructor(private http: HttpClient) {  }
 

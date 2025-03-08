@@ -6,7 +6,7 @@ import {Module} from "../entity/module";
   providedIn: 'root'
 })
 
-export class Moduleservice{
+export class ModuleService {
 
   constructor(private http: HttpClient) {  }
 

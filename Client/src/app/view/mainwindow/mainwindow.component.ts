@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthorizationManager} from "../../service/authorizationmanager";
-import {DarkModeService} from "../../service/DarkModeService";
 import {MatMenuTrigger} from "@angular/material/menu";
 
 @Component({
@@ -32,7 +31,7 @@ export class MainwindowComponent {
   };
   userImage: string = 'assets/default.png'
 
-  constructor(private router: Router, public authService: AuthorizationManager, public darkModeSevice: DarkModeService) {
+  constructor(private router: Router, public authService: AuthorizationManager) {
   }
 
   logout(): void {

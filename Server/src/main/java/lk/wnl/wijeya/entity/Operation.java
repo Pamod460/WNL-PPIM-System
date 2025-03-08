@@ -1,8 +1,13 @@
 package lk.wnl.wijeya.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.Objects;
 
+@Setter
+@Getter
 @Entity
 public class Operation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,22 +20,6 @@ public class Operation {
 
     public Operation(){}
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public boolean equals(Object o) {

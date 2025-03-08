@@ -1,24 +1,24 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Employee} from "../../../entity/employee";
-import {EmployeeService} from "../../../service/employeeservice";
+import {EmployeeService} from "../../../service/employee.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
-import {FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {UiAssist} from "../../../util/ui/ui.assist";
 import {Gender} from "../../../entity/gender";
 import {Designation} from "../../../entity/designation";
-import {GenderService} from "../../../service/genderservice";
-import {DesignationService} from "../../../service/designationservice";
+import {GenderService} from "../../../service/gender.service";
+import {DesignationService} from "../../../service/designation.service";
 import {MatDialog} from "@angular/material/dialog";
 import {MessageComponent} from "../../../util/dialog/message/message.component";
 import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
-import {Empstatusservice} from "../../../service/empstatusservice";
+import {EmpstatusService} from "../../../service/empstatus.service";
 import {Empstatus} from "../../../entity/empstatus";
-import {RegexService} from "../../../service/regexservice";
+import {RegexService} from "../../../service/regex.service";
 import {DatePipe} from "@angular/common";
 import {AuthorizationManager} from "../../../service/authorizationmanager";
 import {Emptype} from "../../../entity/emptype";
-import {Emptypeservice} from "../../../service/emptypeservice";
+import {EmptypeService} from "../../../service/emptype.service";
 
 
 @Component({
@@ -27,20 +27,20 @@ import {Emptypeservice} from "../../../service/emptypeservice";
   styleUrls: ['./employee.component.css']
 })
 
-export class EmployeeComponent {
+export class EmployeeComponent implements OnInit{
 
 
   columns: string[] = ['photo', 'number', 'fullname', 'nic','dobirth', 'designation','empstatus'];
   headers: string[] = ['Profile', 'Code', 'Full Name','NIC','Date of Birth', 'Designation','Status'];
   binders: string[] = ['photo', 'number', 'fullname','nic','dobirth', 'designation.name','empstatus.name'];
 
-  defaultProfile: string = 'assets/default.png';
+  defaultProfile = 'assets/default.png';
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
   public form!: FormGroup;
 
-  disableModify: boolean = false;
+  disableModify = false;
   disableGenerateNo = false;
 
   employee!: Employee;
@@ -48,24 +48,24 @@ export class EmployeeComponent {
 
   selectedrow: any;
 
-  employees: Array<Employee> = [];
+  employees: Employee[] = [];
   data!: MatTableDataSource<Employee>;
-  imageurl: string = '';
+  imageurl = '';
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  imageempurl: string = 'assets/default.png';
+  imageempurl = 'assets/default.png';
 
-  enaadd: boolean = false;
-  enaupd: boolean = false;
-  enadel: boolean = false;
+  enaadd = false;
+  enaupd = false;
+  enadel = false;
 
-  hasInsertAuthority: boolean = false;
-  hasUpdateAuthority: boolean = false;
-  hasDeleteAuthority: boolean = false;
+  hasInsertAuthority = false;
+  hasUpdateAuthority = false;
+  hasDeleteAuthority = false;
 
-  genders: Array<Gender> = [];
-  designations: Array<Designation> = [];
-  employeestatuses: Array<Empstatus> = [];
-  employeetypes: Array<Emptype> = [];
+  genders: Gender[] = [];
+  designations: Designation[] = [];
+  employeestatuses: Empstatus[] = [];
+  employeetypes: Emptype[] = [];
 
   regexes: any;
 
@@ -83,8 +83,8 @@ export class EmployeeComponent {
     private es: EmployeeService,
     private gs: GenderService,
     private ds: DesignationService,
-    private ss: Empstatusservice,
-    private et: Emptypeservice,
+    private ss: EmpstatusService,
+    private et: EmptypeService,
     private rs: RegexService,
     private fb: FormBuilder,
     private dg: MatDialog,
@@ -270,11 +270,11 @@ export class EmployeeComponent {
 
     const sserchdata = this.ssearch.getRawValue();
 
-    let number = sserchdata.ssnumber;
-    let fullname = sserchdata.ssfullname;
-    let nic = sserchdata.ssnic;
-    let genderid = sserchdata.ssgender;
-    let designationid = sserchdata.ssdesignation;
+    const number = sserchdata.ssnumber;
+    const fullname = sserchdata.ssfullname;
+    const nic = sserchdata.ssnic;
+    const genderid = sserchdata.ssgender;
+    const designationid = sserchdata.ssdesignation;
 
     let query = "";
 
@@ -310,7 +310,7 @@ export class EmployeeComponent {
   selectImage(e: any): void {
     console.log(e.target.files[0]);
     if (e.target.files) {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
       reader.onload = (event: any) => {
         this.imageempurl = event.target.result;
@@ -327,7 +327,7 @@ export class EmployeeComponent {
 
   add() {
 
-    let errors = this.getErrors(['photo','land','description']);
+    const errors = this.getErrors(['photo','land','description']);
 
     if (errors != "") {
       const errmsg = this.dg.open(MessageComponent, {
@@ -344,7 +344,7 @@ export class EmployeeComponent {
       this.employee = this.form.getRawValue();
       this.employee.photo = btoa(this.imageempurl);
 
-      let empdata: string = "";
+      let empdata = "";
 
       empdata = empdata + "<br>Number is : " + this.employee.number;
       empdata = empdata + "<br>Fullname is : " + this.employee.fullname;
@@ -358,8 +358,8 @@ export class EmployeeComponent {
         }
       });
 
-      let addstatus: boolean = false;
-      let addmessage: string = "Server Not Found";
+      let addstatus = false;
+      let addmessage = "Server Not Found";
 
       confirm.afterClosed().subscribe(async result => {
         if (result) {
@@ -411,7 +411,7 @@ export class EmployeeComponent {
 
   getErrors(optionalFields?: string []): string {
 
-    let errors: string = "";
+    let errors = "";
 
     for (const controlName in this.form.controls) {
       if (!optionalFields?.includes(controlName)) {
@@ -472,7 +472,7 @@ export class EmployeeComponent {
 
   getUpdates(): string {
 
-    let updates: string = "";
+    let updates = "";
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
       if (control.dirty) {
@@ -484,7 +484,7 @@ export class EmployeeComponent {
 
   update() {
 
-    let errors = this.getErrors(['photo','land','description']);
+    const errors = this.getErrors(['photo','land','description']);
 
     if (errors != "") {
       const errmsg = this.dg.open(MessageComponent, {
@@ -495,12 +495,12 @@ export class EmployeeComponent {
 
     } else {
 
-      let updates: string = this.getUpdates();
+      const updates: string = this.getUpdates();
 
       if (updates != "") {
 
-        let updstatus: boolean = false;
-        let updmessage: string = "Server Not Found";
+        let updstatus = false;
+        let updmessage = "Server Not Found";
 
         const confirm = this.dg.open(ConfirmComponent, {
           width: '450px',
@@ -577,8 +577,8 @@ export class EmployeeComponent {
 
     confirm.afterClosed().subscribe(async result => {
       if (result) {
-        let delstatus: boolean = false;
-        let delmessage: string = "Server Not Found";
+        let delstatus = false;
+        let delmessage = "Server Not Found";
 
         this.es.delete(this.employee.id).then((responce: [] | undefined) => {
           console.log(responce);

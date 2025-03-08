@@ -7,7 +7,7 @@ import {Emptype} from "../entity/emptype";
   providedIn: 'root'
 })
 
-export class Emptypeservice {
+export class EmptypeService {
 
   constructor(private http: HttpClient) {  }
 

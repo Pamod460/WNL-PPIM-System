@@ -3,7 +3,7 @@ import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class DarkModeService {
+export class DarkmodeService {
   private renderer: Renderer2;
   private isDarkMode = false;
 

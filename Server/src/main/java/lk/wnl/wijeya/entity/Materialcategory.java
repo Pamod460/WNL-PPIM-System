@@ -6,11 +6,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Objects;
 
 @Setter
 @Getter
 @Entity
-public class Module {
+public class Materialcategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
@@ -18,31 +19,21 @@ public class Module {
     @Basic
     @Column(name = "name")
     private String name;
-
-
     @JsonIgnore
-    @OneToMany(mappedBy = "module")
-    private Collection<Privilege> privileges;
+    @OneToMany(mappedBy = "materialcategory")
+    private Collection<Materialsubcategory> materialsubcategories;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        Module module = (Module) o;
-
-        if (id != null ? !id.equals(module.id) : module.id != null) return false;
-        if (name != null ? !name.equals(module.name) : module.name != null) return false;
-
-        return true;
+        Materialcategory that = (Materialcategory) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
+        return Objects.hash(id, name);
     }
-
 
 }

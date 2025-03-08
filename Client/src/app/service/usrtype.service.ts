@@ -8,7 +8,7 @@ import {Usrtype} from "../entity/usrtype";
   providedIn: 'root'
 })
 
-export class Usrtypeservice {
+export class UsrtypeService {
 
   constructor(private http: HttpClient) {  }
 

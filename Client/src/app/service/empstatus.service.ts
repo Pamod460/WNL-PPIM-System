@@ -6,7 +6,7 @@ import {HttpClient} from "@angular/common/http";
   providedIn: 'root'
 })
 
-export class Empstatusservice {
+export class EmpstatusService {
 
   constructor(private http: HttpClient) {  }
 

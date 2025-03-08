@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthoritySevice } from './authoritysevice';
-import {UserService} from "./userservice";
+import {UserService} from "./user.service";
 import {jwtDecode} from "jwt-decode";
 import {CustomJwtPayload} from "../entity/customJwtPayload";
 import {BehaviorSubject, filter} from "rxjs";
@@ -33,7 +32,7 @@ export class AuthorizationManager {
   ];
 
   Inventory = [
-    { name: 'Item', isVisible: false, routerLink: 'item' },
+    { name: 'Material', isVisible: false, routerLink: 'material' },
   ];
 
 
@@ -65,7 +64,8 @@ export class AuthorizationManager {
     });
 
     menus.forEach(menuGroup => {
-      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       localStorage.setItem(this["localStorage" + menuGroup.Menu + "Menus"], JSON.stringify(menuGroup));
     });
 
@@ -130,11 +130,13 @@ export class AuthorizationManager {
     return this.isAuthenticated.asObservable();
   }
   setFullName(): void {
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     const jwtToken = localStorage.getItem("Authorization").split(' ')[1];
-    let value= jwtDecode<CustomJwtPayload>(jwtToken).uname;
+    const value= jwtDecode<CustomJwtPayload>(jwtToken).uname;
 
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     localStorage.setItem(this.localStorageFullName, value);
   }
 
@@ -160,13 +162,15 @@ export class AuthorizationManager {
   }
 
   getAuthorities(){
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     const jwtToken = localStorage.getItem("Authorization").split(' ')[1];
     return jwtDecode<CustomJwtPayload>(jwtToken).aud;
   }
 
   getRoles(){
-    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     const jwtToken = localStorage.getItem("Authorization").split(' ')[1];
 
     return jwtDecode<CustomJwtPayload>(jwtToken).roles;
@@ -181,7 +185,8 @@ export class AuthorizationManager {
     const menus = this.getNavListItem();
 
     menus.forEach(menuState => {
-      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       const localStorageState = localStorage.getItem(this['localStorage' + menuState.Menu + 'Menus']);
       if (localStorageState) {
         menuState.Menu = JSON.parse(localStorageState);
@@ -196,7 +201,8 @@ export class AuthorizationManager {
   clearMenuState(): void {
     const menus = this.getNavListItem();
     menus.forEach(menu => {
-      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
       localStorage.removeItem(this['localStorage' + menu.Menu + 'Menus']);
     });
   }
