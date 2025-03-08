@@ -110,7 +110,7 @@ public class UserController {
                     extUser.getUserroles().add(newUserRole);
                     newUserRole.setUser(extUser);
                 });
-                user.setIsactive(extUser.getIsactive());
+                user.setIsactive(extUser.isIsactive());
                 BeanUtils.copyProperties(user, extUser, "id", "password", "salt", "userroles");
                 if (user.getPassword() != null && !user.getPassword().isEmpty()
                         && !user.getPassword().equals("WaterBoard@25")) {
@@ -123,6 +123,8 @@ public class UserController {
                 }
 
                 // Update basic user properties
+
+
                 userdao.save(extUser); // Save the updated extUser object
 
                 response.put("id", String.valueOf(user.getId()));
