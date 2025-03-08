@@ -1,9 +1,13 @@
 package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Setter
+@Getter
 @Entity
 public class Userrole {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,14 +22,6 @@ public class Userrole {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
     private Role role;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -44,19 +40,4 @@ public class Userrole {
         return id != null ? id.hashCode() : 0;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
 }

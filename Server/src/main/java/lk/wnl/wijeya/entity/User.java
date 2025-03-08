@@ -1,11 +1,16 @@
 package lk.wnl.wijeya.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Collection;
 
+@Setter
+@Getter
 @Entity
 public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,62 +54,6 @@ public class User {
     @Column(name = "isactive")
     private boolean isactive;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public Date getDocreated() {
-        return docreated;
-    }
-
-    public void setDocreated(Date docreated) {
-        this.docreated = docreated;
-    }
-
-    public Time getTocreated() {
-        return tocreated;
-    }
-
-    public void setTocreated(Time tocreated) {
-        this.tocreated = tocreated;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -135,43 +84,4 @@ public class User {
         return result;
     }
 
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
-    }
-
-    public Usestatus getUsestatus() {
-        return usestatus;
-    }
-
-    public void setUsestatus(Usestatus usestatus) {
-        this.usestatus = usestatus;
-    }
-
-    public Usetype getUsetype() {
-        return usetype;
-    }
-
-    public void setUsetype(Usetype usetype) {
-        this.usetype = usetype;
-    }
-
-    public Collection<Userrole> getUserroles() {
-        return userroles;
-    }
-
-    public void setUserroles(Collection<Userrole> userroles) {
-        this.userroles = userroles;
-    }
-
-    public boolean getIsactive() {
-        return isactive;
-    }
-
-    public void setIsactive(boolean isactive) {
-        this.isactive = isactive;
-    }
 }

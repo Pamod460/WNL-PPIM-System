@@ -2,6 +2,8 @@ package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lk.wnl.wijeya.util.RegexPattern;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -9,6 +11,8 @@ import java.sql.Date;
 import java.util.Arrays;
 import java.util.Collection;
 
+@Setter
+@Getter
 @Entity
 public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,122 +78,14 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "empstatus_id", referencedColumnName = "id", nullable = false)
     private Empstatus empstatus;
-
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<User> users;
-
     public Employee(){}
-
     public Employee(Integer id, String callingname){
         this.id = id;
         this.callingname = callingname;
     }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getCallingname() {
-        return callingname;
-    }
-
-    public void setCallingname(String callingname) {
-        this.callingname = callingname;
-    }
-
-    public byte[] getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
-    }
-
-    public Date getDobirth() {
-        return dobirth;
-    }
-
-    public void setDobirth(Date dobirth) {
-        this.dobirth = dobirth;
-    }
-
-    public String getNic() {
-        return nic;
-    }
-
-    public void setNic(String nic) {
-        this.nic = nic;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getLand() {
-        return land;
-    }
-
-    public void setLand(String land) {
-        this.land = land;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Date getDoassignment() {
-        return doassignment;
-    }
-
-    public void setDoassignment(Date doassignment) {
-        this.doassignment = doassignment;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -213,7 +109,6 @@ public class Employee {
             return false;
         if (description != null ? !description.equals(employee.description) : employee.description != null)
             return false;
-
         return true;
     }
 
@@ -233,45 +128,5 @@ public class Employee {
         result = 31 * result + (doassignment != null ? doassignment.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         return result;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public Emptype getEmptype() {
-        return emptype;
-    }
-
-    public void setEmptype(Emptype emptype) {
-        this.emptype = emptype;
-    }
-
-    public Designation getDesignation() {
-        return designation;
-    }
-
-    public void setDesignation(Designation designation) {
-        this.designation = designation;
-    }
-
-    public Empstatus getEmpstatus() {
-        return empstatus;
-    }
-
-    public void setEmpstatus(Empstatus empstatus) {
-        this.empstatus = empstatus;
-    }
-
-    public Collection<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Collection<User> users) {
-        this.users = users;
     }
 }

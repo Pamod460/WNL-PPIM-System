@@ -1,7 +1,12 @@
 package lk.wnl.wijeya.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@Setter
+@Getter
 @Entity
 public class Privilege {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,22 +25,6 @@ public class Privilege {
     @ManyToOne
     @JoinColumn(name = "operation_id", referencedColumnName = "id", nullable = false)
     private Operation operation;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(String authority) {
-        this.authority = authority;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -57,27 +46,4 @@ public class Privilege {
         return result;
     }
 
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Module getModule() {
-        return module;
-    }
-
-    public void setModule(Module module) {
-        this.module = module;
-    }
-
-    public Operation getOperation() {
-        return operation;
-    }
-
-    public void setOperation(Operation operation) {
-        this.operation = operation;
-    }
 }
