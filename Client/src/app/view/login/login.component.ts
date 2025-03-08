@@ -3,7 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {MessageComponent} from "../../util/dialog/message/message.component";
-import {AuthenticateService} from "../../service/AuthenticateService";
+import {AuthenticateService} from "../../service/Authenticate.Service";
 import {AuthorizationManager} from "../../service/authorizationmanager";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 

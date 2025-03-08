@@ -3,25 +3,25 @@ import {Employee} from "../../../entity/employee";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatSelectionList, MatSelectionListChange} from "@angular/material/list";
 import {Userstatus} from "../../../entity/userstatus";
-import {EmployeeService} from "../../../service/employeeservice";
-import {UserstatusService} from "../../../service/userstatusservice";
-import {Roleservice} from "../../../service/roleservice";
+import {EmployeeService} from "../../../service/employee.service";
+import {UserstatusService} from "../../../service/userstatus.service";
+import {RoleService} from "../../../service/role.service";
 import {Role} from "../../../entity/role";
 import {MatTableDataSource} from "@angular/material/table";
-import {UserService} from "../../../service/userservice";
+import {UserService} from "../../../service/user.service";
 import {User} from "../../../entity/user";
 import {MatPaginator} from "@angular/material/paginator";
 import {UiAssist} from "../../../util/ui/ui.assist";
 import {DatePipe} from "@angular/common";
 import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
 import {MatDialog} from "@angular/material/dialog";
-import {RegexService} from "../../../service/regexservice";
+import {RegexService} from "../../../service/regex.service";
 import {MessageComponent} from "../../../util/dialog/message/message.component";
 import {Userrole} from "../../../entity/userrole";
-import {AuthoritySevice} from "../../../service/authoritysevice";
+import {AuthoritySevice} from "../../../service/authority.sevice";
 import {AuthorizationManager} from "../../../service/authorizationmanager";
 import {Usrtype} from "../../../entity/usrtype";
-import {Usrtypeservice} from "../../../service/usrtypeservice";
+import {UsrtypeService} from "../../../service/usrtype.service";
 
 @Component({
   selector: 'app-user',
@@ -91,8 +91,8 @@ export class UserComponent implements OnInit{
     private fb: FormBuilder,
     private es: EmployeeService,
     private ut: UserstatusService,
-    private ust: Usrtypeservice,
-    private rs: Roleservice,
+    private ust: UsrtypeService,
+    private rs: RoleService,
     private us: UserService,
     private dp: DatePipe,
     private dg: MatDialog,
