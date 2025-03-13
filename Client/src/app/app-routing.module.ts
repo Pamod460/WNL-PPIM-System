@@ -10,7 +10,6 @@ import {PrivilageComponent} from "./view/modules/privilage/privilage.component";
 import {DashboardComponent} from "./view/dashboard/dashboard.component";
 import {ProfileComponent} from "./view/profile/profile.component";
 import {AuthGuard} from "./guard/auth.guard";
-import {MaterialComponent} from "./view/modules/material/material.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -25,7 +24,6 @@ const routes: Routes = [
       {path: "employee", component: EmployeeComponent},
       {path: "user", component: UserComponent},
       {path: "privilege", component: PrivilageComponent},
-      {path: "material", component: MaterialComponent},
       {path: "reports", component: ArrearsByProgramComponent},
     ],canActivate:[AuthGuard]
   }];

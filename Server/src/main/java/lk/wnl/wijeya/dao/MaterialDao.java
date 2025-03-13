@@ -7,6 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MaterialDao extends JpaRepository<Material,Integer> {
 
-    boolean existsByCode(String code);
 }
 

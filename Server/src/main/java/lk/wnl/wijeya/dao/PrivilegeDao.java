@@ -18,6 +18,4 @@ public interface PrivilegeDao extends JpaRepository<Privilege,Integer> {
     Privilege findByMyId(@Param("id") Integer id);
 
     boolean existsByRoleAndModuleAndOperation(Role role, Module module, Operation operation);
-
-    boolean existsByRoleAndModuleAndOperationAndIdNot(Role role, Module module, Operation operation, Integer id);
 }

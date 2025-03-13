@@ -3,18 +3,16 @@ package lk.wnl.wijeya.controller;
 import lk.wnl.wijeya.dao.EmployeeDao;
 import lk.wnl.wijeya.dao.UserDao;
 import lk.wnl.wijeya.entity.Employee;
-import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
-import lk.wnl.wijeya.exception.ResourceNotFoundException;
-import lk.wnl.wijeya.util.StandardResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import java.util.List;
 import java.util.stream.Stream;
 
 @CrossOrigin
@@ -60,10 +58,12 @@ public class EmployeeController {
 
         List<Employee> employees = this.employeedao.findAllNameId();
 
-        employees = employees.stream().map(employee -> {
-            Employee e = new Employee(employee.getId(), employee.getCallingname());
-            return e;
-        }).collect(Collectors.toList());
+        employees = employees.stream().map(
+                employee -> {
+                    Employee e = new Employee(employee.getId(), employee.getCallingname());
+                    return e;
+                }
+        ).collect(Collectors.toList());
 
         return employees;
 
@@ -93,56 +93,102 @@ public class EmployeeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
 //    @PreAuthorize("hasAuthority('Employee-Insert')")
-    public ResponseEntity<StandardResponse> add(@RequestBody Employee employee) {
-        if (employeedao.existsByNumber(employee.getNumber())) {
-            throw new ResourceAlreadyExistException("Number Already Exists");
-        }
-        if (employeedao.existsByNic(employee.getNic())) {
-            throw new ResourceAlreadyExistException("NIC Already Exists");
-        }
-        if (employeedao.existsByEmail(employee.getEmail())) {
-            throw new ResourceAlreadyExistException("Email Already Exists");
-        }
-        if (employeedao.existsByMobile(employee.getMobile())) {
-            throw new ResourceAlreadyExistException("Mobile Number Already Exists");
-        }
-        System.out.println(employee.getLand());
-        Employee emp = employeedao.save(employee);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new StandardResponse(HttpStatus.CREATED.value(), "Employee Added Successfully",
-                        new Employee(emp.getId(), emp.getFullname())));
+    public HashMap<String, String> add(@RequestBody Employee employee) {
+
+        HashMap<String, String> responce = new HashMap<>();
+        String errors = "";
+
+        if (employeedao.findByNumber(employee.getNumber()) != null)
+            errors = errors + "<br> Existing Number";
+        if (employeedao.findByNic(employee.getNic()) != null)
+            errors = errors + "<br> Existing NIC";
+        if (employeedao.existsByEmail(employee.getEmail()))
+            errors = errors + "<br> Existing Email";
+        if (employeedao.existsByMobile(employee.getMobile()))
+            errors = errors + "<br> Existing Mobile Number";
+
+        System.out.println(employee.getDoassignment());
+
+        if (errors == "")
+            employeedao.save(employee);
+        else errors = "Server Validation Errors : <br> " + errors;
+
+        responce.put("id", String.valueOf(employee.getId()));
+        responce.put("url", "/employees/" + employee.getId());
+        responce.put("errors", errors);
+
+        return responce;
     }
 
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody Employee employee) {
-        employeedao.findById(employee.getId()).orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+    @ResponseStatus(HttpStatus.CREATED)
+//    @PreAuthorize("hasAuthority('Employee-Update')")
+    public HashMap<String, String> update(@RequestBody Employee employee) {
 
-        if (employeedao.existsByNumberAndIdNot(employee.getNumber(), employee.getId())) {
-            throw new ResourceAlreadyExistException("Number Already Exists");
-        }
-        if (employeedao.existsByNicAndIdNot(employee.getNic(), employee.getId())) {
-            throw new ResourceAlreadyExistException("NIC Already Exists");
-        }
-        if (employeedao.existsByMobileAndIdNot(employee.getMobile(), employee.getId())) {
-            throw new ResourceAlreadyExistException("Mobile Number Already Exists");
-        }
-        if (employeedao.existsByEmailAndIdNot(employee.getEmail(), employee.getId())) {
-            throw new ResourceAlreadyExistException("Email Already Exists");
-        }
+        HashMap<String, String> responce = new HashMap<>();
+        String errors = "";
 
-        Employee emp = employeedao.save(employee);
-        return ResponseEntity.ok(new StandardResponse(200, "Employee Updated Successfully", new Employee(emp.getId(), emp.getFullname())));
+        Employee emp1 = employeedao.findByNumber(employee.getNumber());
+        Employee emp2 = employeedao.findByNic(employee.getNic());
+        Employee emp3 = employeedao.findByMobile(employee.getMobile());
+        Employee emp4 = employeedao.findByEmail(employee.getEmail());
+
+        if (emp1 != null && employee.getId() != emp1.getId())
+            errors = errors + "<br> Existing Number";
+        if (emp2 != null && employee.getId() != emp2.getId())
+            errors = errors + "<br> Existing NIC";
+
+        if (emp3 != null && employee.getId() != emp3.getId())
+            errors = errors + "<br> Existing Mobile number";
+
+        if (emp4 != null && employee.getId() != emp4.getId())
+            errors = errors + "<br> Existing Email";
+
+        System.out.println(employee.getPhoto().length);
+
+        if (errors == "") employeedao.save(employee);
+        else errors = "Server Validation Errors : <br> " + errors;
+
+        responce.put("id", String.valueOf(employee.getId()));
+        responce.put("url", "/employees/" + employee.getId());
+        responce.put("errors", errors);
+
+        return responce;
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
-        Employee employee = employeedao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Employee Not Found"));
-        if (userDao.existsByEmployee(employee)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new StandardResponse(400, "Cannot delete employee. A user account is associated with this employee", null));
+    public HashMap<String, String> delete(@PathVariable Integer id) {
+
+        HashMap<String, String> responce = new HashMap<>();
+        String errors = "";
+
+        Employee employee = employeedao.findByMyId(id);
+
+        if (employee == null){
+            errors = errors + "<br> Employee Does Not Existed";
         }
-//        employeedao.delete(employee);
-        return new ResponseEntity<>(new StandardResponse(200, "Employee Deleted Successfully", null), HttpStatus.OK);
+        else{
+            boolean userAccExists = userDao.existsByEmployee(employee);
+            if (userAccExists){
+                errors = "Cannot delete employee. A user account is associated with this employee";
+            }
+        }
+
+        if (errors.isEmpty()) {
+            employeedao.delete(employee);
+        }
+
+        responce.put("id", String.valueOf(id));
+        responce.put("url", "/employees/" + id);
+        responce.put("errors", errors);
+
+        return responce;
     }
 
 }
+
+
+
+

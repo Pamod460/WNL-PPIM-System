@@ -1,81 +1,43 @@
-<div class="container-fluid my-4">
-  <!-- Profile Section -->
-  <div class="row">
-    <div class="col-12">
-      <div class="p-4 border rounded shadow-sm bg-white d-flex justify-content-between align-items-start">
-        <!-- Profile Information Form -->
-        <div class="flex-grow-1" style="max-width: 50%;">
-          <h4 class="fw-bold">Profile Information</h4>
-          <p class="text-muted">Your account's profile information</p>
-          <form>
-            <!-- Full Name -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Full Name</label>
-              <input type="text" class="form-control w-50" [value]="fullName" disabled />
-
-            </div>
-            <!-- Email -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Email</label>
-              <input type="email" class="form-control w-50" [value]="email" disabled />
-            </div>
-            <!-- Description -->
-            <div class="mb-3">
-              <label class="form-label fw-semibold">Description</label>
-              <textarea class="form-control w-50" rows="3" disabled>{{description?description:"ND"}}</textarea>
-            </div>
-          </form>
-        </div>
-
-        <!-- Profile Picture -->
-        <div class="ms-4">
-          <img
-            [src]="imageURL"
-            alt="Profile Picture"
-            class="rounded-circle img-fluid"
-          />
-        </div>
-      </div>
-    </div>
+<!-- profile.component.html -->
+<div class="profile-container">
+  <div class="profile-header">
+    <img [src]="profile.avatar" alt="{{ profile.name }}" class="profile-avatar">
+    <h1>{{ profile.name }}</h1>
+    <h2>{{ profile.title }}</h2>
   </div>
 
-  <!-- Update Password Section -->
-  <div class="row mt-3">
-    <div class="col-12">
-      <div class="p-4 border rounded shadow-sm bg-white">
-        <h4 class="fw-bold">Update Password</h4>
-        <p class="text-muted">
-          Ensure your account is using a long, random password to stay secure
-        </p>
-        <form [formGroup]="updatePasswdForm">
-          <!-- New Password -->
-          <label class="form-label fw-semibold">New Password</label>
-          <div class="input-group mb-3  fields">
-            <input [type]="showNewPassword ? 'text' : 'password'" class="form-control" formControlName="newpasswd"/>
-            <div class="eye-icon">
-              <button mat-icon-button type="button" (click)="toggleNewPasswordVisibility()">
-                <mat-icon>{{ showNewPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-              </button>
-            </div>
-          </div>
-
-          <!-- Confirm Password -->
-          <div class="mb-3">
-            <label class="form-label fw-semibold">Confirm Password</label>
-            <div class="input-group mb-3 fields">
-              <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control" formControlName="confirmpasswd"/>
-              <div class="eye-icon">
-                <button mat-icon-button type="button" (click)="toggleConfirmPasswordVisibility()">
-                  <mat-icon>{{ showConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Save Button -->
-          <button type="button" class="btn btn-dark px-4" (click)="updatePassword()">Save</button>
-        </form>
+  <div class="profile-body">
+    <section class="profile-bio">
+      <h3>About Me</h3>
+      <p>{{ profile.bio }}</p>
+      <div class="profile-contact">
+        <p><strong>Location:</strong> {{ profile.location }}</p>
+        <p><strong>Email:</strong> {{ profile.email }}</p>
       </div>
-    </div>
+    </section>
+
+    <section class="profile-skills">
+      <h3>Skills</h3>
+      <div class="skills-grid">
+        <div *ngFor="let skill of skills" class="skill-item">
+          <div class="skill-name">{{ skill.name }}</div>
+          <div class="skill-bar">
+            <div class="skill-level" [style.width.%]="skill.level"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-social">
+      <h3>Connect</h3>
+      <div class="social-links">
+        <a *ngFor="let social of socialLinks"
+           [href]="social.link"
+           target="_blank"
+           class="social-link">
+          {{ social.platform }}
+        </a>
+      </div>
+    </section>
   </div>
 </div>

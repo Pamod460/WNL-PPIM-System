@@ -4,7 +4,7 @@
 html, body {
   height: 100%;
   /*background-color: #7ff0e6*/
-  background-color: rgba(33, 53, 85, 0.8) !important;
+  background-color: rgba(33, 53, 85, 0.8);
 
 }
 
@@ -108,4 +108,3 @@ mat-form-field input {
   pointer-events: none;
   opacity: 0.9;
 }
-

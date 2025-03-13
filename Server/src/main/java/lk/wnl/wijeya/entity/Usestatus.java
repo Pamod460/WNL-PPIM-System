@@ -1,9 +1,7 @@
 package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,8 +9,6 @@ import java.util.Collection;
 
 @Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 public class Usestatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +22,6 @@ public class Usestatus {
     @JsonIgnore
     @OneToMany(mappedBy = "usestatus")
     private Collection<User> users;
-
-    public Usestatus(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
 
     @Override
     public boolean equals(Object o) {
