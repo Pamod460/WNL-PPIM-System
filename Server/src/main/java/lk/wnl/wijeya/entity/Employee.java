@@ -2,7 +2,9 @@ package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lk.wnl.wijeya.util.RegexPattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,10 +12,13 @@ import javax.validation.constraints.Pattern;
 import java.sql.Date;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 @Setter
 @Getter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Employee {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -45,7 +50,7 @@ public class Employee {
     private String nic;
     @Basic
     @Column(name = "address")
-    @Pattern(regexp = "^([\\w\\/\\-,\\s]{2,})$", message = "Invalid Address")
+    @Pattern(regexp = "^./*$", message = "Invalid Address")
     private String address;
     @Basic
     @Column(name = "mobile")
@@ -81,7 +86,7 @@ public class Employee {
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<User> users;
-    public Employee(){}
+
     public Employee(Integer id, String callingname){
         this.id = id;
         this.callingname = callingname;
@@ -90,28 +95,22 @@ public class Employee {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Employee employee = (Employee) o;
-
-        if (id != null ? !id.equals(employee.id) : employee.id != null) return false;
-        if (number != null ? !number.equals(employee.number) : employee.number != null) return false;
-        if (fullname != null ? !fullname.equals(employee.fullname) : employee.fullname != null) return false;
-        if (callingname != null ? !callingname.equals(employee.callingname) : employee.callingname != null)
-            return false;
+        if (!Objects.equals(id, employee.id)) return false;
+        if (!Objects.equals(number, employee.number)) return false;
+        if (!Objects.equals(fullname, employee.fullname)) return false;
+        if (!Objects.equals(callingname, employee.callingname)) return false;
         if (!Arrays.equals(photo, employee.photo)) return false;
-        if (dobirth != null ? !dobirth.equals(employee.dobirth) : employee.dobirth != null) return false;
-        if (nic != null ? !nic.equals(employee.nic) : employee.nic != null) return false;
-        if (address != null ? !address.equals(employee.address) : employee.address != null) return false;
-        if (mobile != null ? !mobile.equals(employee.mobile) : employee.mobile != null) return false;
-        if (land != null ? !land.equals(employee.land) : employee.land != null) return false;
-        if (email != null ? !email.equals(employee.email) : employee.email != null) return false;
-        if (doassignment != null ? !doassignment.equals(employee.doassignment) : employee.doassignment != null)
-            return false;
-        if (description != null ? !description.equals(employee.description) : employee.description != null)
-            return false;
+        if (!Objects.equals(dobirth, employee.dobirth)) return false;
+        if (!Objects.equals(nic, employee.nic)) return false;
+        if (!Objects.equals(address, employee.address)) return false;
+        if (!Objects.equals(mobile, employee.mobile)) return false;
+        if (!Objects.equals(land, employee.land)) return false;
+        if (!Objects.equals(email, employee.email)) return false;
+        if (!Objects.equals(doassignment, employee.doassignment)) return false;
+        if (!Objects.equals(description, employee.description)) return false;
         return true;
     }
-
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
