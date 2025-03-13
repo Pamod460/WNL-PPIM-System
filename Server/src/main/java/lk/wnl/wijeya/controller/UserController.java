@@ -1,17 +1,25 @@
 package lk.wnl.wijeya.controller;
 
 import lk.wnl.wijeya.dao.UserDao;
+import lk.wnl.wijeya.entity.Employee;
 import lk.wnl.wijeya.entity.User;
 import lk.wnl.wijeya.entity.Userrole;
+import lk.wnl.wijeya.entity.Usestatus;
+import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
+import lk.wnl.wijeya.exception.ResourceNotFoundException;
+import lk.wnl.wijeya.util.StandardResponse;
 import lk.wnl.wijeya.util.userPasswdRequest.UserPasswdRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -57,184 +65,122 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public HashMap<String, String> add(@RequestBody User user) {
-
-        HashMap<String, String> responce = new HashMap<>();
-        String errors = "";
-
+    public ResponseEntity<StandardResponse> add(@RequestBody User user) {
         if (userdao.findByUsername(user.getUsername()) != null)
-            errors = errors + "<br> Existing Username";
+            throw new ResourceAlreadyExistException("Existing Username");
 
-        if (errors == "") {
-            for (Userrole u : user.getUserroles()) u.setUser(user);
+        for (Userrole u : user.getUserroles()) u.setUser(user);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
+        user.setIsactive(true);
 
-            // Encrypt UserName and Password with Salt
-            String salt = passwordEncoder.encode(user.getUsername());
-            String hashedPassword = passwordEncoder.encode(salt + user.getPassword());
-            user.setSalt(salt);
-            user.setPassword(hashedPassword);
-            userdao.save(user);
-
-            responce.put("id", String.valueOf(user.getId()));
-            responce.put("url", "/users/" + user.getId());
-            responce.put("errors", errors);
-
-            return responce;
-        } else errors = "Server Validation Errors : <br> " + errors;
-
-        responce.put("id", String.valueOf(user.getId()));
-        responce.put("url", "/users/" + user.getId());
-        responce.put("errors", errors);
-
-        return responce;
+        User usr = userdao.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new StandardResponse(HttpStatus.CREATED.value(), "User Added Successfully", usr));
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public HashMap<String, String> update(@RequestBody User user) {
-        HashMap<String, String> response = new HashMap<>();
+    public ResponseEntity<StandardResponse> update(@RequestBody User user) {
+        User existingUser = userdao.findByUsername(user.getUsername());
 
-        String errors = "";
-
-        User extUser = userdao.findByUsername(user.getUsername());
-
-        if (extUser != null) {
-
-            // Update Existing User Roles
-            try {
-                extUser.getUserroles().clear();
-                user.getUserroles().forEach(newUserRole -> {
-                    newUserRole.setUser(extUser);
-                    extUser.getUserroles().add(newUserRole);
-                    newUserRole.setUser(extUser);
-                });
-                user.setIsactive(extUser.getIsactive());
-                BeanUtils.copyProperties(user, extUser, "id", "password", "salt", "userroles");
-                if (user.getPassword() != null && !user.getPassword().isEmpty()
-                        && !user.getPassword().equals("WaterBoard@25")) {
-                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                    // Encrypt UserName and Password with Salt
-                    String salt = passwordEncoder.encode(user.getUsername());
-                    String hashedPassword = passwordEncoder.encode(salt + user.getPassword());
-                    extUser.setSalt(salt);
-                    extUser.setPassword(hashedPassword);
-                }
-
-                // Update basic user properties
-                userdao.save(extUser); // Save the updated extUser object
-
-                response.put("id", String.valueOf(user.getId()));
-                response.put("url", "/users/" + user.getId());
-                response.put("errors", errors);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        if (existingUser == null) {
+            throw new ResourceNotFoundException("User Not Found");
         }
 
-        return response;
+        // Check if a user with the same username already exists (excluding current user)
+        if (userdao.existsByUsernameAndIdNot(user.getUsername(), user.getId())) {
+            throw new ResourceAlreadyExistException("Username Already Exists");
+        }
+
+        try {
+            // Update roles
+            existingUser.getUserroles().clear();
+            user.getUserroles().forEach(newUserRole -> {
+                newUserRole.setUser(existingUser);
+                existingUser.getUserroles().add(newUserRole);
+            });
+
+            // Preserve active status
+            user.setIsactive(existingUser.isIsactive());
+
+            // Copy properties except sensitive ones
+            BeanUtils.copyProperties(user, existingUser, "id", "password", "userroles");
+
+            // Password update logic
+            if (user.getPassword() != null && !user.getPassword().isEmpty()
+                    && !user.getPassword().equals("WaterBoard@25")) {
+
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                if (!passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
+                    String hashedPassword = passwordEncoder.encode( user.getPassword());
+                    existingUser.setPassword(hashedPassword);
+                }
+            }
+
+            // Save updated user
+            User updatedUser = userdao.save(existingUser);
+
+            return ResponseEntity.ok(new StandardResponse(
+                    HttpStatus.OK.value(), "User Updated Successfully", updatedUser
+            ));
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating user: " + e.getMessage());
+        }
     }
+
 
     @DeleteMapping("/{username}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public HashMap<String, String> delete(@PathVariable String username) {
-
-        HashMap<String, String> responce = new HashMap<>();
-        String errors = "";
-
-        User use1 = userdao.findByUsername(username);
-
-        if (use1 == null)
-            errors = errors + "<br> User Does Not Existed";
-
-        if (errors == "") {
-            use1.setIsactive(false);
-            userdao.save(use1);
-        } else errors = "Server Validation Errors : <br> " + errors;
-
-        responce.put("username", String.valueOf(username));
-        responce.put("url", "/users/" + username);
-        responce.put("errors", errors);
-
-        return responce;
+    public ResponseEntity<StandardResponse> delete(@PathVariable String username) {
+        User exsistingUser = userdao.findByUsername(username);
+        if (exsistingUser == null)
+            throw new ResourceNotFoundException("User Not Found");
+        exsistingUser.setIsactive(false);
+        exsistingUser.setUsestatus(new Usestatus(2,"Inactive"));
+        userdao.save(exsistingUser);
+        return ResponseEntity.ok(new StandardResponse(HttpStatus.OK.value(), "User Successfully Deleted", null));
     }
 
-    @GetMapping(path = "/empbyuser/{username}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Object get(@PathVariable String username) {
-
-        HashMap<String, String> response = new HashMap<>();
-        String errors = "";
-
+    @GetMapping("/empbyuser/{username}")
+    public Employee get(@PathVariable String username) {
         User user = userdao.findByUsername(username);
-
-        if (user == null)
-            errors = errors + "<br> User Does Not Exist";
-
-        if (errors.isEmpty()) {
-            return user.getEmployee(); // Return the Employee object
-        } else {
-            errors = "Server Validation Errors : <br> " + errors;
-            response.put("username", username);
-            response.put("url", "/users/" + username);
-            response.put("errors", errors);
-            return response; // Return the error response
+        if (user == null) {
+            throw new ResourceNotFoundException("User does not exist");
         }
+        return user.getEmployee();
     }
 
-    @GetMapping(path = "/userRole/{username}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Object getUser(@PathVariable String username) {
-
-
-        HashMap<String, String> response = new HashMap<>();
-        String errors = "";
-
+    @GetMapping("/userRole/{username}")
+    public Collection<Userrole> getUser(@PathVariable String username) {
         User user = userdao.findByUsername(username);
-
-        if (user == null)
-            errors = errors + "<br> User Does Not Exist";
-
-        if (errors.isEmpty()) {
-            return user.getUserroles(); // Return the Employee object
-        } else {
-            errors = "Server Validation Errors : <br> " + errors;
-            response.put("username", username);
-            response.put("url", "/users/" + username);
-            response.put("errors", errors);
-            return response; // Return the error response
+        if (user == null) {
+            throw new ResourceNotFoundException("User does not exist");
         }
+        return user.getUserroles();
     }
 
     @PutMapping("/user-passwd-update")
-    public HashMap<String, String> updateUserPasswd(@RequestBody UserPasswdRequest userPasswdRequest) {
+    public ResponseEntity<StandardResponse> updateUserPasswd(@RequestBody UserPasswdRequest userPasswdRequest) {
 
-        HashMap<String, String> response = new HashMap<>();
-        String errors = "";
+        User existingUser = userdao.findByUsername(userPasswdRequest.getUserName());
 
-        User foundedUser = userdao.findByUsername(userPasswdRequest.getUserName());
-
-        if (foundedUser == null) {
-            errors = errors + "<br> User Does Not Exist";
-            response.put("errors", errors);
+        if (existingUser == null) {
+            throw new ResourceNotFoundException("User does not exist");
         }
 
-        if (errors.isEmpty()) {
-            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String salt = passwordEncoder.encode(userPasswdRequest.getUserName());
-            String hashPasswd = passwordEncoder.encode(salt + userPasswdRequest.getNewPasswd());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashPasswd = passwordEncoder.encode(userPasswdRequest.getNewPasswd());
 
-            foundedUser.setSalt(salt);
-            foundedUser.setPassword(hashPasswd);
+        existingUser.setPassword(hashPasswd);
 
-            userdao.save(foundedUser);
+        userdao.save(existingUser);
 
-            response.put("id", String.valueOf(foundedUser.getId()));
-            response.put("url", "/users/" + foundedUser.getId());
-
-        }
-        return response;
-    }
+        return ResponseEntity.ok(new StandardResponse(
+                HttpStatus.OK.value(),
+                "Password updated successfully",
+                Map.of("id", existingUser.getId(), "url", "/users/" + existingUser.getId())
+                ));
+}
 
 }

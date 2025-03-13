@@ -3,22 +3,22 @@
 
     <form [formGroup]="form">
       <div id="imgpanel">
-        <img [src]="imageempurl" class="rounded-circle">
+        <img [src]="imageempurl" class="rounded-circle" alt="">
         <input id="userImage" hidden="hidden" (change)="selectImage($event)" type="file" formControlName="photo">
 
-        <button type="button" class="btn btn-colour text-white" id="selectbutton"
+        <button type="button" class="btn btn-dark " id="selectbutton"
                 (click)="document.getElementById('userImage')?.click()">
           Select
         </button>
-        <button type="button" class="btn btn-colour text-white" id="clearbutton" (click)="clearImage()">Clear</button>
+        <button type="button" class="btn btn-dark " id="clearbutton" (click)="clearImage()">Clear</button>
       </div>
 
-      <mat-form-field appearance="outline" class="me-3" style="width: 66%">
+      <mat-form-field appearance="outline" class="me-3" style="width: 65%">
         <mat-label>Number</mat-label>
         <input matInput readonly formControlName="number">
       </mat-form-field>
 
-      <button type="button" class="btn btn-colour text-white pt-2 pb-2" (click)="getLastEmpCode()"
+      <button type="button" class="btn btn-dark  pt-2 pb-2" (click)="getLastEmpCode()"
               [disabled]="disableGenerateNo">Generate Number
       </button>
 
@@ -84,8 +84,8 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Assignment Date</mat-label>
-        <input matInput [matDatepicker]="assdate" [readonly]="true" formControlName="doassignment">
-        <mat-datepicker-toggle matIconSuffix [for]="assdate" [disabled]="true"></mat-datepicker-toggle>
+        <input matInput [matDatepicker]="assdate" [max]="doaMaxDate" formControlName="doassignment">
+        <mat-datepicker-toggle matIconSuffix [for]="assdate" ></mat-datepicker-toggle>
         <mat-datepicker #assdate></mat-datepicker>
       </mat-form-field>
 
@@ -115,16 +115,16 @@
       </mat-form-field>
 
       <div id="butpanel">
-        <button type="button" class="btn btn-colour btn-lg" (click)="add()"
+        <button type="button" class="btn btn-dark btn-lg" (click)="add()"
                 [disabled]="!(enaadd && hasInsertAuthority)">Add
         </button>
-        <button type="button" class="btn btn-colour btn-lg" (click)="update()"
+        <button type="button" class="btn btn-dark btn-lg" (click)="update()"
                 [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update
         </button>
-        <button type="button" class="btn btn-colour btn-lg" (click)="delete()"
+        <button type="button" class="btn btn-dark btn-lg" (click)="delete()"
                 [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete
         </button>
-        <button type="button" class="btn btn-colour btn-lg" (click)="clear()">Clear</button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="clear()">Clear</button>
       </div>
 
     </form>
@@ -150,10 +150,10 @@
           <option *ngFor="let designation of designations" [value]="designation.id">{{ designation.name }}</option>
         </select>
 
-        <button class="btn btn-primary" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
+        <button class="btn btn-dark" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
           <mat-icon style="padding-top: 7px">search</mat-icon>
         </button>
-        <button class="btn btn-primary" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
+        <button class="btn btn-dark" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
           Clear &nbsp; &nbsp;
         </button>
       </div>
@@ -171,7 +171,7 @@
           <ng-container *ngIf="column === 'photo'; else checkStatus ">
             <img
               [src]="uiassist.getProperty(element, binders[i]) ? uiassist.getProperty(element, binders[i]) : defaultProfile"
-              class="m-2 rounded-circle"
+              class="my-2 rounded-circle"
               width="50" height="50" alt="Photo"/>
           </ng-container>
 

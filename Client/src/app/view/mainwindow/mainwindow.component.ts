@@ -1,7 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {AuthorizationManager} from "../../service/authorizationmanager";
-import {DarkModeService} from "../../service/DarkModeService";
+import {AuthorizationManager} from "../../service/auth/authorizationmanager";
 import {MatMenuTrigger} from "@angular/material/menu";
 
 @Component({
@@ -9,10 +8,11 @@ import {MatMenuTrigger} from "@angular/material/menu";
   templateUrl: './mainwindow.component.html',
   styleUrls: ['./mainwindow.component.css']
 })
-export class MainwindowComponent {
+export class MainwindowComponent implements OnInit{
 
-  opened: boolean = true;
+  opened = true;
 
+  isNavigationActive = false;
   menuGroup: any[] = [];
 
   // Set Mat icons you need to add to Menus
@@ -28,24 +28,22 @@ export class MainwindowComponent {
     'User': 'event_note',
     'Privilege': 'assignment',
     'Class': 'schedule',
-    'Inventory': 'description'
+    'Material': 'description'
   };
-  userImage: string = 'assets/default.png'
-
-  constructor(private router: Router, public authService: AuthorizationManager, public darkModeSevice: DarkModeService) {
+  userImage = 'assets/default.png'
+  activeRole="";
+  constructor(private router: Router, public authorizationManager: AuthorizationManager) {
   }
 
   logout(): void {
-    this.router.navigateByUrl("login")
-    this.authService.clearUsername();
-    this.authService.clearMenuState();
-    localStorage.removeItem("Authorization");
-    localStorage.removeItem("employee");
+    this.authorizationManager.logout();
+    // this.router.navigateByUrl("login")
+    // this.authService.clearUsername();
+    // this.authService.clearMenuState();
+    // localStorage.removeItem("Authorization");
+    // localStorage.removeItem("employee");
   }
 
-  // Check that the logged user has the permission to view and then set Visible menu or else set not-visible menu
-  isExpanded: boolean = false;
-  panelExpanded: boolean = false;
 
   isMenuVisible(category: string): boolean {
     let isVisible = true;
@@ -60,18 +58,16 @@ export class MainwindowComponent {
     return isVisible;
   }
 
-  async ngOnInit(): Promise<void> {
-    this.menuGroup = this.authService.getNavListItem();
-    await this.authService.getAuth(this.authService.getUsername());
-    this.userImage = this.authService.getUserProfile();
-
+   ngOnInit() {
+    this.menuGroup = this.authorizationManager.getNavListItem();
+    this.authorizationManager.getAuth(this.authorizationManager.getUsername());
+    this.userImage = this.authorizationManager.getUserProfile();
+     // @ts-ignore
+     this.activeRole = this.authorizationManager.getRoles()[0].name
   }
 
-  protected readonly event = event;
 
-  show(event: any) {
-    console.log(event)
-  }
+
   private closeTimeout: any;
 
   // Open the menu
@@ -105,26 +101,15 @@ export class MainwindowComponent {
   }
 
 
-  isNavigationActive = false;
-  // menuItems = [
-  //   { label: 'Home', isActive: false },
-  //   { label: 'About', isActive: false },
-  //   { label: 'Services', isActive: false },
-  //   { label: 'Contact', isActive: false },
-  // ];
 
   toggleMenu(): void {
     this.isNavigationActive = !this.isNavigationActive;
   }
 
-  // activateLink(item: any): void {
-  //   this.menuItems.forEach(menuItem => menuItem.isActive = false);
-  //   item.isActive = true;
-  // }
+  checkIsAdmin() {
+    return localStorage.getItem("username") !="Admin"
+  }
 }
 
 
-// admMenuItems = this.authService.Admin;
-// acdMenuItems = this.authService.Academic;
-// regMenuItems = this.authService.Registration;
-// clsMenuItems = this.authService.Class;
+

@@ -5,7 +5,7 @@ mat-toolbar {
   margin-left: 28px;
   /*margin-right: 15px;*/
   /*border-radius: 30px;*/
-  background-color: #f9f9f9;
+  background-color: #f3f5fa;
 
 }
 
@@ -15,9 +15,19 @@ mat-toolbar-row {
   width: 100%;
   /*border-radius: 30px;*/
   align-items: center;
-  background-color: #f9f9f9 !important;
+  background-color: #ffffff !important;
 }
+mat-sidenav-content{
+  background-color: #f3f5fa;
+  border-radius:30px !important;
+}
+mat-sidenav-container{
+  background-color: #f3f5fa;
+  border: 5px solid #51575d !important;
+  border-left:none !important;
+  border-radius:30px !important;
 
+}
 .toolbar-left {
   display: flex;
   justify-content: flex-start;
@@ -66,11 +76,11 @@ mat-toolbar-row {
 }
 
 mat-icon {
-  color: #f9f9f9;
+  color: #f3f5fa;
 }
 
 ::ng-deep .mdc-list-item__primary-text {
-  /*color: #f9f9f9 !important;*/
+  /*color: #f3f5fa !important;*/
 }
 
 mat-sidenav-container {
@@ -94,7 +104,7 @@ mat-toolbar mat-icon {
 mat-sidenav a {
   font-size: 14px;
   text-decoration: none;
-  color: #f9f9f9;
+  color: #f3f5fa;
 }
 
 mat-sidenav mat-icon {
@@ -186,7 +196,7 @@ mat-sidenav {
 
 .main-menu-item:hover,
 .main-menu-item.hovered {
-  background-color: #f9f9f9;
+  background-color: #f3f5fa;
 }
 
 .main-menu-item:nth-child(1), .main-menu-item:nth-child(4) {
@@ -199,7 +209,7 @@ mat-sidenav {
   width: 100%;
   display: flex;
   text-decoration: none;
-  color: #f9f9f9;
+  color: #f3f5fa;
 }
 
 .main-menu-item:hover *,
@@ -247,7 +257,7 @@ mat-sidenav {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px 35px 0 10px #f9f9f9;
+  box-shadow: 35px 35px 0 10px #f3f5fa;
   pointer-events: none;
 }
 
@@ -261,7 +271,7 @@ mat-sidenav {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px -35px 0 10px #f9f9f9;
+  box-shadow: 35px -35px 0 10px #f3f5fa;
   pointer-events: none;
 }
 
@@ -276,7 +286,7 @@ mat-sidenav {
   border: none;
   box-shadow: none;
   width: 200px;
-  color: #f9f9f9 !important;
+  color: #f3f5fa !important;
 }
 
 
@@ -301,7 +311,7 @@ mat-sidenav {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px 35px 0 10px #f9f9f9;
+  box-shadow: 35px 35px 0 10px #f3f5fa;
   pointer-events: none;
 }
 
@@ -314,12 +324,12 @@ mat-sidenav {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px -35px 0 10px #f9f9f9;
+  box-shadow: 35px -35px 0 10px #f3f5fa;
   pointer-events: none;
 }
 
 .sub-menu-item:hover {
-  background-color: #f9f9f9;
+  background-color: #f3f5fa;
 }
 
 .sub-menu-item {
@@ -333,26 +343,26 @@ mat-sidenav {
 }
 
 .sub-menu-item a {
-  color: #f9f9f9
+  color: #f3f5fa
 }
 
 .accordion-item-header, .sub-menu-item {
   width: 250px;
-  color: #f9f9f9;
+  color: #f3f5fa;
   position: relative;
   list-style: none;
   border-top-left-radius: 30px;
   border-bottom-left-radius: 30px;
 }
 .accordion-item-header *{
-  color: #f9f9f9;
+  color: #f3f5fa;
   padding-top: 5px !important;
 
 }
 .accordion-item-header:hover {
-  background: #f9f9f9 !important;
+  background: #f3f5fa !important;
   padding: 0 !important;
-  /*color: #f9f9f9 !important;*/
+  /*color: #f3f5fa !important;*/
 }
 
 .mat-menu-span {
@@ -362,7 +372,7 @@ mat-sidenav {
 .active-link{
   width: 100%;
   height: 60px;
-  background-color: #f9f9f9;
+  background-color: #f3f5fa;
   border-radius: 40px 0 0 40px;
   .mat-icon {
     color: black;
@@ -383,7 +393,7 @@ mat-sidenav {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px -35px 0 10px #f9f9f9;
+  box-shadow: 35px -35px 0 10px #f3f5fa;
   pointer-events: none;
 }
 .active-link-2  a::after {
@@ -395,7 +405,7 @@ mat-sidenav {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px -35px 0 10px #f9f9f9;
+  box-shadow: 35px -35px 0 10px #f3f5fa;
   pointer-events: none;
 }
 
@@ -408,7 +418,7 @@ mat-sidenav {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px 35px 0 10px #f9f9f9;
+  box-shadow: 35px 35px 0 10px #f3f5fa;
   pointer-events: none;
 }
 .active-link-2  a::before {
@@ -420,13 +430,13 @@ mat-sidenav {
   height: 50px;
   background-color: transparent;
   border-radius: 50%;
-  box-shadow: 35px 35px 0 10px #f9f9f9;
+  box-shadow: 35px 35px 0 10px #f3f5fa;
   pointer-events: none;
 }
 .active-link-2{
   width: 100%;
   height: 63px;
-  background-color: #f9f9f9;
+  background-color: #f3f5fa;
   border-radius: 40px 0 0 40px;
   .mat-icon {
     color: black;
@@ -434,4 +444,22 @@ mat-sidenav {
   .title {
     color: black;
   }
+}
+.lbl-role {
+  font-size: 14px;
+  color: #8d8d8d;
+  margin-top:-5px;
+}
+lbl-user {
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
+  margin-bottom:-5px;
+}
+
+.proinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content:center;
 }

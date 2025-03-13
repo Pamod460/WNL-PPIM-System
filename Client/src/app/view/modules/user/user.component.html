@@ -1,17 +1,14 @@
-
-
-
 <!--</mat-grid-list>-->
-<app-common-layout  [formCol]="4" [viewCol]="8" [statusImageUrl]="imageurl" >
+<app-common-layout [formCol]="4" [viewCol]="8" [statusImageUrl]="imageurl">
   <div form>
 
     <form [formGroup]="form">
 
       <mat-form-field appearance="outline">
         <mat-label>Employee</mat-label>
-        <mat-select formControlName="employee" >
+        <mat-select formControlName="employee">
           <mat-option [value]="null" selected disabled>Not Selected</mat-option>
-          <mat-option *ngFor="let employee of employees" [value]="employee">{{employee.callingname}}</mat-option>
+          <mat-option *ngFor="let employee of employees" [value]="employee">{{ employee.callingname }}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -23,16 +20,18 @@
       <mat-form-field appearance="outline">
         <mat-label>Password</mat-label>
         <input matInput [type]="pwdhide  ? 'password' : 'text'" formControlName="password" autocomplete="new-password">
-        <button mat-icon-button matSuffix (click)="pwdhide = !pwdhide" [attr.aria-label]="'Hide password'" [disabled]="!isPwViewable" [attr.aria-pressed]="pwdhide">
-          <mat-icon>{{pwdhide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <button mat-icon-button matSuffix (click)="pwdhide = !pwdhide" [attr.aria-label]="'Hide password'"
+                [disabled]="!isPwViewable" [attr.aria-pressed]="pwdhide">
+          <mat-icon>{{ pwdhide ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Confirm Password</mat-label>
         <input matInput [type]="pwdconfhide  ? 'password' : 'text'" formControlName="confirmpassword">
-        <button mat-icon-button matSuffix (click)="pwdconfhide = !pwdconfhide" [attr.aria-label]="'Hide password'" [disabled]="!isConfPwViewable" [attr.aria-pressed]="pwdconfhide">
-          <mat-icon>{{pwdconfhide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <button mat-icon-button matSuffix (click)="pwdconfhide = !pwdconfhide" [attr.aria-label]="'Hide password'"
+                [disabled]="!isConfPwViewable" [attr.aria-pressed]="pwdconfhide">
+          <mat-icon>{{ pwdconfhide ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
       </mat-form-field>
 
@@ -44,8 +43,8 @@
       <div id="listtrnasfer">
 
         <div class="list">
-          <mat-selection-list  #availablelist>
-            <mat-list-option  multiple  *ngFor="let role of roles" [value]="role" >{{role.name}}</mat-list-option>
+          <mat-selection-list #availablelist>
+            <mat-list-option multiple *ngFor="let role of roles" [value]="role">{{ role.name }}</mat-list-option>
           </mat-selection-list>
         </div>
 
@@ -57,8 +56,9 @@
         </div>
 
         <div class="list">
-          <mat-selection-list  formControlName="userroles" #selectedlist>
-            <mat-list-option  *ngFor="let userrole of userroles" [value]="userrole">{{userrole.role.name}}</mat-list-option>
+          <mat-selection-list formControlName="userroles" #selectedlist>
+            <mat-list-option *ngFor="let userrole of userroles" [value]="userrole">{{ userrole.role.name }}
+            </mat-list-option>
           </mat-selection-list>
         </div>
 
@@ -79,25 +79,31 @@
       <mat-form-field appearance="outline">
         <mat-label>User Status</mat-label>
         <mat-select formControlName="usestatus">
-          <mat-option selected >Not Selected</mat-option>
-          <mat-option  *ngFor="let userstatus of userstatues" [value]="userstatus">{{userstatus.name}}</mat-option>
+          <mat-option selected>Not Selected</mat-option>
+          <mat-option *ngFor="let userstatus of userstatues" [value]="userstatus">{{ userstatus.name }}</mat-option>
         </mat-select>
       </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>User Type</mat-label>
         <mat-select formControlName="usetype">
-          <mat-option selected >Not Selected</mat-option>
-          <mat-option  *ngFor="let usertype of usertypes" [value]="usertype">{{usertype.name}}</mat-option>
+          <mat-option selected>Not Selected</mat-option>
+          <mat-option *ngFor="let usertype of usertypes" [value]="usertype">{{ usertype.name }}</mat-option>
         </mat-select>
       </mat-form-field>
 
       <div id="butpanel">
 
-        <button type="button" class="btn btn-secondary btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
-        <button type="button" class="btn btn-secondary btn-lg" (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update</button>
-        <button type="button" class="btn btn-secondary btn-lg" (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete</button>
-        <button type="button" class="btn btn-secondary btn-lg" (click)="clear()">Clear</button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">
+          Add
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="update()"
+                [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="delete()"
+                [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="clear()">Clear</button>
 
       </div>
     </form>
@@ -113,14 +119,16 @@
         <mat-cell *matCellDef="let element">
           <ng-container *ngIf="column === 'photo'; else checkStatus ">
             <img
-              [src]="uiassist.getProperty(element, binders[i]) ? uiassist.getProperty(element, binders[i]) : defaultProfile" class="m-2 rounded-circle"
+              [src]="uiassist.getProperty(element, binders[i]) ? uiassist.getProperty(element, binders[i]) : defaultProfile"
+              class="my-2 rounded-circle"
               width="50" height="50" alt="Photo"/>
           </ng-container>
 
           <ng-template #checkStatus>
             <ng-container *ngIf="column === 'userstatus'; else textCell">
                   <span class="pt-2 mt-1">
-                    <mat-icon style="font-size: medium" [ngClass]= "checkEmpStatus(uiassist.getProperty(element, binders[i]))">fiber_manual_record</mat-icon>
+                    <mat-icon style="font-size: medium"
+                              [ngClass]="checkEmpStatus(uiassist.getProperty(element, binders[i]))">fiber_manual_record</mat-icon>
                   </span>
               {{ uiassist.getProperty(element, binders[i]) }}
             </ng-container>
@@ -162,14 +170,15 @@
 
     </mat-table>
 
-    <mat-paginator [length]="20" [pageSize]="5" [pageSizeOptions]="[3,5,10,20]" ></mat-paginator>
+    <mat-paginator [length]="20" [pageSize]="5" [pageSizeOptions]="[3,5,10,20]"></mat-paginator>
 
   </div>
 
   <div search>
     <form [formGroup]="ssearch" class="form-container">
       <div class="input-group mb-3">
-        <input type="text" formControlName="ssemployee" class="form-control" placeholder="Employee Name" style="border-radius: 8px 0 0 8px">
+        <input type="text" formControlName="ssemployee" class="form-control" placeholder="Employee Name"
+               style="border-radius: 8px 0 0 8px">
         <input type="text" formControlName="ssusername" class="form-control" placeholder="Username">
         <select formControlName="ssrole" class="form-select role-drop-down">
           <option [value]="null" selected disabled>Roles</option>
@@ -180,10 +189,10 @@
           <option *ngFor="let userstatus of userstatues" [value]="userstatus.id">{{ userstatus.name }}</option>
         </select>
 
-        <button class="btn btn-primary" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
+        <button class="btn btn-dark" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
           <mat-icon style="padding-top: 7px">search</mat-icon>
         </button>
-        <button class="btn btn-primary" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
+        <button class="btn btn-dark" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
           Clear &nbsp; &nbsp;
         </button>
       </div>

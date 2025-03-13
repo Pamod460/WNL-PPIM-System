@@ -1,24 +1,25 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Employee} from "../../../entity/employee";
-import {EmployeeService} from "../../../service/employeeservice";
+import {EmployeeService} from "../../../service/employee/employee.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
-import {FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {UiAssist} from "../../../util/ui/ui.assist";
 import {Gender} from "../../../entity/gender";
 import {Designation} from "../../../entity/designation";
-import {GenderService} from "../../../service/genderservice";
-import {DesignationService} from "../../../service/designationservice";
+import {GenderService} from "../../../service/employee/gender.service";
+import {DesignationService} from "../../../service/employee/designation.service";
 import {MatDialog} from "@angular/material/dialog";
 import {MessageComponent} from "../../../util/dialog/message/message.component";
 import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
-import {Empstatusservice} from "../../../service/empstatusservice";
+import {EmpstatusService} from "../../../service/employee/empstatus.service";
 import {Empstatus} from "../../../entity/empstatus";
-import {RegexService} from "../../../service/regexservice";
+import {RegexService} from "../../../service/Shared/regex.service";
 import {DatePipe} from "@angular/common";
-import {AuthorizationManager} from "../../../service/authorizationmanager";
+import {AuthorizationManager} from "../../../service/auth/authorizationmanager";
 import {Emptype} from "../../../entity/emptype";
-import {Emptypeservice} from "../../../service/emptypeservice";
+import {EmptypeService} from "../../../service/employee/emptype.service";
+import {ToastrService} from "ngx-toastr";
 
 
 @Component({
@@ -27,20 +28,20 @@ import {Emptypeservice} from "../../../service/emptypeservice";
   styleUrls: ['./employee.component.css']
 })
 
-export class EmployeeComponent {
+export class EmployeeComponent implements OnInit {
+  protected readonly document = document;
 
+  columns: string[] = ['photo', 'number', 'fullname', 'nic', 'dobirth', 'designation', 'empstatus'];
+  headers: string[] = ['Profile', 'Code', 'Full Name', 'NIC', 'Date of Birth', 'Designation', 'Status'];
+  binders: string[] = ['photo', 'number', 'fullname', 'nic', 'dobirth', 'designation.name', 'empstatus.name'];
 
-  columns: string[] = ['photo', 'number', 'fullname', 'nic','dobirth', 'designation','empstatus'];
-  headers: string[] = ['Profile', 'Code', 'Full Name','NIC','Date of Birth', 'Designation','Status'];
-  binders: string[] = ['photo', 'number', 'fullname','nic','dobirth', 'designation.name','empstatus.name'];
-
-  defaultProfile: string = 'assets/default.png';
+  defaultProfile = 'assets/default.png';
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
   public form!: FormGroup;
 
-  disableModify: boolean = false;
+  disableModify = false;
   disableGenerateNo = false;
 
   employee!: Employee;
@@ -48,71 +49,58 @@ export class EmployeeComponent {
 
   selectedrow: any;
 
-  employees: Array<Employee> = [];
+  employees: Employee[] = [];
   data!: MatTableDataSource<Employee>;
-  imageurl: string = '';
+  imageurl = '';
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  imageempurl: string = 'assets/default.png';
+  imageempurl = 'assets/default.png';
 
-  enaadd: boolean = false;
-  enaupd: boolean = false;
-  enadel: boolean = false;
+  enaadd = false;
+  enaupd = false;
+  enadel = false;
 
-  hasInsertAuthority: boolean = false;
-  hasUpdateAuthority: boolean = false;
-  hasDeleteAuthority: boolean = false;
+  hasInsertAuthority = false;
+  hasUpdateAuthority = false;
+  hasDeleteAuthority = false;
 
-  genders: Array<Gender> = [];
-  designations: Array<Designation> = [];
-  employeestatuses: Array<Empstatus> = [];
-  employeetypes: Array<Emptype> = [];
+  genders: Gender[] = [];
+  designations: Designation[] = [];
+  employeestatuses: Empstatus[] = [];
+  employeetypes: Emptype[] = [];
 
   regexes: any;
 
   uiassist: UiAssist;
 
-  minDate : Date;
-  maxDate : Date;
-
+  minDate: Date;
+  maxDate: Date;
+  doaMaxDate: Date = new Date();
   lastEmpCode: any = "";
 
-  today:Date = new Date();
+  today: Date = new Date();
 
   constructor(
-
-    private es: EmployeeService,
-    private gs: GenderService,
-    private ds: DesignationService,
-    private ss: Empstatusservice,
-    private et: Emptypeservice,
-    private rs: RegexService,
-    private fb: FormBuilder,
-    private dg: MatDialog,
-    private dp: DatePipe,
-    public authService:AuthorizationManager) {
-
-
+    private employeeService: EmployeeService,
+    private genderService: GenderService,
+    private designationService: DesignationService,
+    private empstatusService: EmpstatusService,
+    private emptypeService: EmptypeService,
+    private regexService: RegexService,
+    private formBuilder: FormBuilder,
+    private matDialog: MatDialog,
+    private datePipe: DatePipe,
+    public authService: AuthorizationManager,
+    private toastrService: ToastrService
+  ) {
     this.uiassist = new UiAssist(this);
-
-    this.csearch = this.fb.group({
-      "csnumber": new FormControl(),
-      "cscallingname": new FormControl(),
-      "csgender": new FormControl(),
-      "csdesignation": new FormControl(),
-      "csname": new FormControl(),
-      "csmodi": new FormControl(),
-    });
-
-    this.ssearch = this.fb.group({
+    this.ssearch = this.formBuilder.group({
       "ssnumber": new FormControl(),
-      "ssfullname": new FormControl('',Validators.pattern("^([A-Z][a-z]*[.]?[\s]?)*([A-Z][a-z]*)$")),
+      "ssfullname": new FormControl('', Validators.pattern("^([A-Z][a-z]*[.]?[\s]?)*([A-Z][a-z]*)$")),
       "ssgender": new FormControl(),
       "ssdesignation": new FormControl(),
       "ssnic": new FormControl()
     });
-
-
-    this.form = this.fb.group({
+    this.form = this.formBuilder.group({
       "number": new FormControl('', [Validators.required]),
       "fullname": new FormControl('', [Validators.required]),
       "callingname": new FormControl('', [Validators.required]),
@@ -144,23 +132,23 @@ export class EmployeeComponent {
 
     this.createView();
 
-    this.gs.getAllList().then((gens: Gender[]) => {
+    this.genderService.getAllList().subscribe((gens: Gender[]) => {
       this.genders = gens;
     });
 
-    this.ds.getAllList().then((dess: Designation[]) => {
+    this.designationService.getAllList().subscribe((dess: Designation[]) => {
       this.designations = dess;
     });
 
-    this.ss.getAllList().then((stes: Empstatus[]) => {
+    this.empstatusService.getAllList().subscribe((stes: Empstatus[]) => {
       this.employeestatuses = stes;
     });
 
-    this.et.getAllList().then((typs: Emptype[]) => {
+    this.emptypeService.getAllList().subscribe((typs: Emptype[]) => {
       this.employeetypes = typs;
     });
 
-    this.rs.get('employee').then((regs: []) => {
+    this.regexService.get('employee').subscribe((regs: []) => {
       this.regexes = regs;
       this.createForm();
     });
@@ -173,7 +161,6 @@ export class EmployeeComponent {
   }
 
   createView() {
-    this.imageurl = 'assets/pending.gif';
     this.loadTable("");
   }
 
@@ -189,30 +176,32 @@ export class EmployeeComponent {
     this.form.controls['address'].setValidators([Validators.required, Validators.pattern(this.regexes['address']['regex'])]);
     this.form.controls['mobile'].setValidators([Validators.required, Validators.pattern(this.regexes['mobile']['regex'])]);
     this.form.controls['land'].setValidators([Validators.pattern(this.regexes['land']['regex'])]);
-    this.form.controls['email'].setValidators([Validators.required,Validators.pattern(this.regexes['email']['regex'])]);
+    this.form.controls['email'].setValidators([Validators.required, Validators.pattern(this.regexes['email']['regex'])]);
     this.form.controls['designation'].setValidators([Validators.required]);
     this.form.controls['doassignment'].setValidators([Validators.required]);
     this.form.controls['description'].setValidators([Validators.pattern(this.regexes['description']['regex'])]);
     this.form.controls['emptype'].setValidators([Validators.required]);
     this.form.controls['empstatus'].setValidators([Validators.required]);
 
-    Object.values(this.form.controls).forEach( control => { control.markAsTouched(); } );
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
+    });
 
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
       control.valueChanges.subscribe(value => {
 
-          if(controlName == "nic"){
-            if(this.form.controls[controlName].valid){
+          if (controlName == "nic") {
+            if (this.form.controls[controlName].valid) {
               this.form.controls['dobirth'].setValue(this.getBirthdayFromNIC(value).birthDate);
-            }else{
+            } else {
               this.form.controls['dobirth'].setValue("");
             }
 
           }
           // @ts-ignore
           if (controlName == "dobirth" || controlName == "doassignment")
-            value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
+            value = this.datePipe.transform(new Date(value), 'yyyy-MM-dd');
 
           if (this.oldemployee != undefined && control.valid) {
             // @ts-ignore
@@ -228,10 +217,9 @@ export class EmployeeComponent {
       );
 
     }
-    this.form.controls['doassignment'].setValue( new Date(this.today.getFullYear() , this.today.getMonth(), this.today.getDate()));
-    this.disableGenerateNo =false;
+    this.disableGenerateNo = false;
 
-    this.enableButtons(true,false,false);
+    this.enableButtons(true, false, false);
   }
 
   enableButtons(add: boolean, upd: boolean, del: boolean): void {
@@ -248,17 +236,15 @@ export class EmployeeComponent {
 
   loadTable(query: string) {
 
-    this.es.getAll(query)
-      .then((emps: Employee[]) => {
+    this.employeeService.getAll(query).subscribe({
+      next: (emps: Employee[]) => {
         this.employees = emps;
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-      .finally(() => {
         this.data = new MatTableDataSource(this.employees);
         this.data.paginator = this.paginator;
-      });
+      }, error: (error) => {
+        console.log(error);
+      }
+    });
 
   }
 
@@ -270,11 +256,11 @@ export class EmployeeComponent {
 
     const sserchdata = this.ssearch.getRawValue();
 
-    let number = sserchdata.ssnumber;
-    let fullname = sserchdata.ssfullname;
-    let nic = sserchdata.ssnic;
-    let genderid = sserchdata.ssgender;
-    let designationid = sserchdata.ssdesignation;
+    const number = sserchdata.ssnumber;
+    const fullname = sserchdata.ssfullname;
+    const nic = sserchdata.ssnic;
+    const genderid = sserchdata.ssgender;
+    const designationid = sserchdata.ssdesignation;
 
     let query = "";
 
@@ -293,7 +279,7 @@ export class EmployeeComponent {
 
   btnSearchClearMc(): void {
 
-    const confirm = this.dg.open(ConfirmComponent, {
+    const confirm = this.matDialog.open(ConfirmComponent, {
       width: '400px',
       data: {heading: "Clear Search", message: "Are You Sure You Want To Perform this Operation?"}
     });
@@ -310,7 +296,7 @@ export class EmployeeComponent {
   selectImage(e: any): void {
     console.log(e.target.files[0]);
     if (e.target.files) {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
       reader.onload = (event: any) => {
         this.imageempurl = event.target.result;
@@ -322,15 +308,17 @@ export class EmployeeComponent {
   clearImage(): void {
     this.imageempurl = 'assets/default.png';
     this.form.controls['photo'].markAsDirty();
+    // this.form.controls['photo'].setValue(null);
+
   }
 
 
   add() {
 
-    let errors = this.getErrors(['photo','land','description']);
+    const errors = this.getErrors(['photo', 'land', 'description']);
 
     if (errors != "") {
-      const errmsg = this.dg.open(MessageComponent, {
+      const errmsg = this.matDialog.open(MessageComponent, {
         width: '500px',
         data: {heading: "Errors - Employee Add ", message: "You have following Errors <br> " + errors}
       });
@@ -342,15 +330,19 @@ export class EmployeeComponent {
     } else {
 
       this.employee = this.form.getRawValue();
-      this.employee.photo = btoa(this.imageempurl);
+      if (this.imageempurl != 'assets/default.png') {
+        this.employee.photo = btoa(this.imageempurl);
+      } else {
+        this.employee.photo = null;
+      }
 
-      let empdata: string = "";
+      let empdata = "";
 
       empdata = empdata + "<br>Number is : " + this.employee.number;
       empdata = empdata + "<br>Fullname is : " + this.employee.fullname;
       empdata = empdata + "<br>Callingname is : " + this.employee.callingname;
 
-      const confirm = this.dg.open(ConfirmComponent, {
+      const confirm = this.matDialog.open(ConfirmComponent, {
         width: '500px',
         data: {
           heading: "Employee Add",
@@ -358,50 +350,21 @@ export class EmployeeComponent {
         }
       });
 
-      let addstatus: boolean = false;
-      let addmessage: string = "Server Not Found";
-
       confirm.afterClosed().subscribe(async result => {
         if (result) {
-          this.es.add(this.employee).then((responce: [] | undefined) => {
-            if (responce != undefined) { // @ts-ignore
-              console.log("Add-" + responce['id'] + "-" + responce['url'] + "-" + (responce['errors'] == ""));
-              // @ts-ignore
-              addstatus = responce['errors'] == "";
-              console.log("Add Sta-" + addstatus);
-              if (!addstatus) { // @ts-ignore
-                addmessage = responce['errors'];
-              }
-            } else {
-              console.log("undefined");
-              addstatus = false;
-              addmessage = "Content Not Found"
+          if (this.employee.land !== undefined || this.employee.land === "") {
+            this.employee.land = null;
+          }
+          this.employeeService.add(this.employee).subscribe({
+            next: (response) => {
+              this.toastrService.success(response.message).onShown.subscribe(() => {
+                this.disableGenerateNo = false;
+                this.loadTable("");
+                this.resetForm()
+              })
+            }, error: (error) => {
+              this.toastrService.error(error.error.data.message)
             }
-          }).finally(() => {
-
-            if (addstatus) {
-              addmessage = "Successfully Saved";
-              this.form.reset();
-              this.form.controls['doassignment'].setValue( new Date(this.today.getFullYear() , this.today.getMonth(), this.today.getDate()));
-              this.form.controls['description'].setErrors({invalid : true});
-
-              this.clearImage();
-              Object.values(this.form.controls).forEach(control => {
-                control.markAsTouched();
-              });
-              this.loadTable("");
-            }
-
-            const stsmsg = this.dg.open(MessageComponent, {
-              width: '500px',
-              data: {heading: "Status -Employee Add", message: addmessage}
-            });
-
-            stsmsg.afterClosed().subscribe(async result => {
-              if (!result) {
-                return;
-              }
-            });
           });
         }
       });
@@ -409,40 +372,36 @@ export class EmployeeComponent {
   }
 
 
-  getErrors(optionalFields?: string []): string {
-
-    let errors: string = "";
+  // @ts-ignore
+  getErrors(optionalFields?: string[]): string {
+    let errors = "";
 
     for (const controlName in this.form.controls) {
-      if (!optionalFields?.includes(controlName)) {
-        const control = this.form.controls[controlName];
-        if (control.errors) {
+      const control = this.form.controls[controlName];
 
-          if (this.regexes[controlName] != undefined) {
-            errors = errors + "<br>" + this.regexes[controlName]['message'];
+      // Allow optional fields only if they are empty, but still validate if they contain a value
+      if (!optionalFields?.includes(controlName) || (control.value && control.errors)) {
+        if (control.errors) {
+          if (this.regexes[controlName] !== undefined) {
+            errors += "<br>" + this.regexes[controlName]['message'];
           } else {
-            errors = errors + "<br>Invalid " + controlName;
+            errors += "<br>Invalid " + controlName;
           }
         }
       }
     }
-
-    return errors;
   }
 
   fillForm(employee: Employee) {
 
-    this.enableButtons(false,true,true);
+    this.enableButtons(false, true, true);
     this.disableGenerateNo = true;
 
-    this.selectedrow=employee;
-    const loginEmployee = JSON.parse(localStorage.getItem('employee') || '');
-    console.log(loginEmployee.id,employee.id)
+    this.selectedrow = employee;
 
-    if (loginEmployee.id === employee.id) {
-      this.disableModify = true;
-    }else {
-      this.disableModify = false;
+    if (localStorage.getItem('employee')) {
+      const loginEmployee = JSON.parse(localStorage.getItem('employee') || '');
+      this.disableModify = loginEmployee.id === employee.id;
     }
 
     this.employee = JSON.parse(JSON.stringify(employee));
@@ -472,11 +431,11 @@ export class EmployeeComponent {
 
   getUpdates(): string {
 
-    let updates: string = "";
+    let updates = "";
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
       if (control.dirty) {
-        updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1)+" Changed";
+        updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1) + " Changed";
       }
     }
     return updates;
@@ -484,25 +443,25 @@ export class EmployeeComponent {
 
   update() {
 
-    let errors = this.getErrors(['photo','land','description']);
+    const errors = this.getErrors(['photo', 'land', 'description']);
 
     if (errors != "") {
-      const errmsg = this.dg.open(MessageComponent, {
+      const errmsg = this.matDialog.open(MessageComponent, {
         width: '500px',
         data: {heading: "Errors - Employee Update ", message: "You have the following Errors <br> " + errors}
       });
-      errmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+      errmsg.afterClosed().subscribe(async result => {
+        if (!result) {
+          return;
+        }
+      });
 
     } else {
 
-      let updates: string = this.getUpdates();
+      const updates: string = this.getUpdates();
 
       if (updates != "") {
-
-        let updstatus: boolean = false;
-        let updmessage: string = "Server Not Found";
-
-        const confirm = this.dg.open(ConfirmComponent, {
+        const confirm = this.matDialog.open(ConfirmComponent, {
           width: '450px',
           data: {
             heading: "Updates - Employee Update",
@@ -513,128 +472,97 @@ export class EmployeeComponent {
           if (result) {
             //console.log("EmployeeService.update()");
             this.employee = this.form.getRawValue();
-            if (this.employee.land !== undefined || this.employee.land === ""){
+            if (this.employee.land !== undefined || this.employee.land === "") {
               this.employee.land = null;
             }
 
-            if (this.form.controls['photo'].dirty)
-              this.employee.photo = btoa(this.imageempurl);
-
-            else this.employee.photo = this.oldemployee.photo
-
-            console.log(this.employee.photo.length);
-            this.employee.id = this.oldemployee.id;
-
-            this.es.update(this.employee).then((responce: [] | undefined) => {
-              if (responce != undefined) {
-                // @ts-ignore
-                updstatus = responce['errors'] == "";
-                if (!updstatus) { // @ts-ignore
-                  updmessage = responce['errors'];
-                }
+            if (this.form.controls['photo'].dirty) {
+              if (this.imageempurl != 'assets/default.png') {
+                this.employee.photo = btoa(this.imageempurl);
               } else {
-                updstatus = false;
-                updmessage = "Content Not Found"
+                this.employee.photo = null;
               }
-            } ).finally(() => {
-              if (updstatus) {
-                updmessage = "Successfully Updated";
-                this.form.reset();
-                this.disableGenerateNo = false;
-                this.clearImage();
-                Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-                this.loadTable("");
+            } else this.employee.photo = this.oldemployee.photo
+            this.employee.id = this.oldemployee.id;
+            this.employeeService.update(this.employee).subscribe({
+              next: (response) => {
+                this.toastrService.success(response.message).onShown.subscribe(() => {
+                  this.disableGenerateNo = false;
+                  this.resetForm()
+                  this.loadTable("");
+                })
+              }, error: (error) => {
+                this.toastrService.error(error.error.data.message)
               }
-
-              const stsmsg = this.dg.open(MessageComponent, {
-                width: '500px',
-                data: {heading: "Status -Employee Add", message: updmessage}
-              });
-              stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-
             });
           }
         });
-      }
-      else {
-        const updmsg = this.dg.open(MessageComponent, {
+      } else {
+        const updmsg = this.matDialog.open(MessageComponent, {
           width: '500px',
           data: {heading: "Confirmation - Employee Update", message: "Nothing Changed"}
         });
-        updmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+        updmsg.afterClosed().subscribe(async result => {
+          if (!result) {
+            return;
+          }
+        });
       }
     }
   }
 
   delete() {
-    const confirm = this.dg.open(ConfirmComponent, {
+    const confirm = this.matDialog.open(ConfirmComponent, {
       width: '450px',
       data: {
         heading: "Delete Confirmation",
         message: "Are you sure to Delete following Employee? <br> <br>" + this.employee.fullname
       }
     });
-
     confirm.afterClosed().subscribe(async result => {
       if (result) {
-        let delstatus: boolean = false;
-        let delmessage: string = "Server Not Found";
-
-        this.es.delete(this.employee.id).then((responce: [] | undefined) => {
-          console.log(responce);
-          if (responce != undefined) { // @ts-ignore
-            delstatus = responce['errors'] == "";
-            if (!delstatus) { // @ts-ignore
-              delmessage = responce['errors'];
-            }
-          } else {
-            delstatus = false;
-            delmessage = "Content Not Found"
+        this.employeeService.delete(this.employee.id).subscribe({
+          next: (response) => {
+            this.toastrService.success(response.message).onShown.subscribe(() => {
+              this.disableGenerateNo = false;
+              this.resetForm()
+              this.loadTable("");
+            })
+          }, error: (error) => {
+            this.toastrService.error(error.error.message)
           }
-        } ).finally(() => {
-          if (delstatus) {
-            delmessage = "Successfully Deleted";
-            this.form.reset();
-            this.disableGenerateNo = false;
-            this.clearImage();
-            Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-            this.loadTable("");
-          }
-
-          const stsmsg = this.dg.open(MessageComponent, {
-            width: '500px',
-            data: {heading: "Status - Employee Delete ", message: delmessage}
-          });
-          stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-
         });
       }
     });
   }
 
-  clear():void{
-
-    const confirm = this.dg.open(ConfirmComponent, {
+  clear(): void {
+    const confirm = this.matDialog.open(ConfirmComponent, {
       width: '400px',
       data: {
         heading: "Confirmation - Employee Clear",
         message: "Are you sure to Clear following Details ? <br> <br>"
       }
-    });
-
+    })
     confirm.afterClosed().subscribe(async result => {
       if (result) {
-        this.form.reset();
-        this.selectedrow = null;
-        this.createForm();
-        this.clearImage();
-        this.form.controls['description'].markAsPristine();
-        this.form.controls['doassignment'].markAsPristine();
+        this.resetForm()
       }
     });
   }
 
-  protected readonly document = document;
+  resetForm() {
+    this.form.reset();
+    this.selectedrow = null;
+    this.createForm();
+    this.clearImage();
+    this.form.controls['description'].markAsPristine();
+    this.form.controls['doassignment'].markAsPristine();
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
+    });
+    this.enableButtons(true, false, false);
+  }
 
   checkEmpStatus(statusId: string) {
     switch (statusId) {
@@ -650,9 +578,9 @@ export class EmployeeComponent {
   }
 
   getLastEmpCode() {
-    this.es.getLastEmpCode().subscribe(ecode=>{
+    this.employeeService.getLastEmpCode().subscribe(ecode => {
       console.log(ecode.code)
-      this.lastEmpCode =ecode.code
+      this.lastEmpCode = ecode.code
       this.form.controls["number"].setValue(this.lastEmpCode)
     });
 
@@ -660,7 +588,6 @@ export class EmployeeComponent {
 
   getBirthdayFromNIC(nic: string) {
     let year: number, dayOfYear: number;
-
     if (nic.length === 10 && /^[0-9]{9}[Vv]$/.test(nic)) {
       // Old NIC format (79XXXXXXXV)
       year = 1900 + parseInt(nic.substring(0, 2));
@@ -672,34 +599,21 @@ export class EmployeeComponent {
     } else {
       throw new Error("Invalid NIC format");
     }
-
     // Determine gender and adjust day of year for females
     const gender = dayOfYear > 500 ? 'Female' : 'Male';
     if (dayOfYear > 500) dayOfYear -= 500;
-
     // Leap year check
     const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
     const daysInMonth = [31, isLeapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
     // Convert day of year to month and date
     let month = 0;
     while (dayOfYear > daysInMonth[month]) {
       dayOfYear -= daysInMonth[month];
       month++;
     }
-
     // Format date correctly
     const birthDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayOfYear).padStart(2, '0')}`;
-    return { birthDate, gender };
+    return {birthDate, gender};
   }
 }
-
-
-
-
-
-
-
-
-
-
+// 699

@@ -2,11 +2,14 @@ mat-card {
   width: 100%;
   height: 100%;
   margin: 10px 10px -10px 10px;
+  border-radius: 10px;
 }
 
 mat-card-content {
   overflow: auto;
   height: 100%;
+  border-bottom-left-radius:10px !important;
+  border-bottom-right-radius:10px !important;
 }
 
 mat-card-title{
@@ -19,6 +22,8 @@ mat-card-title{
 mat-card-header {
   background-color: #51575d;
   color: #fff;
+  border-top-right-radius:10px !important;
+  border-top-left-radius:10px !important;
   /*display: flex;*/
   /*justify-content: center;*/
   /*align-items: center;*/

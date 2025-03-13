@@ -1,10 +1,14 @@
 package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collection;
 
+@Setter
+@Getter
 @Entity
 public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,22 +26,6 @@ public class Role {
     @JsonIgnore
     @OneToMany(mappedBy = "role", fetch = FetchType.EAGER)
     private Collection<Privilege> privileges;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -59,19 +47,4 @@ public class Role {
         return result;
     }
 
-    public Collection<Userrole> getUserroles() {
-        return userroles;
-    }
-
-    public void setUserroles(Collection<Userrole> userroles) {
-        this.userroles = userroles;
-    }
-
-    public Collection<Privilege> getPrivileges() {
-        return privileges;
-    }
-
-    public void setPrivileges(Collection<Privilege> privileges) {
-        this.privileges = privileges;
-    }
 }

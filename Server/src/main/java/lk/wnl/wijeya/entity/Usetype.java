@@ -1,10 +1,14 @@
 package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Collection;
 
+@Setter
+@Getter
 @Entity
 public class Usetype {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,22 +22,6 @@ public class Usetype {
     @JsonIgnore
     @OneToMany(mappedBy = "usetype")
     private Collection<User> users;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -55,11 +43,4 @@ public class Usetype {
         return result;
     }
 
-    public Collection<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Collection<User> users) {
-        this.users = users;
-    }
 }

@@ -4,7 +4,7 @@
 html, body {
   height: 100%;
   /*background-color: #7ff0e6*/
-  background-color: rgba(33, 53, 85, 0.8);
+  background-color: rgba(33, 53, 85, 0.8) !important;
 
 }
 
@@ -93,3 +93,19 @@ mat-form-field input {
 .text-secondary-light {
   color: #a2a3a9; /* Light gray */
 }
+.btn-colour{
+  background-color: #000000;
+  color: #ffffff;
+}
+.btn-colour:hover{
+  background-color: #ffffff;
+  color: #000000 !important;
+  border: 1px solid #000000;
+}
+.btn-colour:disabled{
+  background-color: #000000;
+  color: #ffffff;
+  pointer-events: none;
+  opacity: 0.9;
+}
+

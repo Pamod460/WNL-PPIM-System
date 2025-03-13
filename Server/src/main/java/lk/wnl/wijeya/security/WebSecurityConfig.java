@@ -18,7 +18,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -27,37 +26,40 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
+
     @Value("${jwt.secret}")
     private String jwtSecret;
 
     @Value("${jwt.expiration}")
     private int jwtExpiration;
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .csrf().disable()
-                .authorizeRequests()  // updated from authorizeHttpRequests()
-                .antMatchers("/Admin").hasRole("ADMIN")
-                .antMatchers("/").permitAll()
-                .anyRequest().authenticated()
-                .and()
+                .authorizeHttpRequests(auth -> auth
+                                .antMatchers("/Admin").hasRole("ADMIN")
+                                .antMatchers("/").permitAll()
+                                .anyRequest().authenticated()
+                )
                 .logout()
                 .permitAll()
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), wsJwtTokenUtil(), userService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new JwtAuthorizationFilter(authenticationManager(), wsJwtTokenUtil(), userService), JwtAuthenticationFilter.class)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // ensures stateless session
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(passwordEncoder())
-                .and()
+        .and()
                 .inMemoryAuthentication()
                 .withUser("Admin")
                 .password(passwordEncoder().encode("Admin1234"))
                 .roles("ACC");
+
     }
 
     @Bean
@@ -88,84 +90,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         return source;
     }
+
 }
-
-
-
-
-
-
-//@Configuration
-//@EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
-//public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-//
-//    @Autowired
-//    private UserService userService;
-//
-//
-//    @Value("${jwt.secret}")
-//    private String jwtSecret;
-//
-//    @Value("${jwt.expiration}")
-//    private int jwtExpiration;
-//
-//
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http.cors().and()
-//                .csrf().disable()
-//                .authorizeHttpRequests(auth -> auth
-//                                .antMatchers("/Admin").hasRole("ADMIN")
-//                                .antMatchers("/").permitAll()
-//                                .anyRequest().authenticated()
-//                )
-//                .logout()
-//                .permitAll()
-//                .and()
-//                .addFilterBefore(new JwtAuthenticationFilter(authenticationManager(), wsJwtTokenUtil(), userService), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterAfter(new JwtAuthorizationFilter(authenticationManager(), wsJwtTokenUtil(), userService), JwtAuthenticationFilter.class)
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//    }
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder())
-//        .and()
-//                .inMemoryAuthentication()
-//                .withUser("Admin")
-//                .password(passwordEncoder().encode("Admin1234"))
-//                .roles("ACC");
-//
-//    }
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//
-//    @Override
-//    @Bean
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
-//
-//    @Bean
-//    public JwtTokenUtil wsJwtTokenUtil() {
-//        return new JwtTokenUtil(jwtSecret, jwtExpiration);
-//    }
-//
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("http://localhost:4200");
-//        configuration.addAllowedMethod("*");
-//        configuration.addAllowedHeader("*");
-//
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//
-//        return source;
-//    }
-//
-//}
