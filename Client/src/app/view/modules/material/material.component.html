@@ -1,0 +1,194 @@
+<app-common-layout [statusImageUrl]="imageurl">
+  <div form>
+
+    <form [formGroup]="form">
+      <!-- Material Category -->
+      <mat-form-field appearance="outline">
+        <mat-label>Material Category</mat-label>
+        <mat-select formControlName="materialcategory">
+          <mat-option [value]="null">Not Selected</mat-option>
+          <mat-option *ngFor="let category of materialCategories" [value]="category">{{ category.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- Material Subcategory -->
+      <mat-form-field appearance="outline">
+        <mat-label>Material Subcategory</mat-label>
+        <mat-select formControlName="materialsubcategory">
+          <mat-option [value]="null" >Not Selected</mat-option>
+          <mat-option *ngFor="let subcategory of materialSubcategories" [value]="subcategory">{{ subcategory.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <!-- Code -->
+      <mat-form-field appearance="outline">
+        <mat-label>Code</mat-label>
+        <input matInput formControlName="code" required>
+      </mat-form-field>
+
+      <!-- Name -->
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" required>
+      </mat-form-field>
+
+      <!-- Quantity -->
+      <mat-form-field appearance="outline">
+        <mat-label>Quantity</mat-label>
+        <input matInput type="number" formControlName="quantity" required min="1">
+      </mat-form-field>
+
+      <!-- Re-order Point -->
+      <mat-form-field appearance="outline">
+        <mat-label>Re-order Point</mat-label>
+        <input matInput type="number" formControlName="rop" required min="0">
+      </mat-form-field>
+
+      <!-- Unit Price -->
+      <mat-form-field appearance="outline">
+        <mat-label>Unit Price</mat-label>
+        <input matInput type="number" formControlName="unitprice" required min="0">
+      </mat-form-field>
+      <!-- Unit Type -->
+      <mat-form-field appearance="outline">
+        <mat-label>Unit Type</mat-label>
+        <mat-select formControlName="unittype">
+          <mat-option value="">Not Selected</mat-option>
+          <mat-option *ngFor="let type of unitTypes" [value]="type">{{ type.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Material Status -->
+      <mat-form-field appearance="outline">
+        <mat-label>Material Status</mat-label>
+        <mat-select formControlName="materialstatus" >
+          <mat-option value="">Not Selected</mat-option>
+          <mat-option *ngFor="let status of materialStatuses" [value]="status">{{ status.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Description -->
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <input matInput formControlName="description">
+      </mat-form-field>
+
+      <!-- Date Introduced -->
+      <mat-form-field appearance="outline">
+        <mat-label>Date Introduced</mat-label>
+        <input matInput [matDatepicker]="dateIntroduced" formControlName="dointroduced">
+        <mat-datepicker-toggle matSuffix [for]="dateIntroduced"></mat-datepicker-toggle>
+        <mat-datepicker #dateIntroduced></mat-datepicker>
+      </mat-form-field>
+
+      <!-- Photo -->
+      <div id="imgpanel">
+        <img [src]="imageempurl" class="rounded-circle" alt="Photo" />
+        <input id="userImage" hidden (change)="selectImage($event)" type="file" formControlName="photo">
+
+        <button type="button" class="btn btn-dark" id="selectbutton" (click)="document.getElementById('userImage')?.click()">
+          Select
+        </button>
+        <button type="button" class="btn btn-dark" id="clearbutton" (click)="clearImage()">Clear</button>
+      </div>
+
+      <!-- Buttons -->
+      <div id="butpanel">
+        <button type="button" class="btn btn-dark btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update</button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete</button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="clear()">Clear</button>
+      </div>
+    </form>
+
+
+  </div>
+
+  <div search>
+    <form [formGroup]="ssearch" class="form-container">
+      <div class="input-group mb-3">
+        <input type="text" formControlName="name" class="form-control search-bar-items" placeholder=" Name"
+               style="border-radius: 40px 0 0 40px">
+
+        <input type="text" formControlName="code" class="form-control search-bar-items"
+               placeholder="Code">
+        <select formControlName="materialsubcategory" class="form-select gender-drop-down">
+          <option [value]="null" selected disabled>Subcategory</option>
+          <option *ngFor="let materialsubcategory of materialSubcategories" [value]="materialsubcategory.id">{{ materialsubcategory.name }}</option>
+        </select>
+
+        <select formControlName="materialstatus" class="form-select designation-drop-down">
+          <option [value]="null" selected disabled>Status</option>
+          <option *ngFor="let materialstatus of materialStatuses" [value]="materialstatus.id">{{ materialstatus.name }}</option>
+        </select>
+
+        <button class="btn btn-dark" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
+          <mat-icon style="padding-top: 7px">search</mat-icon>
+        </button>
+        <button class="btn btn-dark" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
+          Clear &nbsp; &nbsp;
+        </button>
+      </div>
+    </form>
+
+  </div>
+  <div view>
+
+    <mat-table [dataSource]="data">
+
+      <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+        <mat-header-cell *matHeaderCellDef class="table-header"> {{ headers[i] }}</mat-header-cell>
+
+        <mat-cell *matCellDef="let element">
+          <ng-container *ngIf="column === 'photo'; else checkStatus ">
+            <img
+              [src]="uiassist.getProperty(element, binders[i]) ? uiassist.getProperty(element, binders[i]) : defaultProfile"
+              class="m-2 rounded-circle"
+              width="50" height="50" alt="Photo"/>
+          </ng-container>
+
+          <ng-template #checkStatus>
+            <ng-container *ngIf="column === 'materialstatus'; else textCell">
+                  <span class="pt-2 mt-1">
+                    <mat-icon style="font-size: medium"
+                              [ngClass]="checkMatStatus(uiassist.getProperty(element, binders[i]))">fiber_manual_record</mat-icon>
+                  </span>
+              {{ uiassist.getProperty(element, binders[i]) }}
+            </ng-container>
+          </ng-template>
+          <ng-template #textCell>
+            {{ uiassist.getProperty(element, binders[i]) }}
+          </ng-template>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Modify Button Column -->
+      <ng-container matColumnDef="modify">
+        <mat-header-cell *matHeaderCellDef class="table-header"> Actions</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="fillForm(row)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              data-slot="icon"
+              class="w-5 h-5 mr-3"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+              />
+            </svg>
+          </button>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="columns.concat(['modify'])"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columns.concat(['modify']);"
+               [ngClass]="{'selected-row': row === selectedrow}">
+      </mat-row>
+    </mat-table>
+    <mat-paginator [length]="20" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]"></mat-paginator>
+  </div>
+</app-common-layout>
+

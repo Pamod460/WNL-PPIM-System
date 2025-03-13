@@ -13,7 +13,7 @@
         <button type="button" class="btn btn-dark " id="clearbutton" (click)="clearImage()">Clear</button>
       </div>
 
-      <mat-form-field appearance="outline" class="me-3" style="width: 66%">
+      <mat-form-field appearance="outline" class="me-3" style="width: 65%">
         <mat-label>Number</mat-label>
         <input matInput readonly formControlName="number">
       </mat-form-field>
@@ -84,8 +84,8 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Assignment Date</mat-label>
-        <input matInput [matDatepicker]="assdate" [readonly]="true" formControlName="doassignment">
-        <mat-datepicker-toggle matIconSuffix [for]="assdate" [disabled]="true"></mat-datepicker-toggle>
+        <input matInput [matDatepicker]="assdate" [max]="doaMaxDate" formControlName="doassignment">
+        <mat-datepicker-toggle matIconSuffix [for]="assdate" ></mat-datepicker-toggle>
         <mat-datepicker #assdate></mat-datepicker>
       </mat-form-field>
 
@@ -171,7 +171,7 @@
           <ng-container *ngIf="column === 'photo'; else checkStatus ">
             <img
               [src]="uiassist.getProperty(element, binders[i]) ? uiassist.getProperty(element, binders[i]) : defaultProfile"
-              class="m-2 rounded-circle"
+              class="my-2 rounded-circle"
               width="50" height="50" alt="Photo"/>
           </ng-container>
 

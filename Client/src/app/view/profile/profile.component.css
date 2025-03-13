@@ -1,113 +1,40 @@
-/* profile.component.css */
-.profile-container {
-  max-width: 600px;
-  margin: 2rem auto;
-  background-color: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  font-family: 'Arial', sans-serif;
-}
-
-.profile-header {
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-  color: white;
-  text-align: center;
-  padding: 2rem;
-}
-
-.profile-avatar {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 4px solid white;
+img {
   object-fit: cover;
-  margin-bottom: 1rem;
+  margin-top: 60px;
+  width: 250px; height: 250px;
+  margin-right: 35rem;
+  background-color: lightblue;
 }
 
-.profile-header h1 {
-  margin: 0;
-  font-size: 1.8rem;
+.fields{
+  width: 23.7%;
 }
 
-.profile-header h2 {
-  margin: 0.5rem 0 0;
-  font-size: 1.2rem;
-  opacity: 0.9;
+.eye-icon {
+  border: 1px solid #d9d8d8;
+  border-radius: 0 8px 8px 0;
+  height: 40px;
+  width: 40px;
 }
 
-.profile-body {
-  padding: 1.5rem;
+.eye-icon button  {
+  height: 40px;
+  width: 40px;
 }
 
-.profile-body h3 {
-  color: #333;
-  border-bottom: 2px solid #eee;
-  padding-bottom: 0.5rem;
-  margin-bottom: 1rem;
+.eye-icon button mat-icon {
+  height: 25px;
+  width: 20px;
+  font-size: 20px;
+  margin-top: -4px;
+  margin-left: -3px;
 }
 
-.profile-bio p {
-  color: #666;
-  line-height: 1.6;
+.fields .form-control {
+  height: 40px; /* Adjust as needed */
+  font-size: 14px; /* Adjust text size */
+  padding: 5px 10px; /* Adjust padding */
 }
 
-.profile-contact {
-  background-color: #f1f1f1;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-top: 1rem;
-}
 
-.skills-grid {
-  display: grid;
-  gap: 1rem;
-}
 
-.skill-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.skill-name {
-  flex: 0 0 100px;
-  font-weight: bold;
-  color: #333;
-}
-
-.skill-bar {
-  flex-grow: 1;
-  height: 10px;
-  background-color: #e0e0e0;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.skill-level {
-  height: 100%;
-  background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-}
-
-.profile-social {
-  margin-top: 1.5rem;
-}
-
-.social-links {
-  display: flex;
-  justify-content: space-around;
-  gap: 1rem;
-}
-
-.social-link {
-  text-decoration: none;
-  color: #2575fc;
-  font-weight: bold;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  transition: background-color 0.3s ease;
-}
-
-.social-link:hover {
-  background-color: rgba(37, 117, 252, 0.1);
-}

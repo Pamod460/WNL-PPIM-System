@@ -41,6 +41,7 @@
     "@angular/localize": "^15.1.0",
     "@types/jasmine": "~4.3.0",
     "angular-eslint": "19.0.2",
+    "cypress": "^14.1.0",
     "eslint": "^9.16.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",

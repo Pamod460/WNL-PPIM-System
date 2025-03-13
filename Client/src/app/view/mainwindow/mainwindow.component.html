@@ -1,5 +1,6 @@
 <mat-sidenav-container class="border-5  border-dark border">
-  <mat-sidenav class="navigation  border-0"  [class.mini]="true" [(opened)]="opened" mode="side" [style.width]="opened ? '250px' : '80px'">
+  <mat-sidenav class="navigation  border-0" [class.mini]="true" [(opened)]="opened" mode="side"
+               [style.width]="opened ? '250px' : '80px'">
     <ul class="nav flex-column">
       <li>
         <div class="d-flex  pt-1 justify-content-center w-100 align-content-center ">
@@ -8,8 +9,8 @@
 
         </div>
       </li>
-      <li class="nav-item main-menu-item "  routerLinkActive="active-link-2">
-        <a routerLink="home" class="nav-link " >
+      <li class="nav-item main-menu-item " routerLinkActive="active-link-2">
+        <a routerLink="home" class="nav-link ">
               <span class="icon">
                 <mat-icon>home</mat-icon>
                             </span>
@@ -18,7 +19,7 @@
       </li>
 
       <li class="nav-item main-menu-item " routerLinkActive="active-link-2">
-        <a routerLink="dashboard" class="nav-link" >
+        <a routerLink="dashboard" class="nav-link">
                             <span class="icon">
                               <mat-icon>widgets</mat-icon>
                             </span>
@@ -31,7 +32,7 @@
       </li>
 
       <li class="nav-item" *ngFor="let menuItem of menuGroup; let i = index">
-        <a class="nav-link p-0">
+        <a class="nav-link p-0" *ngIf="isMenuVisible(menuItem.Menu)">
           <div class="accordion accordion-flush" [id]="'accordionFlushExample' + i">
             <div class="accordion-item">
               <div class="accordion-item-header">
@@ -54,11 +55,13 @@
                 class="accordion-collapse collapse"
                 [attr.aria-labelledby]="'flush-heading' + i"
                 [attr.data-bs-parent]="'#accordionFlushExample' + i">
-                <div class="accordion-body sub-navigation" *ngFor="let subMenuItem of menuItem.MenuItems" style=" padding-top: 1px !important;">
-                  <div class="sub-menu-item" [routerLink]="subMenuItem.isVisible ? subMenuItem.routerLink : null" routerLinkActive="active-link">
-                    <a  class="nav-link">
+                <div class="accordion-body sub-navigation" *ngFor="let subMenuItem of menuItem.MenuItems"
+                     style=" padding-top: 1px !important;">
+                  <div class="sub-menu-item" [routerLink]="subMenuItem.isVisible ? subMenuItem.routerLink : null"
+                       routerLinkActive="active-link">
+                    <a class="nav-link">
                       <span class="icon">
-                              <mat-icon>widgets</mat-icon>
+                              <mat-icon>{{ matSubMenuIcons[subMenuItem.name] }}</mat-icon>
                             </span>
                       <span class="title">  {{ subMenuItem.name }}</span>
                     </a>
@@ -89,13 +92,18 @@
 
 
           <a [matMenuTriggerFor]="menu" class="d-flex text-decoration-none " style="color: black;cursor: pointer">
-            <label class="lbl-user">{{ authService.getUsername().toUpperCase() }}</label>
-            <img [src]="userImage" class="img-user"/>
+            <div class="proinfo">
+
+
+            <label class="lbl-user">{{ authorizationManager.getUsername().toUpperCase() }}</label>
+            <label class="lbl-role">{{ activeRole }}</label>
+</div>
+            <img [src]="userImage" class="img-user" alt=""/>
           </a>
 
 
         <mat-menu #menu="matMenu">
-          <button mat-menu-item routerLink="profile">
+          <button mat-menu-item routerLink="profile" *ngIf="checkIsAdmin()">
             <mat-icon>account_circle</mat-icon>
             <span class="mat-menu-span">Profile</span>
           </button>
