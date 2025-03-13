@@ -1,0 +1,22 @@
+<div class="p-4 rounded-3 flex flex-column justify-content-center align-items-center shadow" style="width: 24rem;">
+
+  <div class="d-flex flex-column w-100 mb-4">
+    <!-- SVG Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto" style="width: 40px; height: 40px">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+    </svg>
+
+    <!-- Title -->
+    <p class="fw-bold fs-4 mt-1 mx-auto">Logout</p>
+  </div>
+
+
+  <!-- Description -->
+  <p class="text-center text-muted mt-2 mx-auto mb-4">Are You Sure You Want To Logout?</p>
+
+  <!-- Action Buttons -->
+  <div class="d-flex justify-content-center mt-3">
+    <button class="btn btn-danger me-2 btn" data-bs-dismiss="modal" (click)="logout()">Logout</button>
+    <button class="btn btn-secondary" data-bs-dismiss="modal" (click)="cancel()">Cancel</button>
+  </div>
+</div>
