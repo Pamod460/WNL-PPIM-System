@@ -44,6 +44,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DashboardComponent } from './view/dashboard/dashboard.component';
 import {MatMenuModule} from "@angular/material/menu";
 import { ProfileComponent } from './view/profile/profile.component';
+import { MaterialComponent } from './view/modules/material/material.component';
 import {ToastrModule} from "ngx-toastr";
 import { LogoutComponent } from './util/dialog/logout/logout.component';
 
@@ -64,6 +65,7 @@ import { LogoutComponent } from './util/dialog/logout/logout.component';
     PrivilageComponent,
     DashboardComponent,
     ProfileComponent,
+    MaterialComponent,
     LogoutComponent,
 
 
