@@ -3,7 +3,7 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "
 import {Role} from "../../../entity/role";
 import {Module} from "../../../entity/module";
 import {Operation} from "../../../entity/operation";
-import {RoleService} from "../../../service/privilage/role.service";
+import {RoleService} from "../../../service/user/role.service";
 import {ModuleService} from "../../../service/privilage/module.service";
 import {OperationService} from "../../../service/privilage/operation.service";
 import {MatTableDataSource} from "@angular/material/table";
