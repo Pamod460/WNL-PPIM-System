@@ -51,15 +51,14 @@ public class MaterialController {
     @PostMapping(produces = "application/json")
     public ResponseEntity<StandardResponse> save(@RequestBody Material material) {
         if (materialDao.existsByCode(material.getCode())) {
-            throw new ResourceAlreadyExistException("Email Already Exists");
+            throw new ResourceAlreadyExistException("Material Already Exists");
         }
         Material mat = materialDao.save(material);
-        return new ResponseEntity<StandardResponse>(new StandardResponse(201, "Material Added Successfully", new Material(mat.getId(), mat.getName())), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new StandardResponse("Material Added Successfully", new Material(mat.getId(), mat.getName())));
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Update')")
     public ResponseEntity<StandardResponse> update(@RequestBody Material material) {
         Material emprec = materialDao.findById(material.getId()).orElseThrow(() -> new ResourceNotFoundException("Material Not Found"));
 
@@ -67,17 +66,18 @@ public class MaterialController {
             throw new ResourceAlreadyExistException("Code Already Exists");
         }
         Material mat = this.materialDao.save(material);
-        return new ResponseEntity<StandardResponse>(new StandardResponse(201, "Material Added Successfully", new Material(mat.getId(), mat.getName())), HttpStatus.CREATED);
-
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new StandardResponse("Material Updated Successfully",
+                        new Material(mat.getId(), mat.getName())));
     }
 
     @DeleteMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         Material material = materialDao.findById(id).orElseThrow(() -> new ResourceNotFoundException("Material Not Found"));
         materialDao.delete(material);
-        return new ResponseEntity<StandardResponse>(
-                new StandardResponse(200, "Successfully Deleted", null), HttpStatus.OK
-        );
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new StandardResponse("Material Deleted Successfully", null));
 
 
     }
