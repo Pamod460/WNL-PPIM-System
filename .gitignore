@@ -55,3 +55,4 @@ Assets/wnl-v1-v3.mwb.bak
 Client/app.py
 Client/cypress.config.ts
 Client/cypress
+Client/package-lock.json
