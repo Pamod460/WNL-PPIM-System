@@ -1,7 +1,7 @@
 import {Materialcategory} from "./Materialcategory";
 
 export interface Materialsubcategory {
-  id: number;
+  id?: number;
   name: string;
-  materialcategory: Materialcategory;
+  materialcategory?: Materialcategory;
 }
