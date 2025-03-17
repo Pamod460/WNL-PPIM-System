@@ -1,6 +1,7 @@
 package lk.wnl.wijeya.advisor;
 
 
+import lk.wnl.wijeya.exception.CustomAccessDeniedException;
 import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
 import lk.wnl.wijeya.exception.ResourceNotFoundException;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -23,6 +24,15 @@ public class CustomExceptionHandler {
     public ResponseEntity<StandardResponse> handleResourceAlreadyExistException(ResourceAlreadyExistException exception){
         return new ResponseEntity<StandardResponse>(
                 new StandardResponse(302,"Error",exception), HttpStatus.FOUND
+        );
+    }
+
+        @ExceptionHandler(CustomAccessDeniedException.class)
+    public ResponseEntity<StandardResponse> handleAccessDeniedException(CustomAccessDeniedException exception) {
+        System.out.println("🔴 CustomExceptionHandler Caught AccessDeniedException");
+        return new ResponseEntity<>(
+                new StandardResponse(403, "Access Denied", exception.getMessage()),
+                HttpStatus.FORBIDDEN
         );
     }
 }

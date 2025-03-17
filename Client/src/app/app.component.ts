@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AuthorizationManager} from "./service/authorizationmanager";
+import {AuthorizationManager} from "./service/auth/authorizationmanager";
 
 @Component({
   selector: 'app-root',
