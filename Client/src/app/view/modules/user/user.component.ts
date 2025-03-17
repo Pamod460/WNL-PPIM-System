@@ -5,7 +5,7 @@ import {MatSelectionList} from "@angular/material/list";
 import {Userstatus} from "../../../entity/userstatus";
 import {EmployeeService} from "../../../service/employee/employee.service";
 import {UserstatusService} from "../../../service/user/userstatus.service";
-import {RoleService} from "../../../service/privilage/role.service";
+import {RoleService} from "../../../service/user/role.service";
 import {Role} from "../../../entity/role";
 import {MatTableDataSource} from "@angular/material/table";
 import {UserService} from "../../../service/user/user.service";
