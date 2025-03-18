@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -52,7 +53,7 @@ public class Material {
     @ManyToOne
     @JoinColumn(name = "materialsubcategory_id", referencedColumnName = "id", nullable = false)
     private Materialsubcategory materialsubcategory;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "material")
     private Set<Supply> supplies = new LinkedHashSet<>();
 

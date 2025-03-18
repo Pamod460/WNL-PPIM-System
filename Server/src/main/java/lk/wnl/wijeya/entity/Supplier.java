@@ -1,19 +1,24 @@
 package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "supplier")
 public class Supplier {
     @Id
@@ -74,8 +79,16 @@ public class Supplier {
     @JoinColumn(name = "suppliertype_id", nullable = false)
     private SupplierType suppliertype;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "supplier")
-    private Set<Supply> supplies = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "supplier",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<Supply> supplies;
+
+    @Size(max = 6)
+    @Column(name = "reg_no", length = 6)
+    private String regNo;
+
+    public Supplier(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }
