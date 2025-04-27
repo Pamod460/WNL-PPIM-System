@@ -54,10 +54,6 @@ public class Supplier {
     @Column(name = "contact_person_telephone", length = 10)
     private String contactPersonTelephone;
 
-    @Size(max = 45)
-    @Column(name = "country", length = 45)
-    private String country;
-
     @Column(name = "regdate")
     private LocalDate regdate;
 
@@ -79,13 +75,29 @@ public class Supplier {
     @JoinColumn(name = "suppliertype_id", nullable = false)
     private SupplierType suppliertype;
 
-
     @OneToMany(mappedBy = "supplier",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Supply> supplies;
 
     @Size(max = 6)
     @Column(name = "reg_no", length = 6)
     private String regNo;
+
+    @Size(max = 100)
+    @Column(name = "bank_name", length = 100)
+    private String bankName;
+
+    @Size(max = 100)
+    @Column(name = "bank_branch", length = 100)
+    private String bankBranch;
+
+    @Size(max = 100)
+    @Column(name = "accont_holder", length = 100)
+    private String accontHolder;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "country_id", nullable = false, referencedColumnName = "id")
+    private Country country;
 
     public Supplier(Integer id, String name) {
         this.id = id;
