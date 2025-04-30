@@ -11,7 +11,7 @@ import {EmployeeComponent} from './view/modules/employee/employee.component';
 import {UserComponent} from './view/modules/user/user.component';
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatCardModule} from "@angular/material/card";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatButtonModule} from "@angular/material/button";
 import {MatInputModule} from "@angular/material/input";
@@ -47,6 +47,8 @@ import { ProfileComponent } from './view/profile/profile.component';
 import { MaterialComponent } from './view/modules/material/material.component';
 import {ToastrModule} from "ngx-toastr";
 import { LogoutComponent } from './util/dialog/logout/logout.component';
+import { SupplierComponent } from './view/modules/supplier/supplier.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 
 
@@ -67,45 +69,48 @@ import { LogoutComponent } from './util/dialog/logout/logout.component';
     ProfileComponent,
     MaterialComponent,
     LogoutComponent,
+    SupplierComponent,
 
 
   ],
-    imports: [
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatSelectModule,
-        MatTableModule,
-        MatPaginatorModule,
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatGridListModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatButtonModule,
-        MatInputModule,
-        MatToolbarModule,
-        MatSidenavModule,
-        MatListModule,
-        MatExpansionModule,
-        MatIconModule,
-        MatDialogModule,
-        HttpClientModule,
-        MatChipsModule,
-        ReactiveFormsModule,
-        MatSlideToggleModule,
-        MatPseudoCheckboxModule,
-        MatCheckboxModule,
-        CommonLayoutComponent,
-        NgbModule,
-        MatMenuModule,
-      ToastrModule.forRoot({
-        positionClass: 'toast-top-right',
-        timeOut: 5000,
-        preventDuplicates: true
-      })
+  imports: [
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    MatTableModule,
+    MatPaginatorModule,
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatGridListModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatDialogModule,
+    HttpClientModule,
+    MatChipsModule,
+    ReactiveFormsModule,
+    MatSlideToggleModule,
+    MatPseudoCheckboxModule,
+    MatCheckboxModule,
+    CommonLayoutComponent,
+    NgbModule,
+    MatMenuModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+      timeOut: 5000,
+      preventDuplicates: true
+    }),
+    FormsModule,
+    MatAutocompleteModule
 
-    ],
+  ],
   providers: [
     EmployeeService,
     DatePipe,
