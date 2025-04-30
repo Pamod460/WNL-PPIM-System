@@ -20,6 +20,7 @@ import {UnittypeService} from "../../../service/material/unittype.service";
 import {ToastrService} from "ngx-toastr";
 import {Materialcategory} from "../../../entity/Materialcategory";
 import {MaterialcategoryService} from "../../../service/material/materialcategory.service";
+import {TableUtilsService} from "../../../service/Shared/table-utils.service";
 
 @Component({
     selector: 'app-material',
@@ -33,7 +34,7 @@ export class MaterialComponent implements OnInit {
     headers: string[] = ['Name', 'Code', 'Quantity', 'ROP', 'Unit Price', 'Unit Type', 'Status', 'Subcategory'];
     binders: string[] = ['name', 'code', 'quantity', 'rop', 'unitprice', 'unittype.name', 'materialstatus.name', 'materialsubcategory.name', 'materialstatus.name', 'materialsubcategory.'];
 
-    defaultProfile = 'assets/default.png';
+    defaultProfile = 'assets/defaultimg.png';
     public ssearch!: FormGroup;
     public form!: FormGroup;
 
@@ -47,7 +48,7 @@ export class MaterialComponent implements OnInit {
     data!: MatTableDataSource<Material>;
     imageurl = '';
     @ViewChild(MatPaginator) paginator!: MatPaginator;
-    imageempurl = 'assets/default.png';
+    imageempurl = 'assets/defaultImg.png';
 
     enaadd = false;
     enaupd = false;
@@ -84,7 +85,9 @@ export class MaterialComponent implements OnInit {
         private matDialog: MatDialog,
         private dp: DatePipe,
         public authService: AuthorizationManager,
-        private toastr: ToastrService) {
+        private toastr: ToastrService,
+        private tableUtils: TableUtilsService
+    ) {
 
 
         this.uiassist = new UiAssist(this);
@@ -187,7 +190,7 @@ export class MaterialComponent implements OnInit {
         this.form.controls['materialcategory'].setValidators([Validators.required]);
 
         Object.values(this.form.controls).forEach(control => {
-            control.markAsTouched();
+            // control.markAsTouched();
         });
 
         for (const controlName in this.form.controls) {
@@ -543,4 +546,7 @@ export class MaterialComponent implements OnInit {
 
     }
 
+  getColumnClass(columnIndex: number) {
+    return this.tableUtils.getColumnSizeClass(this.data, this.binders, columnIndex, this.uiassist);
+  }
 }

@@ -272,10 +272,7 @@ export class UserComponent implements OnInit {
     const selectedOptions = this.selectedlist.selectedOptions.selected; // Right Side
     for (const option of selectedOptions) {
       const extUserRoles = option.value;
-      this.userroles = this.userroles.filter(role => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        role !== extUserRoles
-      }); // Remove the Selected one From Right Side
+      this.userroles = this.userroles.filter(role => role !== extUserRoles); // Remove the Selected one From Right Side
       this.roles.push(extUserRoles.role);
     }
 
@@ -514,7 +511,7 @@ export class UserComponent implements OnInit {
         const confirm = this.matDialog.open(ConfirmComponent, {
           width: '500px',
           data: {
-            heading: "Confirmation - Employee Update",
+            heading: "Confirmation - User Update",
             message: "Are you sure to Save folowing Updates? <br> <br>" + updates
           }
         });

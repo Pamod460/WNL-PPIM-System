@@ -20,6 +20,7 @@ import {AuthorizationManager} from "../../../service/auth/authorizationmanager";
 import {Emptype} from "../../../entity/emptype";
 import {EmptypeService} from "../../../service/employee/emptype.service";
 import {ToastrService} from "ngx-toastr";
+import {TableUtilsService} from "../../../service/Shared/table-utils.service";
 
 
 @Component({
@@ -90,12 +91,13 @@ export class EmployeeComponent implements OnInit {
     private matDialog: MatDialog,
     private datePipe: DatePipe,
     public authService: AuthorizationManager,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private tableUtils: TableUtilsService
   ) {
     this.uiassist = new UiAssist(this);
     this.ssearch = this.formBuilder.group({
       "ssnumber": new FormControl(),
-      "ssfullname": new FormControl('', Validators.pattern("^([A-Z][a-z]*[.]?[\s]?)*([A-Z][a-z]*)$")),
+      "ssfullname": new FormControl('', Validators.pattern("^([A-Z][a-z]*[.]?[s]?)*([A-Z][a-z]*)$")),
       "ssgender": new FormControl(),
       "ssdesignation": new FormControl(),
       "ssnic": new FormControl()
@@ -615,5 +617,9 @@ export class EmployeeComponent implements OnInit {
     const birthDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayOfYear).padStart(2, '0')}`;
     return {birthDate, gender};
   }
+
+  getColumnClass(columnIndex: number) {
+    return this.tableUtils.getColumnSizeClass(this.data, this.binders, columnIndex, this.uiassist);
+  }
 }
-// 699
+

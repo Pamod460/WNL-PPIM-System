@@ -135,9 +135,9 @@
     <mat-table [dataSource]="data">
 
       <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
-        <mat-header-cell *matHeaderCellDef class="table-header"> {{ headers[i] }}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="table-header" [ngClass]="getColumnClass(i)"> {{ headers[i] }}</mat-header-cell>
 
-        <mat-cell *matCellDef="let element">
+        <mat-cell *matCellDef="let element" [ngClass]="getColumnClass(i)">
           <ng-container *ngIf="column === 'photo'; else checkStatus ">
             <img
               [src]="uiassist.getProperty(element, binders[i]) ? uiassist.getProperty(element, binders[i]) : defaultProfile"
@@ -161,10 +161,10 @@
       </ng-container>
 
       <!-- Modify Button Column -->
-      <ng-container matColumnDef="modify">
+      <ng-container matColumnDef="modify" >
         <mat-header-cell *matHeaderCellDef class="table-header"> Actions</mat-header-cell>
         <mat-cell *matCellDef="let row">
-          <button mat-icon-button (click)="fillForm(row)">
+          <button mat-icon-button (click)="fillForm(row)" *ngIf="binders.length>0">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

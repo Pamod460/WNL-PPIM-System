@@ -1,6 +1,5 @@
 <app-common-layout [statusImageUrl]="imageurl">
   <div form>
-
     <form [formGroup]="form">
       <div id="imgpanel">
         <img [src]="imageempurl" class="rounded-circle" alt="">
@@ -85,7 +84,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Assignment Date</mat-label>
         <input matInput [matDatepicker]="assdate" [max]="doaMaxDate" formControlName="doassignment">
-        <mat-datepicker-toggle matIconSuffix [for]="assdate" ></mat-datepicker-toggle>
+        <mat-datepicker-toggle matIconSuffix [for]="assdate"></mat-datepicker-toggle>
         <mat-datepicker #assdate></mat-datepicker>
       </mat-form-field>
 
@@ -137,8 +136,7 @@
         <input type="text" formControlName="ssfullname" class="form-control search-bar-items" placeholder="  Full Name"
                style="border-radius: 40px 0 0 40px">
 
-        <input type="text" formControlName="ssnumber" class="form-control search-bar-items"
-               placeholder="Employee Number">
+        <input type="text" formControlName="ssnumber" class="form-control search-bar-items"  placeholder="Employee Number">
         <input type="text" formControlName="ssnic" class="form-control search-bar-items" placeholder="NIC">
         <select formControlName="ssgender" class="form-select gender-drop-down">
           <option [value]="null" selected disabled>Gender</option>
@@ -165,9 +163,10 @@
     <mat-table [dataSource]="data">
 
       <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
-        <mat-header-cell *matHeaderCellDef class="table-header"> {{ headers[i] }}</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef class="table-header" [ngClass]="getColumnClass(i)"> {{ headers[i] }}
+        </mat-header-cell>
 
-        <mat-cell *matCellDef="let element">
+        <mat-cell *matCellDef="let element" [ngClass]="getColumnClass(i)">
           <ng-container *ngIf="column === 'photo'; else checkStatus ">
             <img
               [src]="uiassist.getProperty(element, binders[i]) ? uiassist.getProperty(element, binders[i]) : defaultProfile"

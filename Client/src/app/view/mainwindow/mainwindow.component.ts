@@ -28,7 +28,8 @@ export class MainwindowComponent implements OnInit{
     'User': 'event_note',
     'Privilege': 'assignment',
     'Class': 'schedule',
-    'Material': 'description'
+    'Material': 'description',
+    'Supplier': 'store'
   };
   userImage = 'assets/default.png'
   activeRole="";
