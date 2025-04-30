@@ -1,6 +1,7 @@
 package lk.wnl.wijeya.controller;
 
 import lk.wnl.wijeya.dao.SupplierDao;
+import lk.wnl.wijeya.entity.Employee;
 import lk.wnl.wijeya.entity.Supplier;
 import lk.wnl.wijeya.entity.Supply;
 import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +31,27 @@ public class SupplierController {
     @GetMapping(path = "/list", produces = "application/json")
     public List<Supplier> get() {
         return supplierDao.findAll();
+    }
+
+    @GetMapping(value = "/last", produces = "application/json")
+    public ResponseEntity<Map<String, String>> getLastEmployee() {
+        String code;
+        Supplier supplier = supplierDao.findTopByOrderByIdDesc();
+
+        int no = (supplier != null) ? Integer.parseInt(supplier.getRegNo().substring(1)) + 1 : 1;
+
+        if (no < 10) {
+            code = "S00" + no;
+        } else if (no < 100) {
+            code = "S0" + no;
+        } else {
+            code = "S" + no;
+        }
+
+        Map<String, String> response = new HashMap<>();
+        response.put("code", code);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping(produces = "application/json")
