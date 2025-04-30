@@ -1,6 +1,7 @@
 import {Supply} from "./Supply";
 import {SupplierStatus} from "./SupplierStatus";
 import {SupplierType} from "./SupplierType";
+import {Country} from "./Country";
 
 export class Supplier {
   id!: number;
@@ -11,7 +12,7 @@ export class Supplier {
   email?: string;
   contactPerson?: string;
   contactPersonTelephone?: string;
-  country?: string;
+  country?: Country;
   regdate?: Date;
   bankAccNo?: string;
   description?: string;
