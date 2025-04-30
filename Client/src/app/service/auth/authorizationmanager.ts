@@ -35,6 +35,7 @@ export class AuthorizationManager {
 
   Inventory = [
     {name: 'Material', isVisible: false, routerLink: 'material'},
+    {name: 'Supplier', isVisible: false, routerLink: 'supplier'},
   ];
 
 
@@ -76,6 +77,7 @@ export class AuthorizationManager {
       this.setUsername(username);
       try {
         const authoritiesArray = this.getAuthorities();
+        if (username!=="Admin")
         this.userService.getEmployeeByUserName(username).subscribe({
           next: employee => {
             this.setEmployee(employee);
