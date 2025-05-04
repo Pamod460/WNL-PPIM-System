@@ -4,7 +4,7 @@
 html, body {
   height: 100%;
   /*background-color: #7ff0e6*/
-  background-color: rgba(33, 53, 85, 0.8);
+  background-color: rgba(33, 53, 85, 0.8) !important;
 
 }
 
@@ -108,3 +108,26 @@ mat-form-field input {
   pointer-events: none;
   opacity: 0.9;
 }
+
+
+
+.medium-text {
+  padding-right: 70px  !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.long-text {
+  padding-right: 115px  !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Image cell styling */
+.image-column {
+  /*padding-right: 50px !important;*/
+  object-fit: cover;
+}
+

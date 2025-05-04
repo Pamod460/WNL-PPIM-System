@@ -133,13 +133,13 @@ mat-card-title{
 #butpanel{
   width: auto;
   height: auto;
-  margin: 10px 0 20px -5px;
+  /*margin: 10px 0 20px -5px;*/
   display: flex;
 }
 
 #butpanel button{
   width: 118px;
-  padding: 10px 20px 10px 20px;
+  /*padding: 10px 20px 10px 20px;*/
   margin: 2px;
   font-size: 16px;
   color: white;
@@ -148,7 +148,7 @@ mat-card-title{
 #listtrnasfer {
   display: inline-flex;
   margin-bottom: 30px;
-  margin-left: 10px;
+
 }
 
 #pnlmiddle button{
@@ -160,7 +160,7 @@ mat-card-title{
   border: solid gray;
   border-radius: 5px;
   max-height: 160px;
-  width: 180px;
+  width: 200px;
   margin-top: 10px;
   overflow: auto;
 }

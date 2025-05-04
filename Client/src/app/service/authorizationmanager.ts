@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
-import {UserService} from "./user.service";
+import {Injectable} from '@angular/core';
+import {UserService} from "../user/user.service";
 import {jwtDecode} from "jwt-decode";
-import {CustomJwtPayload} from "../entity/customJwtPayload";
+import {CustomJwtPayload} from "../../entity/customJwtPayload";
 import {BehaviorSubject, filter} from "rxjs";
 import {NavigationEnd, Router} from "@angular/router";
+import {MatDialog} from "@angular/material/dialog";
+import {LogoutComponent} from "../../util/dialog/logout/logout.component";
 
 @Injectable()
 export class AuthorizationManager {
@@ -25,38 +27,35 @@ export class AuthorizationManager {
   private readonly localStorageClassMenus = 'clsMenuState';
 
   Admin = [
-    { name: 'Employee', isVisible: false, routerLink: 'employee' },
-    { name: 'User', isVisible: false, routerLink: 'user' },
-    { name: 'Privilege', isVisible: false, routerLink: 'privilege' }
+    {name: 'Employee', isVisible: false, routerLink: 'employee'},
+    {name: 'User', isVisible: false, routerLink: 'user'},
+    {name: 'Privilege', isVisible: false, routerLink: 'privilege'}
     // { name: 'Operations', isVisible: false, routerLink: 'operation' }
   ];
 
   Inventory = [
-    { name: 'Material', isVisible: false, routerLink: 'material' },
+    {name: 'Material', isVisible: false, routerLink: 'material'},
+    {name: 'Supplier', isVisible: false, routerLink: 'supplier'},
   ];
 
 
-
-  getNavListItem(){
+  getNavListItem() {
     return [
-      { Menu : 'ADMIN' , MenuItems : this.Admin },
-      { Menu : 'INVENTORY' , MenuItems : this.Inventory }
+      {Menu: 'ADMIN', MenuItems: this.Admin},
+      {Menu: 'INVENTORY', MenuItems: this.Inventory}
     ]
   }
 
-  constructor(private us:UserService,private router: Router) {
+  constructor(private userService: UserService, private router: Router, private dialog: MatDialog,) {
 
     this.router.events.pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        console.log("Route changed:", this.router.url);
         this.checkAuthStatus();
       });
   }
 
   enableMenus(modules: { module: string; operation: string }[]): void {
-
     const menus = this.getNavListItem();
-
     menus.forEach(menuGroup => {
       menuGroup.MenuItems.forEach(menuItem => {
         menuItem.isVisible = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
@@ -71,48 +70,55 @@ export class AuthorizationManager {
 
   }
 
-  async getAuth(username: string): Promise<void> {
+  getAuth(username: string) {
+    console.log("username", username)
+    if (username) {
+      this.setFullName();
+      this.setUsername(username);
+      try {
+        const authoritiesArray = this.getAuthorities();
+        if (username!=="Admin")
+        this.userService.getEmployeeByUserName(username).subscribe({
+          next: employee => {
+            this.setEmployee(employee);
+            this.setUserProfile();
+          }, error: err => {
+            console.log(err)
+          }
+        });
+        this.setUserProfile();
+        if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+          const authorities = this.extractAuthorities(authoritiesArray);
+          this.enableMenus(authorities);
+        } else {
+          console.log('Authorities are undefined or not an array');
+        }
 
-    this.setFullName();
-    this.setUsername(username);
-
-    try {
-      const authoritiesArray = this.getAuthorities();
-
-
-      const employee = await this.us.getEmployeeByUserName(username);
-
-      this.setEmployee(employee);
-      this.setUserProfile();
-
-      if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
-        const authorities = this.extractAuthorities(authoritiesArray);
-        this.enableMenus(authorities);
-      } else {
-        console.log('Authorities are undefined or not an array');
+      } catch (error) {
+        console.error(error);
       }
-
-    } catch (error) {
-      console.error(error);
     }
   }
+
 
   extractAuthorities(authoritiesArray: string[]): { module: string; operation: string }[] {
     return authoritiesArray.map(authority => {
       const [module, operation] = authority.split('-');
-      return { module, operation };
+      return {module, operation};
     });
   }
 
   getUsername(): string {
     return localStorage.getItem(this.localStorageUsreName) || '';
   }
+
   getFullName(): string {
     return localStorage.getItem(this.localStorageFullName) || '';
   }
-  getToken(){
+
+  getToken() {
     const jwtToken = localStorage.getItem("Authorization");
-    if(jwtToken!=null) return jwtToken.split(' ')[1]
+    if (jwtToken != null) return jwtToken.split(' ')[1]
     else return ""
 
   }
@@ -129,14 +135,12 @@ export class AuthorizationManager {
   isUserAuthenticated() {
     return this.isAuthenticated.asObservable();
   }
-  setFullName(): void {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    const jwtToken = localStorage.getItem("Authorization").split(' ')[1];
-    const value= jwtDecode<CustomJwtPayload>(jwtToken).uname;
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
+  setFullName(): void {
+    const jwtToken = this.getToken()
+    const value = jwtToken ? jwtDecode<CustomJwtPayload>(jwtToken).uname : '';
+
+    // @ts-ignore
     localStorage.setItem(this.localStorageFullName, value);
   }
 
@@ -151,24 +155,25 @@ export class AuthorizationManager {
   setUserProfile(): void {
     const employee = localStorage.getItem('employee');
     if (employee) {
-      try {
-        const img = JSON.parse(employee).photo;
+      const img = JSON.parse(employee).photo;
+      if (img) {
         this.imageempurl = atob(img);
-      } catch (error) {
-        //console.error("Error decoding employee photo:", error);
+      } else {
         this.imageempurl = "assets/default.png";
       }
+    } else {
+      this.imageempurl = "assets/default.png";
     }
   }
 
-  getAuthorities(){
+  getAuthorities() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     const jwtToken = localStorage.getItem("Authorization").split(' ')[1];
     return jwtDecode<CustomJwtPayload>(jwtToken).aud;
   }
 
-  getRoles(){
+  getRoles() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     const jwtToken = localStorage.getItem("Authorization").split(' ')[1];
@@ -210,5 +215,25 @@ export class AuthorizationManager {
 
   removeToken() {
     localStorage.removeItem("Authorization")
+  }
+
+  logout(): void {
+    const dialogRef = this.dialog.open(LogoutComponent);
+
+    dialogRef.afterClosed().subscribe(value => {
+      if (value) {
+        this.performLogout();
+      }
+    });
+  }
+
+  performLogout(): void {
+    this.clearUsername();
+    this.clearMenuState();
+    localStorage.removeItem("Authorization");
+    localStorage.removeItem("employee");
+    localStorage.removeItem("fullname");
+
+    this.router.navigateByUrl("/login");
   }
 }

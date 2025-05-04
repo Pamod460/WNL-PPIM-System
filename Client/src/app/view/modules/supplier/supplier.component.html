@@ -1,0 +1,303 @@
+<!--</mat-grid-list>-->
+<app-common-layout [formCol]="4" [viewCol]="8" [statusImageUrl]="imageurl">
+  <div form>
+    <form [formGroup]="form">
+      <!-- Essential Business Details -->
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="me-3" style="width: 65%">
+        <mat-label>Registration No</mat-label>
+        <input matInput readonly formControlName="regNo">
+      </mat-form-field>
+      <button type="button" class="btn btn-dark  pt-2 pb-2" (click)="getLastSupCode()"
+              [disabled]="disableGenerateNo">Generate Number
+      </button>
+      <mat-form-field appearance="outline">
+        <mat-label>Registration Date</mat-label>
+        <input matInput [matDatepicker]="regdatePicker" formControlName="regdate">
+        <mat-datepicker-toggle matSuffix [for]="regdatePicker"></mat-datepicker-toggle>
+        <mat-datepicker #regdatePicker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- Contact Details -->
+      <mat-form-field appearance="outline">
+        <mat-label>Telephone</mat-label>
+        <input matInput formControlName="telephone">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Fax No</mat-label>
+        <input matInput formControlName="faxNo">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Address</mat-label>
+        <textarea matInput formControlName="address"></textarea>
+      </mat-form-field>
+
+      <!-- Key Contact Person Details -->
+      <mat-form-field appearance="outline">
+        <mat-label>Contact Person</mat-label>
+        <input matInput formControlName="contactPerson">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Contact Person Telephone</mat-label>
+        <input matInput formControlName="contactPersonTelephone">
+      </mat-form-field>
+
+      <!-- Additional Business Details -->
+      <mat-form-field appearance="outline">
+        <mat-label>Supplier Type</mat-label>
+        <mat-select formControlName="suppliertype">
+          <mat-option *ngFor="let type of supplierTypes" [value]="type">{{ type.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Country</mat-label>
+
+        <input
+          matInput
+          formControlName="country"
+          [matAutocomplete]="auto"
+          placeholder="Choose a country"
+        />
+
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let country of filteredCountries | async" [value]="country.name">
+            {{ country.name }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Bank</mat-label>
+        <input matInput formControlName="bankName">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Bank Branch</mat-label>
+        <input matInput formControlName="bankBranch">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Bank Account No</mat-label>
+        <input matInput formControlName="bankAccNo">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Bank Account Holder Name</mat-label>
+        <input matInput formControlName="accontHolder">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
+
+      <!-- Material Selection -->
+      <div class="d-flex mb-3">
+        <div class="list">
+          <mat-selection-list>
+            <mat-list-option *ngFor="let supply of supplies" [value]="supply">{{ supply.material.name }}
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+
+        <button (click)="openDialog()" class="btn btn-dark mx-auto btn-lg my-auto h-25 ">
+          {{ btnMaterialText }}
+        </button>
+      </div>
+
+
+      <ng-template #dialogTemplate>
+        <div class="list-dialog">
+          <div id="listtrnasfer">
+            <div class="list">
+              <mat-selection-list #availablelist>
+                <mat-list-option multiple *ngFor="let material of materials" [value]="material">{{ material.name }}
+                </mat-list-option>
+              </mat-selection-list>
+            </div>
+
+            <div id="pnlmiddle">
+              <button mat-raised-button (click)="rightSelected()">&gt;</button>
+              <button mat-raised-button (click)="leftSelected()">&lt;</button>
+              <button mat-raised-button (click)="rightAll()">&gt;&gt;</button>
+              <button mat-raised-button (click)="leftAll()">&lt;&lt;</button>
+            </div>
+
+            <div class="list">
+              <mat-selection-list formControlName="supplies" #selectedlist>
+                <mat-list-option *ngFor="let supply of supplies" [value]="supply">{{ supply.material.name }}
+                </mat-list-option>
+              </mat-selection-list>
+            </div>
+          </div>
+
+          <button (click)="addMaterials()" class="btn btn-dark mx-auto btn-lg">
+            OK
+          </button>
+        </div>
+      </ng-template>
+
+      <!-- Supplier Details -->
+      <mat-form-field appearance="outline">
+        <mat-label>Supplier Status</mat-label>
+        <mat-select formControlName="supplierstatus">
+          <mat-option *ngFor="let status of supplierStatuses" [value]="status">{{ status.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+      <!-- Action Buttons -->
+      <div id="butpanel">
+        <button type="button" class="btn btn-dark btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">
+          Add
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="update()"
+                [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="delete()"
+                [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="clear()">Clear</button>
+      </div>
+    </form>
+
+
+  </div>
+  <div view>
+    <mat-table [dataSource]="data">
+
+      <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+        <mat-header-cell *matHeaderCellDef class="table-header" [ngClass]="getColumnClass(i)"> {{ headers[i] }}
+        </mat-header-cell>
+
+        <mat-cell *matCellDef="let element" [ngClass]="getColumnClass(i)">
+          <ng-container *ngIf="column === 'photo'; else checkStatus ">
+            <img
+              [src]="uiassist.getProperty(element, binders[i]) ? uiassist.getProperty(element, binders[i]) : defaultProfile"
+              class="my-2 rounded-circle"
+              width="50" height="50" alt="Photo"/>
+          </ng-container>
+
+          <ng-template #checkStatus>
+            <ng-container *ngIf="column === 'supplierstatus'; else textCell">
+                  <span class="pt-2 mt-1">
+                    <mat-icon style="font-size: medium"
+                              [ngClass]="checkSupplierStatus(uiassist.getProperty(element, binders[i]))">fiber_manual_record</mat-icon>
+                  </span>
+              {{ uiassist.getProperty(element, binders[i]) }}
+            </ng-container>
+          </ng-template>
+          <ng-template #textCell>
+            {{ uiassist.getProperty(element, binders[i]) }}
+          </ng-template>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Modify Button Column -->
+      <ng-container matColumnDef="modify">
+        <mat-header-cell *matHeaderCellDef class="table-header"> Actions</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="fillForm(row)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              data-slot="icon"
+              class="w-5 h-5 mr-3"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+              />
+            </svg>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="columns.concat(['modify'])"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columns.concat(['modify']);"
+               [ngClass]="{'selected-row': row === selectedrow}">
+      </mat-row>
+
+    </mat-table>
+
+    <mat-paginator [length]="20" [pageSize]="5" [pageSizeOptions]="[3,5,10,20]"></mat-paginator>
+
+  </div>
+
+  <div search>
+    <form [formGroup]="ssearch" class="form-container">
+      <div class="input-group mb-3">
+        <input type="text" formControlName="number" class="form-control" placeholder="Supplier Number"
+               style="border-radius: 40px 0 0 40px">
+        <input type="text" formControlName="name" class="form-control" placeholder="Name">
+        <select formControlName="suppliertype" class="form-select ">
+          <option [value]="null" selected disabled>Supplier Type</option>
+          <option *ngFor="let supplierType of supplierTypes" [value]="supplierType.id">{{ supplierType.name }}</option>
+        </select>
+        <select formControlName="supplierstatus" class="form-select usstatus-drop-down">
+          <option [value]="null" selected disabled>Supplier Status</option>
+          <option *ngFor="let userstatus of supplierStatuses" [value]="userstatus.id">{{ userstatus.name }}</option>
+        </select>
+
+        <select formControlName="material" class="form-select usstatus-drop-down">
+          <option [value]="null" selected disabled>Material</option>
+          <option *ngFor="let userstatus of materials" [value]="userstatus.id">{{ userstatus.name }}</option>
+        </select>
+
+        <button class="btn btn-dark" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
+          <mat-icon style="padding-top: 7px">search</mat-icon>
+        </button>
+        <button class="btn btn-dark" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
+          Clear &nbsp; &nbsp;
+        </button>
+      </div>
+    </form>
+  </div>
+</app-common-layout>
+
+
+<!--
+            <div id="listtrnasfer">
+
+              <div class="w-50">
+                <mat-form-field appearance="outline" class="mt-2 material-dropdown ">
+                  <mat-label>Material</mat-label>
+                  <mat-select formControlName="material">
+                    <mat-option *ngFor="let status of materials" [value]="status">{{ status.name }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+
+                <button (click)="addToList()" class="btn btn-dark mx-auto  btn-lg ms-2 mt-2">
+                  Add
+                </button>
+
+                <button (click)="removeFromList(selectedlist.selectedOptions.selected)"
+                        class="btn btn-dark   mx-auto btn-lg ms-2 mt-2 my-auto">
+                  Remove
+                </button>
+
+              </div>
+
+              <div class="list">
+                <mat-selection-list formControlName="supplies" #selectedlist>
+                  <mat-list-option *ngFor="let supply of supplies" [value]="supply">{{ supply.material.name }}
+                  </mat-list-option>
+                </mat-selection-list>
+              </div>
+
+            </div>-->

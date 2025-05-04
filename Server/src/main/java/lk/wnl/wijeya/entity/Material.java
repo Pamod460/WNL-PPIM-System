@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -50,6 +53,9 @@ public class Material {
     @ManyToOne
     @JoinColumn(name = "materialsubcategory_id", referencedColumnName = "id", nullable = false)
     private Materialsubcategory materialsubcategory;
+    @JsonIgnore
+    @OneToMany(mappedBy = "material")
+    private Set<Supply> supplies = new LinkedHashSet<>();
 
     public Material(Integer id, String name) {
     }
