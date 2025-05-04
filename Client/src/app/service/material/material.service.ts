@@ -5,31 +5,33 @@ import {environment} from "../../../environments/environment";
 import {StandardResponse} from "../../entity/standardresponse";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class MaterialService {
-   readonly API_URL=environment.api_url
-  constructor(private http: HttpClient) {  }
+    readonly API_URL = environment.api_url
 
-   delete(id: number | undefined){
-    return this.http.delete<StandardResponse>(`${this.API_URL}/materials/` + id);
-  }
+    constructor(private http: HttpClient) {
+    }
 
-   update(employee: Material){
-    return this.http.put<StandardResponse>(`${this.API_URL}/materials`, employee);
-  }
+    delete(id: number | undefined) {
+        return this.http.delete<StandardResponse>(`${this.API_URL}/materials/` + id);
+    }
 
+    update(employee: Material) {
+        return this.http.put<StandardResponse>(`${this.API_URL}/materials`, employee);
+    }
 
-   getAll(query:string) {
-     return this.http.get<Material[]>(`${this.API_URL}/materials/` + query);
-  }
+    getAll(query: string) {
+        return this.http.get<Material[]>(`${this.API_URL}/materials/` + query);
+    }
+    getAllList() {
+        return this.http.get<Material[]>(`${this.API_URL}/materials/list`);
+    }
 
+    add(material: Material) {
 
-
-   add(material: Material){
-
-    return this.http.post<StandardResponse>(`${this.API_URL}/materials`, material);
-  }
+        return this.http.post<StandardResponse>(`${this.API_URL}/materials`, material);
+    }
 
 
 }

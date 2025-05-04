@@ -35,18 +35,6 @@ mat-card-title {
   padding-left: 10px;
 }
 
-#loading img {
-  width: 30px;
-  height: 25px;
-  margin-left: 200px;
-}
-
-.csearch {
-  height: 40px;
-  width: 100%;
-  margin-top: 5px;
-}
-
 #ssearch mat-card-content {
   padding-top: 30px;
 }
@@ -71,21 +59,21 @@ mat-card-title {
 #butpanel {
   width: auto;
   height: auto;
-  /*margin: 10px 0 20px -5px;*/
+  margin: 10px 0 20px -5px;
   display: flex;
 }
 
 #butpanel button {
   width: 118px;
-  /*padding: 10px 20px 10px 20px;*/
+  padding: 10px 20px 10px 20px;
   margin: 2px;
   font-size: 16px;
   color: white;
 }
-
+/*list transfer*/
 #listtrnasfer {
   display: inline-flex;
-  margin-bottom: 30px;
+  /*margin-bottom: 30px;*/
 
 }
 
@@ -94,11 +82,19 @@ mat-card-title {
   display: block !important;
 }
 
+
+.list-dialog {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
 .list {
   border: solid gray;
   border-radius: 5px;
-  max-height: 160px;
-  width: 200px;
+  max-height: 200px;
+  height: 200px;
+  width: 300px;
   margin-top: 10px;
   overflow: auto;
 }
@@ -110,6 +106,9 @@ mat-card-title {
 .list .mat-mdc-list-item .mdc-list-item__primary-text {
   font-size: 14px !important;
 }
+
+/*list transfer*/
+
 
 .selected-row {
   background-color: #c9e6ff !important;
@@ -201,13 +200,23 @@ mat-paginator {
 .usstatus-drop-down {
   font-style: normal !important; /* Make it italic */
   font-size: 0.9rem !important; /* Adjust font size */
-  width: 50px;
+  width: 100px;
 }
 
 .role-drop-down {
   font-style: normal !important; /* Make it italic */
   font-size: 0.9rem !important; /* Adjust font size */
+  width: 100px;
 }
+
+
+.material-dropdown {
+  height: 45px;
+  /*width: 40%;*/
+}
+
+
+
 
 
 

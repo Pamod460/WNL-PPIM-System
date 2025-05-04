@@ -1,6 +1,7 @@
 package lk.wnl.wijeya.controller;
 
 import lk.wnl.wijeya.dao.MaterialDao;
+import lk.wnl.wijeya.entity.Emptype;
 import lk.wnl.wijeya.entity.Material;
 import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
 import lk.wnl.wijeya.exception.ResourceNotFoundException;
@@ -47,7 +48,21 @@ public class MaterialController {
         return mstream.collect(Collectors.toList());
 
     }
+    @GetMapping(path ="/list", produces = "application/json")
+    public List<Material> get() {
 
+        List<Material> materials = this.materialDao.findAll();
+
+        materials = materials.stream().map(
+                material -> { Material d = new Material();
+                    d.setId(material.getId());
+                    d.setName(material.getName());
+                    return d; }
+        ).collect(Collectors.toList());
+
+        return materials;
+
+    }
     @PostMapping(produces = "application/json")
     public ResponseEntity<StandardResponse> save(@RequestBody Material material) {
         if (materialDao.existsByCode(material.getCode())) {

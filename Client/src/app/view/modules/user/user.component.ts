@@ -5,7 +5,7 @@ import {MatSelectionList} from "@angular/material/list";
 import {Userstatus} from "../../../entity/userstatus";
 import {EmployeeService} from "../../../service/employee/employee.service";
 import {UserstatusService} from "../../../service/user/userstatus.service";
-import {RoleService} from "../../../service/privilage/role.service";
+import {RoleService} from "../../../service/user/role.service";
 import {Role} from "../../../entity/role";
 import {MatTableDataSource} from "@angular/material/table";
 import {UserService} from "../../../service/user/user.service";
@@ -272,10 +272,7 @@ export class UserComponent implements OnInit {
     const selectedOptions = this.selectedlist.selectedOptions.selected; // Right Side
     for (const option of selectedOptions) {
       const extUserRoles = option.value;
-      this.userroles = this.userroles.filter(role => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        role !== extUserRoles
-      }); // Remove the Selected one From Right Side
+      this.userroles = this.userroles.filter(role => role !== extUserRoles); // Remove the Selected one From Right Side
       this.roles.push(extUserRoles.role);
     }
 
@@ -514,7 +511,7 @@ export class UserComponent implements OnInit {
         const confirm = this.matDialog.open(ConfirmComponent, {
           width: '500px',
           data: {
-            heading: "Confirmation - Employee Update",
+            heading: "Confirmation - User Update",
             message: "Are you sure to Save folowing Updates? <br> <br>" + updates
           }
         });

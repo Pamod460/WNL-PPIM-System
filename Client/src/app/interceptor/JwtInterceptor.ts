@@ -24,7 +24,7 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401) {
+        if (error.status === 401 || (error.status === 500 && error.error.message.includes("JWT expired"))) {
           // Token is invalid or expired
           this.authorizationManager.removeToken();
           this.router.navigate(['/login']); // Redirect to login page

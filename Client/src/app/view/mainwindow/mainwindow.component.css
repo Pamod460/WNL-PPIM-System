@@ -147,12 +147,12 @@ mat-sidenav {
 
 .navigation {
   position: fixed;
-  width: 300px;
+  /*width: 250px;*/
   height: 100%;
   background: #51575d;
   /*background: #2a2185;*/
   border-left: 10px solid #2a2185;
-  transition: 0.5s;
+  /*transition: 0.5s;*/
   overflow: hidden;
 }
 
@@ -166,12 +166,34 @@ mat-sidenav {
   left: 0;
   width: 100%;
 }
-.navigation.mini {
-  width: 60px;
+mat-sidenav {
+  width: 250px;
+  transition: width 0.3s ease-in-out;
 }
-.sidenav.mini {
-  width: 60px;
+
+mat-sidenav.mini {
+  width: 80px;
 }
+
+mat-sidenav .title {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+mat-sidenav.mini .title {
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+}
+
+mat-sidenav .icon {
+  margin-right: 10px;
+}
+
+mat-sidenav.mini .icon {
+  margin-right: 0;
+}
+
 
 .nav-items a {
   display: flex;
