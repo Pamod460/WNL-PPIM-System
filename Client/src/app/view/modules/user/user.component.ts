@@ -17,7 +17,7 @@ import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
 import {MatDialog} from "@angular/material/dialog";
 import {RegexService} from "../../../service/Shared/regex.service";
 import {MessageComponent} from "../../../util/dialog/message/message.component";
-import {Userrole} from "../../../entity/userrole";
+import {UserRole} from "../../../entity/userRole";
 import {AuthorizationManager} from "../../../service/auth/authorizationmanager";
 import {Usrtype} from "../../../entity/usrtype";
 import {UsrtypeService} from "../../../service/user/usrtype.service";
@@ -36,7 +36,7 @@ export class UserComponent implements OnInit {
   userstatues: Userstatus[] = [];
   usertypes: Usrtype[] = [];
   users: User[] = [];
-  userroles: Userrole[] = [];
+  userroles: UserRole[] = [];
 
   @Input() roles: Role[] = [];
   oldroles: Role[] = [];
@@ -53,9 +53,9 @@ export class UserComponent implements OnInit {
   @ViewChild('selectedlist') selectedlist!: MatSelectionList;
   defaultProfile = 'assets/default.png';
 
-  columns: string[] = ['photo', 'employee', 'username', 'role', 'userstatus', 'usertype'];
+  columns: string[] = ['photo', 'employee', 'username', 'role', 'userStatus', 'userType'];
   headers: string[] = ['Profile', 'Employee', 'Username', 'Role', 'User Status', 'User Type'];
-  binders: string[] = ['employee.photo', 'employee.callingname', 'username', 'getRole()', 'usestatus.name', 'usetype.name'];
+  binders: string[] = ['employee.photo', 'employee.callingname', 'username', 'getRole()', 'userStatus.name', 'userType.name'];
   imageurl = '';
 
   data !: MatTableDataSource<User>;
@@ -110,10 +110,10 @@ export class UserComponent implements OnInit {
       "confirmpassword": new FormControl('', [Validators.required]),
       "docreated": new FormControl('', [Validators.required]),
       "tocreated": new FormControl(this.datePipe.transform(Date.now(), "hh:mm:ss"), [Validators.required]),
-      "usestatus": new FormControl('', [Validators.required]),
-      "usetype": new FormControl('', [Validators.required]),
+      "userStatus": new FormControl('', [Validators.required]),
+      "userType": new FormControl('', [Validators.required]),
       "description": new FormControl(),
-      "userroles": new FormControl('', [Validators.required])
+      "userRoles": new FormControl('', [Validators.required])
     });
 
     this.ssearch = this.formBuilder.group({
@@ -196,11 +196,11 @@ export class UserComponent implements OnInit {
   }
 
   getRole(element: User): string {
-    if (!element.userroles || element.userroles.length === 0) {
+    if (!element.userRoles || element.userRoles.length === 0) {
       return "";
     }
 
-    return element.userroles.map(e => e.role.name).join(", ");
+    return element.userRoles.map(e => e.role.name).join(", ");
   }
 
 
@@ -211,10 +211,10 @@ export class UserComponent implements OnInit {
     this.form.controls['confirmpassword'].setValidators([Validators.required, Validators.pattern(this.regexes['password']['regex'])]);
     this.form.controls['docreated'].setValidators([Validators.required]);
     this.form.controls['tocreated'].setValidators([Validators.required]);
-    this.form.controls['usestatus'].setValidators([Validators.required]);
-    this.form.controls['usetype'].setValidators([Validators.required]);
+    this.form.controls['userStatus'].setValidators([Validators.required]);
+    this.form.controls['userType'].setValidators([Validators.required]);
     this.form.controls['description'].setValidators([Validators.pattern(this.regexes['description']['regex'])]);
-    this.form.controls['userroles'].setValidators([Validators.required]);
+    this.form.controls['userRoles'].setValidators([Validators.required]);
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
     });
@@ -257,15 +257,15 @@ export class UserComponent implements OnInit {
   }
 
   rightSelected(): void {
-    this.user.userroles = this.availablelist.selectedOptions.selected.map(option => {
-      const userRole = new Userrole(option.value);
+    this.user.userRoles = this.availablelist.selectedOptions.selected.map(option => {
+      const userRole = new UserRole(option.value);
       this.roles = this.roles.filter(role => role !== option.value); //Remove Selected
       this.userroles.push(userRole); // Add selected to Right Side
       return userRole;
     });
 
-    this.form.controls["userroles"].clearValidators();
-    this.form.controls["userroles"].updateValueAndValidity(); // Update status
+    this.form.controls["userRoles"].clearValidators();
+    this.form.controls["userRoles"].updateValueAndValidity(); // Update status
   }
 
   leftSelected(): void {
@@ -280,15 +280,15 @@ export class UserComponent implements OnInit {
 
 
   rightAll(): void {
-    this.user.userroles = this.availablelist.selectAll().map(option => {
-      const userRole = new Userrole(option.value);
+    this.user.userRoles = this.availablelist.selectAll().map(option => {
+      const userRole = new UserRole(option.value);
       this.roles = this.roles.filter(role => role !== option.value);
       this.userroles.push(userRole);
       return userRole;
     });
 
-    this.form.controls["userroles"].clearValidators();
-    this.form.controls["userroles"].updateValueAndValidity();
+    this.form.controls["userRoles"].clearValidators();
+    this.form.controls["userRoles"].updateValueAndValidity();
   }
 
   leftAll(): void {
@@ -375,7 +375,7 @@ export class UserComponent implements OnInit {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-expect-error
       delete user.confirmpassword;
-      user.userroles = this.user.userroles;
+      user.userRoles = this.user.userRoles;
       this.user = user;
 
       let usrdata = "";
@@ -434,14 +434,14 @@ export class UserComponent implements OnInit {
     this.user.employee = this.employees.find(e => e.id === this.user.employee.id);
 
     //@ts-ignore
-    this.user.usestatus = this.userstatues.find(s => s.id === this.user.usestatus.id);
+    this.user.userStatus = this.userstatues.find(s => s.id === this.user.userStatus.id);
 
     //@ts-ignore
-    this.user.usetype = this.usertypes.find(s => s.id === this.user.usetype.id);
+    this.user.userType = this.usertypes.find(s => s.id === this.user.userType.id);
 
-    this.userroles = this.user.userroles; // Load User Roles
+    this.userroles = this.user.userRoles; // Load User Roles
 
-    this.user.userroles.forEach((ur) => this.roles = this.roles.filter((r) => r.id != ur.role.id)); // Load or remove roles by comparing with user.userroles
+    this.user.userRoles.forEach((ur) => this.roles = this.roles.filter((r) => r.id != ur.role.id)); // Load or remove roles by comparing with user.userroles
 
     const userData = {...this.user}; // Clone the user object
     //@ts-ignore

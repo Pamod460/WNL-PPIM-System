@@ -99,8 +99,4 @@ public class Supplier {
     @JoinColumn(name = "country_id", nullable = false, referencedColumnName = "id")
     private Country country;
 
-    public Supplier(Integer id, String name) {
-        this.id = id;
-        this.name = name;
-    }
 }

@@ -20,8 +20,8 @@ export class Employee{
   public description !: string;
   public gender !: Gender;
   public designation !: Designation;
-  public empstatus !: Empstatus;
-  public emptype !: Emptype;
+  public employeeStatus !: Empstatus;
+  public employeeType !: Emptype;
 
 
   constructor(id:number, fullname:string, number:string,
@@ -47,8 +47,8 @@ export class Employee{
     this.description=description;
     this.gender=gender;
     this.designation=designation;
-    this.empstatus=empstatus;
-    this.emptype=emptype;
+    this.employeeStatus=empstatus;
+    this.employeeType=emptype;
   }
 
 }

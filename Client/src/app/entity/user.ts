@@ -1,6 +1,6 @@
 import {Employee} from "./employee";
 import {Userstatus} from "./userstatus";
-import {Userrole} from "./userrole";
+import {UserRole} from "./userRole";
 import {Usrtype} from "./usrtype";
 
 export class User{
@@ -10,12 +10,12 @@ export class User{
   public username !: string;
   public password !: string;
   public confirmpassword !: string;
-  public userroles!:Userrole[];
+  public userRoles!:UserRole[];
   public description !: string;
   public tocreated!:string | null;
   public docreated!:string;
-  public usestatus !: Userstatus;
-  public usetype !: Usrtype;
+  public userStatus !: Userstatus;
+  public userType !: Usrtype;
 
 
 
