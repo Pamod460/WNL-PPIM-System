@@ -3,10 +3,10 @@ package lk.wnl.wijeya.security;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lk.wnl.wijeya.dao.UserDao;
+import lk.wnl.wijeya.repository.UserRepository;
 import lk.wnl.wijeya.entity.Role;
 import lk.wnl.wijeya.entity.User;
-import lk.wnl.wijeya.entity.Userrole;
+import lk.wnl.wijeya.entity.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +22,7 @@ public class JwtTokenUtil {
     private final String secret;
     private final int expiration;
     @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     public JwtTokenUtil(@Value("${jwt.secret}") String secret, @Value("${jwt.expiration}") int expiration) {
         this.secret = secret;
@@ -33,10 +33,10 @@ public class JwtTokenUtil {
         String username;
         Map<String, Object> claims = new HashMap<>();
 
-        User user = userDao.findByUsername(userDetails.getUsername());
+        User user = userRepository.findByUsername(userDetails.getUsername());
         if (user != null) {
-            Collection<Userrole> userroles = user.getUserroles();
-            List<Role> roles = userroles.stream().map(Userrole::getRole).collect(Collectors.toList());
+            Collection<UserRole> userRoles = user.getUserRoles();
+            List<Role> roles = userRoles.stream().map(UserRole::getRole).collect(Collectors.toList());
             claims.put("roles", roles);
             username = user.getEmployee().getFullname();
         } else {

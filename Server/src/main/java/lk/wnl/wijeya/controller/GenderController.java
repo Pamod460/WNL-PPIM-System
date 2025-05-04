@@ -1,7 +1,10 @@
 package lk.wnl.wijeya.controller;
 
-import lk.wnl.wijeya.dao.GenderDao;
+import lk.wnl.wijeya.dto.GenderDto;
+import lk.wnl.wijeya.repository.GenderRepository;
 import lk.wnl.wijeya.entity.Gender;
+import lk.wnl.wijeya.service.GenderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,24 +16,16 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/genders")
+@RequiredArgsConstructor
 public class GenderController {
 
-    @Autowired
-    private GenderDao genderdao;
+    private final GenderService genderService;
 
     @GetMapping(path ="/list",produces = "application/json")
-    public List<Gender> get() {
+    public List<GenderDto> get() {
 
-        List<Gender> genders = this.genderdao.findAll();
 
-        genders = genders.stream().map(
-                gender -> { Gender g = new Gender();
-                            g.setId(gender.getId());
-                            g.setName(gender.getName());
-                            return g; }
-        ).collect(Collectors.toList());
-
-        return genders;
+        return this.genderService.getAll();
 
     }
 

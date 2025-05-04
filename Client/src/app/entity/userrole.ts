@@ -1,6 +1,6 @@
 import {Role} from "./role";
 
-export class Userrole {
+export class UserRole {
 
   public role !: Role;
 

@@ -96,7 +96,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Employee Type</mat-label>
-        <mat-select formControlName="emptype">
+        <mat-select formControlName="employeeType">
           <mat-option [value]="null" selected>Not Selected</mat-option>
           <mat-option *ngFor="let employeetype of employeetypes" [value]="employeetype">{{ employeetype.name }}
           </mat-option>
@@ -105,7 +105,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Employee Status</mat-label>
-        <mat-select formControlName="empstatus">
+        <mat-select formControlName="employeeStatus">
           <mat-option [value]="null" selected>Not Selected</mat-option>
           <mat-option *ngFor="let employeestatus of employeestatuses"
                       [value]="employeestatus">{{ employeestatus.name }}

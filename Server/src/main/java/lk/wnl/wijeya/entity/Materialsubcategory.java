@@ -26,17 +26,5 @@ public class Materialsubcategory {
     @JoinColumn(name = "materialcategory_id", referencedColumnName = "id", nullable = false)
     private Materialcategory materialcategory;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Materialsubcategory that = (Materialsubcategory) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
 
 }

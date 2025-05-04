@@ -23,16 +23,5 @@ public class Operation {
     private String name;
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Operation operation = (Operation) o;
-        return Objects.equals(id, operation.id) && Objects.equals(name, operation.name);
-    }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
 }

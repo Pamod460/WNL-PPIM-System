@@ -56,7 +56,7 @@
         </div>
 
         <div class="list">
-          <mat-selection-list formControlName="userroles" #selectedlist>
+          <mat-selection-list formControlName="userRoles" #selectedlist>
             <mat-list-option *ngFor="let userrole of userroles" [value]="userrole">{{ userrole.role.name }}
             </mat-list-option>
           </mat-selection-list>
@@ -78,7 +78,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>User Status</mat-label>
-        <mat-select formControlName="usestatus">
+        <mat-select formControlName="userStatus">
           <mat-option selected>Not Selected</mat-option>
           <mat-option *ngFor="let userstatus of userstatues" [value]="userstatus">{{ userstatus.name }}</mat-option>
         </mat-select>
@@ -86,7 +86,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>User Type</mat-label>
-        <mat-select formControlName="usetype">
+        <mat-select formControlName="userType">
           <mat-option selected>Not Selected</mat-option>
           <mat-option *ngFor="let usertype of usertypes" [value]="usertype">{{ usertype.name }}</mat-option>
         </mat-select>

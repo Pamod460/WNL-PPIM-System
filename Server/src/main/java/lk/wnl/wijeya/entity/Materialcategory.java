@@ -23,17 +23,4 @@ public class Materialcategory {
     @OneToMany(mappedBy = "materialcategory")
     private Collection<Materialsubcategory> materialsubcategories;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Materialcategory that = (Materialcategory) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
 }
