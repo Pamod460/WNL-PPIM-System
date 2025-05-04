@@ -1,11 +1,11 @@
 package lk.wnl.wijeya.security;
 
-import lk.wnl.wijeya.dao.ModuleDao;
-import lk.wnl.wijeya.dao.UserDao;
+import lk.wnl.wijeya.repository.ModuleRepository;
+import lk.wnl.wijeya.repository.UserRepository;
 import lk.wnl.wijeya.entity.Privilege;
 import lk.wnl.wijeya.entity.User;
 import lk.wnl.wijeya.entity.Module;
-import lk.wnl.wijeya.entity.Userrole;
+import lk.wnl.wijeya.entity.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,15 +21,15 @@ import java.util.Set;
 @Service
 public class UserService implements UserDetailsService {
 
-    final UserDao userdao;
+    final UserRepository userdao;
 
     @Autowired
-    public UserService(UserDao userdao) {
+    public UserService(UserRepository userdao) {
         this.userdao = userdao;
     }
 
     @Autowired
-    private ModuleDao moduleDao;
+    private ModuleRepository moduleRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -37,7 +37,7 @@ public class UserService implements UserDetailsService {
         if (username.equals("Admin")) {
             Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
-            List<Module> modules = moduleDao.findAll();
+            List<Module> modules = moduleRepository.findAll();
             String[] operations = {"select","insert","update","delete"};
 
             for (Module module : modules){
@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService {
             if (user == null) {
                 throw new UsernameNotFoundException("User not found with username " + username);
             }
-            String userStatus = user.getUsestatus().getName();
+            String userStatus = user.getUserStatus().getName();
             if (userStatus.equalsIgnoreCase("inactive")){
                 throw new RuntimeException("Access Denied/This user account is inactive. Please contact the System Administrator for support.");
             }
@@ -73,9 +73,9 @@ public class UserService implements UserDetailsService {
 
             Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
-            List<Userrole> userroles = (List<Userrole>) user.getUserroles();
+            List<UserRole> userRoles = (List<UserRole>) user.getUserRoles();
 
-            for(Userrole u : userroles){
+            for(UserRole u : userRoles){
                 List<Privilege> privileges = (List<Privilege>) u.getRole().getPrivileges();
                 for (Privilege p:privileges){
                     authorities.add(new SimpleGrantedAuthority(p.getAuthority()));

@@ -1,36 +1,30 @@
 package lk.wnl.wijeya.controller;
 
 
-import lk.wnl.wijeya.dao.OperationDao;
-import lk.wnl.wijeya.entity.Operation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import lk.wnl.wijeya.dto.OperationDto;
+import lk.wnl.wijeya.service.OperationService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/operations")
+@RequiredArgsConstructor
 public class OperationController {
 
-    @Autowired
-    private OperationDao operationDao;
+    private final OperationService operationService;
+
 
     @GetMapping(produces = "application/json")
-    public List<Operation> get(@RequestParam HashMap<String, String> params) {
+    public List<OperationDto> get() {
 
-        List<Operation> operations = this.operationDao.findAll();
+        return operationService.getAll();
 
-        if(params.isEmpty())  return operations;
-
-        String moduleid= params.get("moduleid");
-
-        Stream<Operation> pstream = operations.stream();
-
-        return pstream.collect(Collectors.toList());
 
     }
 }

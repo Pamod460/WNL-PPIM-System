@@ -1,8 +1,11 @@
 package lk.wnl.wijeya.controller;
 
 
-import lk.wnl.wijeya.dao.ModuleDao;
+import lk.wnl.wijeya.dto.ModuleDto;
+import lk.wnl.wijeya.repository.ModuleRepository;
 import lk.wnl.wijeya.entity.Module;
+import lk.wnl.wijeya.service.ModuleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,24 +18,14 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/modules")
+@RequiredArgsConstructor
 public class ModuleController {
-
-    @Autowired
-    private ModuleDao moduledao;
+    private final ModuleService moduleService;
 
     @GetMapping(path ="/list",produces = "application/json")
-    public List<Module> get() {
+    public List<ModuleDto> get() {
+       return moduleService.getAll();
 
-        List<Module> modules = this.moduledao.findAll();
-
-        modules = modules.stream().map(
-                module -> { Module m = new Module();
-                            m.setId(module.getId());
-                            m.setName(module.getName());
-                            return m; }
-        ).collect(Collectors.toList());
-
-        return modules;
 
     }
 

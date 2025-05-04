@@ -28,13 +28,19 @@ dependencies {
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	developmentOnly ("org.springframework.boot:spring-boot-devtools")
+	// MapStruct
+	implementation("org.mapstruct:mapstruct:1.6.3")
+	annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
 
-
-	// Lombok
+	// Lombok (for main code)
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 
-	// Lombok for tests (optional)
+	// Required for proper Lombok + MapStruct integration
+	annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+
+	// Lombok (for test code)
 	testCompileOnly("org.projectlombok:lombok")
 	testAnnotationProcessor("org.projectlombok:lombok")
 }
@@ -42,3 +48,7 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+tasks.withType<JavaCompile> {
+	options.annotationProcessorPath = configurations.annotationProcessor.get()
+}
+

@@ -1,6 +1,6 @@
 package lk.wnl.wijeya.controller;
 
-import lk.wnl.wijeya.dao.SupplierTypeDao;
+import lk.wnl.wijeya.repository.SupplierTypeRepository;
 import lk.wnl.wijeya.entity.SupplierType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,11 +16,11 @@ import java.util.List;
 public class SupplierTypeController {
 
     @Autowired
-    private SupplierTypeDao supplierTypeDao;
+    private SupplierTypeRepository supplierTypeRepository;
 
     @GetMapping(path = "/list", produces = "application/json")
     public List<SupplierType> get() {
-        return supplierTypeDao.findAll();
+        return supplierTypeRepository.findAll();
     }
 }
 
