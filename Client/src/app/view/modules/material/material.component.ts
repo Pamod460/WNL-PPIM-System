@@ -134,6 +134,7 @@ export class MaterialComponent implements OnInit {
         })
         this.materialsubcategoryService.getAll("").subscribe({
             next: (materialsubcategories: Materialsubcategory[]) => {
+              console.log(materialsubcategories)
                 this.allMaterialSubcategories = materialsubcategories;
             }, error: (err: any) => {
                 console.log(err);

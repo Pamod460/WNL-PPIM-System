@@ -32,9 +32,9 @@ import {TableUtilsService} from "../../../service/Shared/table-utils.service";
 export class EmployeeComponent implements OnInit {
   protected readonly document = document;
 
-  columns: string[] = ['photo', 'number', 'fullname', 'nic', 'dobirth', 'designation', 'empstatus'];
+  columns: string[] = ['photo', 'number', 'fullname', 'nic', 'dobirth', 'designation', 'employeeStatus'];
   headers: string[] = ['Profile', 'Code', 'Full Name', 'NIC', 'Date of Birth', 'Designation', 'Status'];
-  binders: string[] = ['photo', 'number', 'fullname', 'nic', 'dobirth', 'designation.name', 'empstatus.name'];
+  binders: string[] = ['photo', 'number', 'fullname', 'nic', 'dobirth', 'designation.name', 'employeeStatus.name'];
 
   defaultProfile = 'assets/default.png';
 
@@ -117,8 +117,8 @@ export class EmployeeComponent implements OnInit {
       "designation": new FormControl('', [Validators.required]),
       "doassignment": new FormControl('', [Validators.required]),
       "description": new FormControl(),
-      "emptype": new FormControl('', [Validators.required]),
-      "empstatus": new FormControl('', [Validators.required]),
+      "employeeType": new FormControl('', [Validators.required]),
+      "employeeStatus": new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
 
     const today = new Date();
@@ -182,8 +182,8 @@ export class EmployeeComponent implements OnInit {
     this.form.controls['designation'].setValidators([Validators.required]);
     this.form.controls['doassignment'].setValidators([Validators.required]);
     this.form.controls['description'].setValidators([Validators.pattern(this.regexes['description']['regex'])]);
-    this.form.controls['emptype'].setValidators([Validators.required]);
-    this.form.controls['empstatus'].setValidators([Validators.required]);
+    this.form.controls['employeeType'].setValidators([Validators.required]);
+    this.form.controls['employeeStatus'].setValidators([Validators.required]);
 
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
@@ -423,9 +423,9 @@ export class EmployeeComponent implements OnInit {
     //@ts-ignore
     this.employee.designation = this.designations.find(d => d.id === this.employee.designation.id);
     //@ts-ignore
-    this.employee.empstatus = this.employeestatuses.find(s => s.id === this.employee.empstatus.id);
+    this.employee.employeeStatus = this.employeestatuses.find(s => s.id === this.employee.employeeStatus.id);
     //@ts-ignore
-    this.employee.emptype = this.employeetypes.find(s => s.id === this.employee.emptype.id);
+    this.employee.employeeType = this.employeetypes.find(s => s.id === this.employee.employeeType.id);
 
     this.form.patchValue(this.employee);
     this.form.markAsPristine();
