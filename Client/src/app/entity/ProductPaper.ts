@@ -2,7 +2,7 @@ import {Paper} from "./Paper";
 
 export interface ProductPaper {
   paper: Paper;
-  linecost: number;
+  lineCost: number;
   quantity: number;
   id?: number;
   name?: string;
