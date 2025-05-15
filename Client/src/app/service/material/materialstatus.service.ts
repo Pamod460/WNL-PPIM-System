@@ -13,19 +13,11 @@ export class MaterialstatusService {
 
   constructor(private http: HttpClient) { }
 
-  delete(id: number | undefined): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
-  }
 
-  update(entity: Materialstatus): Observable<Materialstatus> {
-    return this.http.put<Materialstatus>(`${this.baseUrl}`, entity);
-  }
 
   getAll(query: string ) {
     return this.http.get<Materialstatus[]>(`${this.baseUrl}` + query);
   }
 
-  add(entity: Materialstatus): Observable<Materialstatus> {
-    return this.http.post<Materialstatus>(`${this.baseUrl}`, entity);
-  }
+
 }
