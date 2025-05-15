@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -27,7 +29,7 @@ public class Paper {
     @OneToMany(mappedBy = "paper")
     private Set<ProductPaper> productPapers = new LinkedHashSet<>();
 
-    @Column(name = "unitprice", precision = 7, scale = 2)
+    @Column(name = "unit_price", precision = 7, scale = 2)
     private BigDecimal unitprice;
 
 }
