@@ -55,6 +55,10 @@ public class Material {
     @OneToMany(mappedBy = "material")
     private Set<Supply> supplies = new LinkedHashSet<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "material")
+    private Set<ProductMaterial> productMaterials = new LinkedHashSet<>();
+
     public Material(Integer id, String name) {
     }
 

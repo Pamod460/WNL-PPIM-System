@@ -49,6 +49,8 @@ import {ToastrModule} from "ngx-toastr";
 import { LogoutComponent } from './util/dialog/logout/logout.component';
 import { SupplierComponent } from './view/modules/supplier/supplier.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import { ProductComponent } from './view/modules/product/product.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 
 
@@ -70,47 +72,49 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
     MaterialComponent,
     LogoutComponent,
     SupplierComponent,
+    ProductComponent,
 
 
   ],
-  imports: [
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatSelectModule,
-    MatTableModule,
-    MatPaginatorModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatGridListModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatToolbarModule,
-    MatSidenavModule,
-    MatListModule,
-    MatExpansionModule,
-    MatIconModule,
-    MatDialogModule,
-    HttpClientModule,
-    MatChipsModule,
-    ReactiveFormsModule,
-    MatSlideToggleModule,
-    MatPseudoCheckboxModule,
-    MatCheckboxModule,
-    CommonLayoutComponent,
-    NgbModule,
-    MatMenuModule,
-    ToastrModule.forRoot({
-      positionClass: 'toast-top-right',
-      timeOut: 5000,
-      preventDuplicates: true
-    }),
-    FormsModule,
-    MatAutocompleteModule
+    imports: [
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatSelectModule,
+        MatTableModule,
+        MatPaginatorModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatGridListModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatToolbarModule,
+        MatSidenavModule,
+        MatListModule,
+        MatExpansionModule,
+        MatIconModule,
+        MatDialogModule,
+        HttpClientModule,
+        MatChipsModule,
+        ReactiveFormsModule,
+        MatSlideToggleModule,
+        MatPseudoCheckboxModule,
+        MatCheckboxModule,
+        CommonLayoutComponent,
+        NgbModule,
+        MatMenuModule,
+        ToastrModule.forRoot({
+            positionClass: 'toast-top-right',
+            timeOut: 5000,
+            preventDuplicates: true
+        }),
+        FormsModule,
+        MatAutocompleteModule,
+        MatTooltipModule
 
-  ],
+    ],
   providers: [
     EmployeeService,
     DatePipe,

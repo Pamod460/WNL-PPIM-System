@@ -12,18 +12,18 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "country")
-public class Country {
+@Table(name = "product_frequency")
+public class ProductFrequency {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
     @Size(max = 45)
-    @Column(name = "name", length = 45)
-    private String name;
+    @Column(name = "frequency", length = 45)
+    private String frequency;
     @JsonIgnore
-    @OneToMany(mappedBy = "country")
-    private Set<Supplier> suppliers = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "productfrequency")
+    private Set<Product> products = new LinkedHashSet<>();
 
 }

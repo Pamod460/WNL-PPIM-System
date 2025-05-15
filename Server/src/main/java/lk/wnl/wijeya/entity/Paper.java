@@ -5,15 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "country")
-public class Country {
+@Table(name = "paper")
+public class Paper {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -23,7 +26,10 @@ public class Country {
     @Column(name = "name", length = 45)
     private String name;
     @JsonIgnore
-    @OneToMany(mappedBy = "country")
-    private Set<Supplier> suppliers = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "paper")
+    private Set<ProductPaper> productPapers = new LinkedHashSet<>();
+
+    @Column(name = "unit_price", precision = 7, scale = 2)
+    private BigDecimal unitprice;
 
 }

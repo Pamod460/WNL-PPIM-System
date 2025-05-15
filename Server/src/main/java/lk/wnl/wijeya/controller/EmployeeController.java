@@ -20,7 +20,6 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
     public List<EmployeeDto> get(@RequestParam HashMap<String, String> params) {
         return employeeService.getAllEmployees(params);
     }

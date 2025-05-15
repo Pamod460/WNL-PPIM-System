@@ -12,10 +12,9 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "country")
-public class Country {
+@Table(name = "product_status")
+public class ProductStatus {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 
@@ -23,7 +22,7 @@ public class Country {
     @Column(name = "name", length = 45)
     private String name;
     @JsonIgnore
-    @OneToMany(mappedBy = "country")
-    private Set<Supplier> suppliers = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "productStatus")
+    private Set<Product> products = new LinkedHashSet<>();
 
 }

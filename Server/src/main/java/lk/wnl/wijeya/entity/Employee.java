@@ -1,7 +1,6 @@
 package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lk.wnl.wijeya.util.regex.RegexPattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,49 +23,47 @@ public class Employee {
     private Integer id;
     @Basic
     @Column(name = "number")
-    @Pattern(regexp = "^E\\d{3}$", message = "Invalid Number")
+
     private String number;
     @Basic
     @Column(name = "fullname")
-    @Pattern(regexp = "^([A-Z][a-z]*[.]?[\\s]?)*([A-Z][a-z]*)$", message = "Invalid Fullname")
+
     private String fullname;
     @Basic
     @Column(name = "callingname")
-    @Pattern(regexp = "^([A-Z][a-z]+)$", message = "Invalid Calligname")
+
     private String callingname;
     @Basic
     @Column(name = "photo")
     private byte[] photo;
     @Basic
     @Column(name = "dobirth")
-    @RegexPattern(reg = "^\\d{2}-\\d{2}-\\d{2}$", msg = "Invalid Date Format")
+
     private Date dobirth;
     @Basic
     @Column(name = "nic")
-    @Pattern(regexp = "^(([\\d]{9}[vVxX])|([\\d]{12}))$", message = "Invalid NIC")
+
     private String nic;
     @Basic
     @Column(name = "address")
-    @Pattern(regexp = "^./*$", message = "Invalid Address")
+
     private String address;
     @Basic
     @Column(name = "mobile")
-    @Pattern(regexp = "^((\\+94|0)(70|71|72|74|75|76|77|78)\\d{7})$", message = "Invalid Mobile Number")
+
     private String mobile;
     @Basic
     @Column(name = "land")
-    @Pattern(regexp = "^(0(11|21|23|24|25|26|27|31|32|33|34|35|36|37|38|41|45|51|52|54|55|57|61|63|65|66|67|71|81|91)-?[0-9]{7}?)$", message = "Invalid Landphone Number")
     private String land;
     @Basic
     @Column(name = "email")
-    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Invalid Email")
+
     private String email;
     @Basic
     @Column(name = "doassignment")
     private Date doassignment;
     @Basic
     @Column(name = "description")
-    @Pattern(regexp = "^(.*)?$", message = "Invalid Description")
     private String description;
     @ManyToOne
     @JoinColumn(name = "gender_id", referencedColumnName = "id", nullable = false)
@@ -84,7 +81,7 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private Collection<User> users;
 
-    public Employee(Integer id, String callingname){
+    public Employee(Integer id, String callingname) {
         this.id = id;
         this.callingname = callingname;
     }

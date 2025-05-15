@@ -50,12 +50,9 @@ public class MaterialServiceIMPL implements MaterialService {
     @Override
     public List<MaterialDto> getAllList() {
         List<Material> materials = materialRepository.findAll();
-        System.out.println("Materials 1: " + materials.get(1).getName());
         List<MaterialDto> materialsList = objectMapper.toMaterialDtoList(materials);
-        System.out.println("Materials 2: " + materialsList.get(1).getName());
-
         materialsList = materialsList.stream().map(
-                mat -> new MaterialDto(mat.getId(), mat.getName())
+                mat -> new MaterialDto(mat.getId(), mat.getName(),mat.getUnitprice())
         ).collect(Collectors.toList());
         return materialsList;
     }

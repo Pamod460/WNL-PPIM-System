@@ -19,7 +19,7 @@ public interface ObjectMapper {
 
     List<EmployeeDto> toEmployeeDtoList(List<Employee> employees);
     EmployeeStatusDto toEmployeeStatusDto(EmployeeStatus employeeStatus);
-    List<EmployeeStatusDto> toEmployeeStatusDtoList(List<EmployeeStatus> all);
+    List<EmployeeStatusDto> toEmployeeStatusDtoList(List<EmployeeStatus> employeeStatusList);
 
     List<EmployeeTypeDto> toEmployeeTypeDtoList(List<EmployeeType> employeeTypeList);
 
@@ -47,9 +47,9 @@ public interface ObjectMapper {
 
     List<SupplierTypeDto> toSupplierTypeDtoList(List<SupplierType> supplierTypeList);
 
-    List<UnitTypeDto> toUnitTypeDtoList(List<UserType> all);
+    List<UnitTypeDto> toUnitTypeDtoList(List<UserType> userTypeList);
 
-    List<UserStatusDto> toUserStatusDtoList(List<UserType> all);
+    List<UserStatusDto> toUserStatusDtoList(List<UserType> userTypeList);
 
     Material toMaterial(MaterialDto materialDto);
 
@@ -67,5 +67,17 @@ public interface ObjectMapper {
 
     Supplier toSupplier(SupplierDto supplierDto);
 
-    List<SupplierDto> toSupplierDtoList(List<Supplier> all);
+    List<SupplierDto> toSupplierDtoList(List<Supplier> supplierList);
+
+    List<ProductCategoryDto> toProductTypeDtoList(List<ProductCategory> productCategoryList);
+
+    List<ProductFrequencyDto> toProductFrequencyDtoList(List<ProductFrequency> productFrequencyList);
+
+    List<ProductStatusDto> toProductStatusDtoList(List<ProductStatus> productStatusList);
+
+    List<ProductDto> toProductDtoList(List<Product> all);
+
+    Product toProduct(ProductDto productDto);
+
+    ProductDto toProductDto(Product product);
 }

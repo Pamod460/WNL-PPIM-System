@@ -1,0 +1,245 @@
+.btn-colour{
+  background-color: #024e85;
+}
+
+
+/* Employee Form > Photo Panel  */
+#imgpanel {
+  height: 120px;
+  margin-bottom: 30px;
+  margin-top: 10px;
+  margin-left: 100px;
+}
+
+#imgpanel img{
+  height: 120px;
+  width: 120px;
+}
+
+#selectbutton, #clearbutton{
+  width: 150px;
+  display: block;
+  margin-left: 150px;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+#selectbutton{
+  margin-top: -105px;
+}
+
+/* Employee Form > Button Panel  */
+#butpanel{
+  width: auto;
+  height: auto;
+  margin: 10px 0 20px -5px;
+  display: flex;
+}
+
+#butpanel button{
+  width: 118px;
+  padding: 10px 20px 10px 20px;
+  margin: 2px;
+  font-size: 16px;
+  color: white;
+}
+
+.selected-row{
+  background-color: #c9e6ff!important;
+}
+
+.mat-row:hover {
+  background-color: inherit!important;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+.custom-breadcrumb{
+  width: 8rem;
+  height: 3rem;
+  margin: 15px 15px 0 30px;
+}
+
+.custom-breadcrumb div{
+  font-weight: bold;
+  font-size: x-large;
+  margin-bottom: 10px;
+  margin-left: 0; /* Keep some space on the left */
+}
+
+mat-icon{
+  font-size: 20px;
+}
+
+a{
+  text-decoration: none;
+  color: black;
+}
+
+::placeholder {
+  color: gray; /* Change placeholder text color */
+  font-style: normal; /* Make it italic */
+  font-size: 0.9rem; /* Adjust font size */
+}
+
+input{
+  height: 45px;
+  width: 10% !important;
+}
+
+.custom-card-content{
+  display: flex;
+  justify-content: space-between; /* Breadcrumb on the left, form on the right */
+  align-items: center; /* Vertically align both breadcrumb and form */
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 80%;
+  overflow: hidden;
+}
+
+.input-group {
+  margin-top: 30px;
+  margin-right: 30px; /* Align the form to the far right with padding */
+}
+
+.form-container {
+  margin-right: 20px;
+  width: auto;
+}
+
+mat-paginator{
+  margin-top: 15px;
+}
+
+input[matInput] {
+  width: 100% !important;
+}
+
+.designation-drop-down{
+  width: 8%;
+  font-style: normal !important; /* Make it italic */
+  font-size: 0.9rem !important; /* Adjust font size */
+}
+
+.gender-drop-down{
+  width: 5%;
+  font-style: normal !important; /* Make it italic */
+  font-size: 0.9rem !important; /* Adjust font size */
+}
+.search-form {
+  width: 100%;
+  padding: 16px 0;
+}
+
+.search-container {
+  display: flex;
+  /*align-items: stretch;*/
+  /*border-radius: 4px;*/
+  /*overflow: hidden;*/
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.inputs-container {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.inputs-container mat-form-field {
+  width: 150px !important;
+  margin: 0;
+  border-right: 1px solid #e0e0e0;
+}
+
+.inputs-container mat-form-field:first-child {
+  border-top-left-radius: 40px;
+  border-bottom-left-radius: 40px;
+}
+
+/* Remove default Material outline appearance to create a seamless connection */
+::ng-deep .inputs-container .mat-form-field-appearance-outline .mat-form-field-outline {
+  background-color: white;
+}
+
+/* Adjust spacing and alignment */
+::ng-deep .inputs-container .mat-form-field-wrapper {
+  margin: 0;
+  padding: 0;
+}
+
+::ng-deep .inputs-container .mat-form-field-infix {
+  /*padding: 0.5em 0;*/
+}
+
+.buttons-container {
+  display: flex;
+  align-items: stretch;
+}
+
+.buttons-container button {
+  margin: 0;
+  height: 100%;
+  border-radius: 0;
+}
+
+.search-btn {
+  min-width: 50px !important;
+}
+
+.clear-btn {
+  min-width: 80px !important;
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .search-container {
+    flex-direction: column;
+  }
+
+  .inputs-container {
+    flex-wrap: wrap;
+  }
+
+  .inputs-container mat-form-field {
+    width: 100% !important;
+    /*border-right: none;*/
+    /*border-bottom: 1px solid #e0e0e0;*/
+  }
+
+  .inputs-container mat-form-field:first-child {
+    border-bottom-left-radius: 0;
+  }
+
+  .buttons-container {
+    flex-direction: row;
+  }
+
+  .search-btn {
+    flex: 1;
+  }
+
+  .clear-btn {
+    /*flex: 2;*/
+    border-top-right-radius: 4px !important;
+    border-bottom-left-radius: 0 !important;
+  }
+}
+::ng-deep .toast-success {
+  background-color: #25983f !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .toast-error {
+  background-color: #dc3545 !important;
+  color: #ffffff !important;
+}
+.w-30{
+  width: 30% !important;
+}
