@@ -12,6 +12,7 @@ import {ProfileComponent} from "./view/profile/profile.component";
 import {AuthGuard} from "./guard/auth.guard";
 import {MaterialComponent} from "./view/modules/material/material.component";
 import {SupplierComponent} from "./view/modules/supplier/supplier.component";
+import {ProductComponent} from "./view/modules/product/product.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -28,6 +29,7 @@ const routes: Routes = [
       {path: "privilege", component: PrivilageComponent},
       {path: "material", component: MaterialComponent},
       {path: "supplier", component: SupplierComponent},
+      {path: "product", component: ProductComponent},
       {path: "reports", component: ArrearsByProgramComponent},
     ],canActivate:[AuthGuard]
   }];

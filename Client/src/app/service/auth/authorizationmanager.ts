@@ -35,14 +35,18 @@ export class AuthorizationManager {
 
   Inventory = [
     {name: 'Material', isVisible: false, routerLink: 'material'},
-    {name: 'Supplier', isVisible: false, routerLink: 'supplier'},
+    {name: 'Product', isVisible: false, routerLink: 'product'},
   ];
+  Registration = [
+    {name: 'Supplier', isVisible: false, routerLink: 'supplier'},
+  ]
 
 
   getNavListItem() {
     return [
       {Menu: 'ADMIN', MenuItems: this.Admin},
-      {Menu: 'INVENTORY', MenuItems: this.Inventory}
+      {Menu: 'INVENTORY', MenuItems: this.Inventory},
+      {Menu: 'Registration', MenuItems: this.Registration}
     ]
   }
 
@@ -77,15 +81,15 @@ export class AuthorizationManager {
       this.setUsername(username);
       try {
         const authoritiesArray = this.getAuthorities();
-        if (username!=="Admin")
-        this.userService.getEmployeeByUserName(username).subscribe({
-          next: employee => {
-            this.setEmployee(employee);
-            this.setUserProfile();
-          }, error: err => {
-            console.log(err)
-          }
-        });
+        if (username !== "Admin")
+          this.userService.getEmployeeByUserName(username).subscribe({
+            next: employee => {
+              this.setEmployee(employee);
+              this.setUserProfile();
+            }, error: err => {
+              console.log(err)
+            }
+          });
         this.setUserProfile();
         if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
           const authorities = this.extractAuthorities(authoritiesArray);
