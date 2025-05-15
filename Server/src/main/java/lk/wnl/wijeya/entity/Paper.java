@@ -32,4 +32,41 @@ public class Paper {
     @Column(name = "unit_price", precision = 7, scale = 2)
     private BigDecimal unitPrice;
 
+    @Size(max = 6)
+    @Column(name = "code", length = 6)
+    private String code;
+
+    @Column(name = "quantity")
+    private Integer quantity;
+
+    @Column(name = "dointroduesed")
+    private LocalDate dointroduesed;
+
+    @Lob
+    @Column(name = "discription")
+    private String discription;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_gsm_id", nullable = false)
+    private PaperGsm paperGsm;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_size_id", nullable = false)
+    private PaperSize paperSize;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_type_id", nullable = false)
+    private PaperType paperType;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_color_id", nullable = false)
+    private PaperColor paperColor;
+
+    @OneToMany(mappedBy = "paper")
+    private Set<PaperSupply> paperSupplies = new LinkedHashSet<>();
+
 }

@@ -75,7 +75,7 @@ public class Supplier {
     @JoinColumn(name = "suppliertype_id", nullable = false)
     private SupplierType suppliertype;
 
-    @OneToMany(mappedBy = "supplier",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "supplier", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Supply> supplies;
 
     @Size(max = 6)
@@ -98,5 +98,9 @@ public class Supplier {
     @ManyToOne
     @JoinColumn(name = "country_id", nullable = false, referencedColumnName = "id")
     private Country country;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "supplier")
+    private Set<PaperSupply> paperSupplies = new LinkedHashSet<>();
 
 }
