@@ -2,6 +2,7 @@ package lk.wnl.wijeya.controller;
 
 import lk.wnl.wijeya.dto.EmployeeDto;
 import lk.wnl.wijeya.dto.MaterialDto;
+import lk.wnl.wijeya.dto.ProductDto;
 import lk.wnl.wijeya.dto.UserDto;
 import lk.wnl.wijeya.util.regex.RegexProvider;
 import lk.wnl.wijeya.util.userPasswdRequest.UserPasswdRequest;
@@ -35,6 +36,10 @@ public class RegexController {
     @GetMapping(path ="/material", produces = "application/json")
     public HashMap<String, HashMap<String, String>> material() {
         return RegexProvider.get(new MaterialDto());
+    }
+    @GetMapping(path ="/product", produces = "application/json")
+    public HashMap<String, HashMap<String, String>> product() {
+        return RegexProvider.get(new ProductDto());
     }
 
 
