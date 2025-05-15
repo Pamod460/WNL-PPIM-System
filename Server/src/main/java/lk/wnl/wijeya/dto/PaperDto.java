@@ -12,5 +12,5 @@ import java.math.BigDecimal;
 public class PaperDto {
     private Integer id;
     private String name;
-    private BigDecimal unitprice;
+    private BigDecimal unitPrice;
 }

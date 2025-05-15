@@ -16,5 +16,5 @@ public class ProductMaterialDto {
     private Integer id;
     private Product product;
     private Integer quantity;
-    private BigDecimal linecost;
+    private BigDecimal lineCost;
 }

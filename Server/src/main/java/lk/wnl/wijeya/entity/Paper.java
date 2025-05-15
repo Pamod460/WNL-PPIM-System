@@ -30,6 +30,6 @@ public class Paper {
     private Set<ProductPaper> productPapers = new LinkedHashSet<>();
 
     @Column(name = "unit_price", precision = 7, scale = 2)
-    private BigDecimal unitprice;
+    private BigDecimal unitPrice;
 
 }

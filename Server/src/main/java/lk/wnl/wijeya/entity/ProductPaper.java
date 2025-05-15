@@ -32,7 +32,7 @@ public class ProductPaper {
     @Column(name = "quentity")
     private Integer quantity;
 
-    @Column(name = "linecost", precision = 7, scale = 2)
-    private BigDecimal linecost;
+    @Column(name = "line_cost", precision = 7, scale = 2)
+    private BigDecimal lineCost;
 
 }

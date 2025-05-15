@@ -27,12 +27,12 @@ public class ProductMaterial {
     @Column(name = "quentity")
     private Integer quantity;
 
-    @Column(name = "linecost", precision = 7, scale = 2)
-    private BigDecimal linecost;
-
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "material_id", nullable = false)
     private Material material;
+
+    @Column(name = "line_cost", precision = 7, scale = 2)
+    private BigDecimal lineCost;
 
 }

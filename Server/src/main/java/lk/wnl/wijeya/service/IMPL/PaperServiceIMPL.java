@@ -19,7 +19,7 @@ public class PaperServiceIMPL implements PaperService {
 
         return paperRepository.findAll().stream().map(paper -> PaperDto.builder()
                 .id(paper.getId())
-                .name(paper.getName()).unitprice(paper.getUnitprice())
+                .name(paper.getName()).unitPrice(paper.getUnitPrice())
                 .build()).collect(Collectors.toList());
     }
 }
