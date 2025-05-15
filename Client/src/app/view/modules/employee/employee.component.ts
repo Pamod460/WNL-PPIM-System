@@ -175,7 +175,7 @@ export class EmployeeComponent implements OnInit {
     this.form.controls['nic'].setValidators([Validators.required, Validators.pattern(this.regexes['nic']['regex'])]);
     this.form.controls['dobirth'].setValidators([Validators.required]);
     this.form.controls['photo'].setValidators(Validators.required);
-    this.form.controls['address'].setValidators([Validators.required, Validators.pattern(this.regexes['address']['regex'])]);
+    this.form.controls['address'].setValidators([Validators.required]);
     this.form.controls['mobile'].setValidators([Validators.required, Validators.pattern(this.regexes['mobile']['regex'])]);
     this.form.controls['land'].setValidators([Validators.pattern(this.regexes['land']['regex'])]);
     this.form.controls['email'].setValidators([Validators.required, Validators.pattern(this.regexes['email']['regex'])]);
@@ -196,13 +196,12 @@ export class EmployeeComponent implements OnInit {
           if (controlName == "nic") {
             if (this.form.controls[controlName].valid) {
               this.form.controls['dobirth'].setValue(this.getBirthdayFromNIC(value).birthDate);
-            } else {
-              this.form.controls['dobirth'].setValue("");
             }
 
           }
           // @ts-ignore
           if (controlName == "dobirth" || controlName == "doassignment")
+            console.log(value);
             value = this.datePipe.transform(new Date(value), 'yyyy-MM-dd');
 
           if (this.oldemployee != undefined && control.valid) {
@@ -354,7 +353,7 @@ export class EmployeeComponent implements OnInit {
 
       confirm.afterClosed().subscribe(async result => {
         if (result) {
-          if (this.employee.land !== undefined || this.employee.land === "") {
+          if (this.employee.land === undefined || this.employee.land === "") {
             this.employee.land = null;
           }
           this.employeeService.add(this.employee).subscribe({
@@ -374,7 +373,6 @@ export class EmployeeComponent implements OnInit {
   }
 
 
-  // @ts-ignore
   getErrors(optionalFields?: string[]): string {
     let errors = "";
 
@@ -392,7 +390,9 @@ export class EmployeeComponent implements OnInit {
         }
       }
     }
+    return errors;
   }
+
 
   fillForm(employee: Employee) {
 

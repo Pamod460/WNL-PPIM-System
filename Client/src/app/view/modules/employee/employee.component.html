@@ -1,4 +1,4 @@
-<app-common-layout [statusImageUrl]="imageurl">
+<app-common-layout >
   <div form>
     <form [formGroup]="form">
       <div id="imgpanel">
@@ -46,7 +46,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Birth Date</mat-label>
-        <input matInput [matDatepicker]="dob" [min]="minDate" [max]="maxDate" [readonly]="true"
+        <input matInput [matDatepicker]="dob" [readonly]="true"
                formControlName="dobirth">
         <mat-datepicker-toggle matSuffix [for]="dob" [disabled]="true"></mat-datepicker-toggle>
         <mat-datepicker #dob></mat-datepicker>

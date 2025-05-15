@@ -149,12 +149,12 @@ export class SupplierComponent implements OnInit {
 
     this.filteredCountries = this.form.controls["country"].valueChanges.pipe(
       startWith(''),
-      map(value => this._filter(value || ''))
+      map(value => this.filter(value || ''))
     );
 
   }
 
-  private _filter(value: string): Country[] {
+  private filter(value: string): Country[] {
     const filterValue = value.toLowerCase();
     return this.countries.filter(country => country.name.toLowerCase().includes(filterValue));
   }
