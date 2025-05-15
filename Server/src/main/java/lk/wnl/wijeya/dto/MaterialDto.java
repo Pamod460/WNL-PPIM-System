@@ -40,4 +40,9 @@ public class MaterialDto {
     }
 
 
+    public MaterialDto(Integer id, String name, BigDecimal unitprice) {
+        this.id = id;
+        this.name = name;
+        this.unitprice = unitprice;
+    }
 }
