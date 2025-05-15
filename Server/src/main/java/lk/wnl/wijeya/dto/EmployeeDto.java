@@ -28,7 +28,6 @@ public class EmployeeDto {
     private Date dobirth;
     @Pattern(regexp = "^(([\\d]{9}[vVxX])|([\\d]{12}))$", message = "Invalid NIC")
     private String nic;
-    @Pattern(regexp = "^./*$", message = "Invalid Address")
     private String address;
     @Pattern(regexp = "^((\\+94|0)(70|71|72|74|75|76|77|78)\\d{7})$", message = "Invalid Mobile Number")
     private String mobile;
