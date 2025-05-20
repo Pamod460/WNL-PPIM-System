@@ -2,10 +2,12 @@ package lk.wnl.wijeya.service.IMPL;
 
 import lk.wnl.wijeya.dto.MaterialDto;
 import lk.wnl.wijeya.entity.Material;
+import lk.wnl.wijeya.entity.User;
 import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
 import lk.wnl.wijeya.exception.ResourceNotFoundException;
 import lk.wnl.wijeya.repository.MaterialRepository;
 import lk.wnl.wijeya.service.MaterialService;
+import lk.wnl.wijeya.service.UserService;
 import lk.wnl.wijeya.util.StandardResponse;
 import lk.wnl.wijeya.util.mapper.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ import java.util.stream.Stream;
 public class MaterialServiceIMPL implements MaterialService {
     private final MaterialRepository materialRepository;
     private final ObjectMapper objectMapper;
+    private final UserService userService;
 
     @Override
     public List<MaterialDto> getAllList(HashMap<String, String> params) {
@@ -52,14 +55,17 @@ public class MaterialServiceIMPL implements MaterialService {
         List<Material> materials = materialRepository.findAll();
         List<MaterialDto> materialsList = objectMapper.toMaterialDtoList(materials);
         materialsList = materialsList.stream().map(
-                mat -> new MaterialDto(mat.getId(), mat.getName(),mat.getUnitprice())
+                mat -> new MaterialDto(mat.getId(), mat.getName(), mat.getUnitprice())
         ).collect(Collectors.toList());
         return materialsList;
     }
 
     @Override
     public ResponseEntity<StandardResponse> save(MaterialDto materialDto) {
+        User user = userService.getUserByUsername(materialDto.getLogger());
         Material material = objectMapper.toMaterial(materialDto);
+        material.setCreatedBy(user);
+
         if (materialRepository.existsByCode(material.getCode())) {
             throw new ResourceAlreadyExistException("Material Already Exists");
         }
@@ -72,7 +78,6 @@ public class MaterialServiceIMPL implements MaterialService {
     public ResponseEntity<StandardResponse> update(MaterialDto materialDto) {
         Material material = objectMapper.toMaterial(materialDto);
         Material emprec = materialRepository.findById(material.getId()).orElseThrow(() -> new ResourceNotFoundException("Material Not Found"));
-
         if (!emprec.getCode().equals(material.getCode()) && materialRepository.existsByCode(material.getCode())) {
             throw new ResourceAlreadyExistException("Code Already Exists");
         }

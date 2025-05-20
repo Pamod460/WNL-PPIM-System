@@ -107,12 +107,13 @@ export class MaterialComponent implements OnInit {
             description: new FormControl(''),
             dointroduced: new FormControl(''),
             photo: new FormControl(''),
+            logger: new FormControl(''),
             unittype: new FormControl(null, [Validators.required]),
             materialstatus: new FormControl(null, [Validators.required]),
             materialsubcategory: new FormControl(null, [Validators.required]),
             materialcategory: new FormControl(null, [Validators.required]),
         });
-
+this.form.get("logger")?.setValue(this.authService.getUsername());
         const today = new Date();
         this.minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate()); // 60 years ago
         this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()); // 18 years ago
@@ -172,7 +173,6 @@ export class MaterialComponent implements OnInit {
     }
 
     createView() {
-        this.imageurl = 'assets/pending.gif';
         this.loadTable("");
     }
 
@@ -212,6 +212,7 @@ export class MaterialComponent implements OnInit {
             );
 
         }
+
         this.form.controls['dointroduced'].setValue(new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()));
         this.disableGenerateNo = false;
         this.form.controls["materialcategory"].valueChanges.subscribe(value => {

@@ -120,6 +120,7 @@ export class ProductComponent implements OnInit {
       unitprice: new FormControl('', [Validators.required, Validators.min(0)]),
       description: new FormControl(''),
       photo: new FormControl(''),
+      logger: new FormControl(''),
       productStatus: new FormControl(null, [Validators.required]),
       productCategory: new FormControl(null, [Validators.required]),
       productfrequency: new FormControl(null, [Validators.required]),
@@ -131,7 +132,7 @@ export class ProductComponent implements OnInit {
     const today = new Date();
     this.minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate()); // 60 years ago
     this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()); // 18 years ago
-
+    this.form.get("logger")?.setValue(this.authService.getUsername());
   }
 
   createMaterialForm(): FormGroup {

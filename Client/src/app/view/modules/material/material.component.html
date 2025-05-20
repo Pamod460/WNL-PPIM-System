@@ -2,6 +2,11 @@
   <div form>
 
     <form [formGroup]="form">
+<!--      Logger-->
+      <mat-form-field appearance="outline" class="opacity-75">
+        <mat-label>Created by</mat-label>
+        <input matInput formControlName="logger" required readonly>
+      </mat-form-field>
       <!-- Material Category -->
       <mat-form-field appearance="outline">
         <mat-label>Material Category</mat-label>

@@ -32,11 +32,12 @@ import java.util.stream.Stream;
 public class UserServiceIMPL implements UserService {
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
+
     @Override
     public List<UserDto> getAllUser(HashMap<String, String> params) {
         List<User> userList = userRepository.findAllByIsactive(true);
 
-        if (!userList.isEmpty()){
+        if (!userList.isEmpty()) {
             List<UserDto> userDtoList = objectMapper.toUserDtoList(userList);
             if (params.isEmpty()) {
                 return userDtoList;
@@ -63,18 +64,20 @@ public class UserServiceIMPL implements UserService {
                 return stream.collect(Collectors.toList());
 
             }
-        }else{
+        } else {
             throw new ResourceNotFoundException("Users Not Found");
         }
     }
 
     @Override
     public ResponseEntity<StandardResponse> saveUser(UserDto userDto) {
-        if (userDto != null){
+        User loggeruser = userRepository.findByUsername(userDto.getLogger());
+        if (userDto != null) {
             if (userRepository.findByUsername(userDto.getUsername()) != null)
                 throw new ResourceAlreadyExistException("Existing Username");
 
             User user = objectMapper.toUser(userDto);
+            user.setCreatedBy(loggeruser);
 
             for (UserRole u : user.getUserRoles()) u.setUser(user);
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -86,7 +89,7 @@ public class UserServiceIMPL implements UserService {
             User savedUser = userRepository.save(user);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(new StandardResponse(HttpStatus.CREATED.value(), "User Added Successfully", new UserDto(savedUser.getId(), savedUser.getUsername())));
-        }else{
+        } else {
             throw new ResourceNotFoundException("User Not Found");
         }
     }
@@ -97,7 +100,7 @@ public class UserServiceIMPL implements UserService {
         if (exsistingUser == null)
             throw new ResourceNotFoundException("User Not Found");
         exsistingUser.setIsactive(false);
-        exsistingUser.setUserStatus(objectMapper.toUseStatus(new UserStatusDto(2,"Inactive")));
+        exsistingUser.setUserStatus(objectMapper.toUseStatus(new UserStatusDto(2, "Inactive")));
         userRepository.save(exsistingUser);
         return ResponseEntity.ok(new StandardResponse(HttpStatus.OK.value(), "User Successfully Deleted", null));
     }
@@ -109,6 +112,11 @@ public class UserServiceIMPL implements UserService {
             throw new ResourceNotFoundException("User does not exist");
         }
         return objectMapper.toEmployeeDto(user.getEmployee());
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -175,7 +183,7 @@ public class UserServiceIMPL implements UserService {
 
                 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
                 if (!passwordEncoder.matches(userDto.getPassword(), existingUser.getPassword())) {
-                    String hashedPassword = passwordEncoder.encode( userDto.getPassword());
+                    String hashedPassword = passwordEncoder.encode(userDto.getPassword());
                     existingUser.setPassword(hashedPassword);
                 }
             }
@@ -184,7 +192,7 @@ public class UserServiceIMPL implements UserService {
             User updatedUser = userRepository.save(existingUser);
 
             return ResponseEntity.ok(new StandardResponse(
-                    HttpStatus.OK.value(), "User Updated Successfully", new UserDto(updatedUser.getId(),updatedUser.getUsername())
+                    HttpStatus.OK.value(), "User Updated Successfully", new UserDto(updatedUser.getId(), updatedUser.getUsername())
             ));
         } catch (Exception e) {
             throw new RuntimeException("Error updating user: " + e.getMessage());

@@ -1,18 +1,24 @@
 package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+
 @Setter
 @Getter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Material {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -59,13 +65,22 @@ public class Material {
     @OneToMany(mappedBy = "material")
     private Set<ProductMaterial> productMaterials = new LinkedHashSet<>();
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "created_by_id", nullable = false)
+    private User createdBy;
+
+    @Transient
+    private String logger;
+
     public Material(Integer id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public Material() {
-
+    public String getLogger() {
+        return this.createdBy.getUsername();
     }
-
 
 
 }

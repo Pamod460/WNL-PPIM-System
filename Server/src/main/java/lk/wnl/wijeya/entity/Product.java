@@ -66,4 +66,14 @@ public class Product {
     @OneToMany(mappedBy = "product",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductPaper> productPapers = new LinkedHashSet<>();
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "created_by_id", nullable = false)
+    private User createdBy;
+
+    @Transient
+    private String logger;
+    public String getLogger() {
+        return this.createdBy.getUsername();
+    }
 }
