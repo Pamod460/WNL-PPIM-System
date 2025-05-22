@@ -16,15 +16,16 @@ public class PaperSupply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-    @JsonIgnore
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "paper_id", nullable = false)
-    private Paper paper;
+
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "paper_type_id", nullable = false)
+    private PaperType paperType;
 
 }

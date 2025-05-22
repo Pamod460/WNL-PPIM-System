@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,7 @@ public class PaperColor {
     @Column(name = "name", length = 45)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "paperColor")
     private Set<Paper> papers = new LinkedHashSet<>();
 

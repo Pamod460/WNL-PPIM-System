@@ -12,8 +12,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "paper_status")
-public class PaperStatus {
+@Table(name = "paper_unit_type")
+public class PaperUnitType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -22,8 +22,9 @@ public class PaperStatus {
     @Size(max = 45)
     @Column(name = "name", length = 45)
     private String name;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "paperStatus")
+    @OneToMany(mappedBy = "paperUnitType")
     private Set<Paper> papers = new LinkedHashSet<>();
 
 }

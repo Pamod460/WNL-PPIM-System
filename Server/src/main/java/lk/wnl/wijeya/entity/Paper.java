@@ -36,15 +36,12 @@ public class Paper {
     @Column(name = "code", length = 6)
     private String code;
 
-    @Column(name = "quantity")
-    private Integer quantity;
-
     @Column(name = "dointroduesed")
-    private LocalDate dointroduesed;
+    private LocalDate doIntroduced;
 
     @Lob
     @Column(name = "discription")
-    private String discription;
+    private String description;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
@@ -66,7 +63,32 @@ public class Paper {
     @JoinColumn(name = "paper_color_id", nullable = false)
     private PaperColor paperColor;
 
-    @OneToMany(mappedBy = "paper")
-    private Set<PaperSupply> paperSupplies = new LinkedHashSet<>();
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_status_id", nullable = false)
+    private PaperStatus paperStatus;
+
+    @Column(name = "rop")
+    private Integer rop;
+
+    @Column(name = "qoh")
+    private Integer qoh;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "created_by_id", nullable = false)
+    private User createdBy;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_unit_type_id", nullable = false)
+    private PaperUnitType paperUnitType;
+
+    @Transient
+    private String logger;
+
+    public String getLogger() {
+        return createdBy.getUsername();
+    }
 
 }
