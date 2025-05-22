@@ -59,15 +59,15 @@ public class Product {
     @JoinColumn(name = "productfrequency_id", nullable = false)
     private ProductFrequency productfrequency;
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductMaterial> productMaterials = new LinkedHashSet<>();
 
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProductPaper> productPapers = new LinkedHashSet<>();
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
     private User createdBy;
 

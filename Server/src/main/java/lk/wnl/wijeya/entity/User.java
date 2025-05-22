@@ -56,7 +56,7 @@ public class User {
     @Basic
     @Column(name = "isactive")
     private boolean isactive;
-
+    @JsonIgnore
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
