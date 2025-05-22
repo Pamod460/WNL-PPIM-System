@@ -13,6 +13,7 @@ import {AuthGuard} from "./guard/auth.guard";
 import {MaterialComponent} from "./view/modules/material/material.component";
 import {SupplierComponent} from "./view/modules/supplier/supplier.component";
 import {ProductComponent} from "./view/modules/product/product.component";
+import {PaperComponent} from "./view/modules/paper/paper.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -30,6 +31,7 @@ const routes: Routes = [
       {path: "material", component: MaterialComponent},
       {path: "supplier", component: SupplierComponent},
       {path: "product", component: ProductComponent},
+      {path: "paper", component: PaperComponent},
       {path: "reports", component: ArrearsByProgramComponent},
     ],canActivate:[AuthGuard]
   }];
