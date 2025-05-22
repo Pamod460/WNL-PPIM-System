@@ -5,8 +5,6 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -14,17 +12,34 @@ import java.util.Set;
 @AllArgsConstructor
 @Builder
 public class PaperDto {
+
     private Integer id;
     private String name;
     private BigDecimal unitPrice;
     private String code;
-    private Integer quantity;
-    private LocalDate dointroduesed;
-    private String discription;
+    private LocalDate doIntroduced;
+    private String description;
     private PaperGsm paperGsm;
     private PaperSize paperSize;
     private PaperType paperType;
     private PaperColor paperColor;
-    private Set<PaperSupply> paperSupplies = new LinkedHashSet<>();
-    private Set<ProductPaper> productPapers = new LinkedHashSet<>();
+    private PaperStatus paperStatus;
+    private Integer rop;
+    private Integer qoh;
+    private PaperUnitType paperUnitType;
+    private String logger;
+
+    public PaperDto(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+
+    }
+
+    public PaperDto(Integer id, String name, BigDecimal unitprice) {
+        this.id = id;
+        this.name = name;
+        this.unitPrice = unitprice;
+    }
+
+
 }
