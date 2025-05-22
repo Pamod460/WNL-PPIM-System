@@ -17,8 +17,8 @@ export class MaterialService {
         return this.http.delete<StandardResponse>(`${this.API_URL}/materials/` + id);
     }
 
-    update(employee: Material) {
-        return this.http.put<StandardResponse>(`${this.API_URL}/materials`, employee);
+    update(material: Material) {
+        return this.http.put<StandardResponse>(`${this.API_URL}/materials`, material);
     }
 
     getAll(query: string) {
