@@ -113,6 +113,7 @@ export class UserComponent implements OnInit {
       "userStatus": new FormControl('', [Validators.required]),
       "userType": new FormControl('', [Validators.required]),
       "description": new FormControl(),
+      "logger": new FormControl(''),
       "userRoles": new FormControl('', [Validators.required])
     });
 
@@ -122,6 +123,7 @@ export class UserComponent implements OnInit {
       "ssrole": new FormControl(),
       "ssrusrstatus": new FormControl(),
     });
+    this.form.get("logger")?.setValue(this.authService.getUsername());
 
   }
 
@@ -412,7 +414,7 @@ export class UserComponent implements OnInit {
 
   fillForm(user: User) {
 
-    if (localStorage.getItem('employee')){
+    if (localStorage.getItem('employee')) {
       const loginEmployee = JSON.parse(localStorage.getItem('employee') || '');
 
       this.disableModify = loginEmployee.id === user.employee.id;

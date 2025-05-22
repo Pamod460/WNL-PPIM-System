@@ -37,7 +37,7 @@ public class SupplierDto {
     private String bankBranch;
     private String accontHolder;
     private Country country;
-
+    private String logger;
     public SupplierDto(Integer id, String name) {
         this.id = id;
         this.name = name;

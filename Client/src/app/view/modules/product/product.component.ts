@@ -120,6 +120,7 @@ export class ProductComponent implements OnInit {
       unitprice: new FormControl('', [Validators.required, Validators.min(0)]),
       description: new FormControl(''),
       photo: new FormControl(''),
+      logger: new FormControl(''),
       productStatus: new FormControl(null, [Validators.required]),
       productCategory: new FormControl(null, [Validators.required]),
       productfrequency: new FormControl(null, [Validators.required]),
@@ -131,26 +132,26 @@ export class ProductComponent implements OnInit {
     const today = new Date();
     this.minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate()); // 60 years ago
     this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()); // 18 years ago
-
+    this.form.get("logger")?.setValue(this.authService.getUsername());
   }
 
   createMaterialForm(): FormGroup {
     const materialForm = this.formBuilder.group({
       material: [null],     // Assumes full Material object
       quantity: [1],
-      linecost: [0]
+      lineCost: [0]
     });
 
-    // Helper function to calculate and update linecost
+    // Helper function to calculate and update lineCost
     const updateLineCost = () => {
       const selectedMaterial: any = materialForm.get('material')?.value;
       const quantity: number = materialForm.get('quantity')?.value ?? 0;
 
       if (selectedMaterial?.unitprice != null) {
         const cost = selectedMaterial.unitprice * quantity;
-        materialForm.get('linecost')?.setValue(cost, {emitEvent: false});
+        materialForm.get('lineCost')?.setValue(cost, {emitEvent: false});
       } else {
-        materialForm.get('linecost')?.setValue(0, {emitEvent: false});
+        materialForm.get('lineCost')?.setValue(0, {emitEvent: false});
       }
     };
 
@@ -166,19 +167,19 @@ export class ProductComponent implements OnInit {
     const paperForm = this.formBuilder.group({
       paper: [null],
       quantity: [1],
-      linecost: [0],
+      lineCost: [0],
     });
 
-    // Helper function to calculate and update linecost
+    // Helper function to calculate and update lineCost
     const updateLineCost = () => {
-      const selectedMaterial: any = paperForm.get('paper')?.value;
+      const selectedPaper: any = paperForm.get('paper')?.value;
       const quantity: number = paperForm.get('quantity')?.value ?? 0;
 
-      if (selectedMaterial?.unitprice != null) {
-        const cost = selectedMaterial.unitprice * quantity;
-        paperForm.get('linecost')?.setValue(cost, {emitEvent: false});
+      if (selectedPaper?.unitPrice != null) {
+        const cost = selectedPaper.unitPrice * quantity;
+        paperForm.get('lineCost')?.setValue(cost, {emitEvent: false});
       } else {
-        paperForm.get('linecost')?.setValue(0, {emitEvent: false});
+        paperForm.get('lineCost')?.setValue(0, {emitEvent: false});
       }
     };
 
@@ -500,7 +501,7 @@ export class ProductComponent implements OnInit {
         // @ts-ignore
         material: mat,       // full object
         quantity: pm.quantity,
-        linecost: pm.linecost
+        lineCost: pm.lineCost
       });
       this.materials.push(fg);
     });
@@ -513,7 +514,7 @@ export class ProductComponent implements OnInit {
 
         paper: paper,       // full object
         quantity: pp.quantity,
-        linecost: pp.linecost
+        lineCost: pp.lineCost
       });
       this.papers.push(fg);
     })

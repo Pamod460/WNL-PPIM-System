@@ -36,6 +36,7 @@ export class AuthorizationManager {
   Inventory = [
     {name: 'Material', isVisible: false, routerLink: 'material'},
     {name: 'Product', isVisible: false, routerLink: 'product'},
+    {name: 'Paper', isVisible: false, routerLink: 'paper'},
   ];
   Registration = [
     {name: 'Supplier', isVisible: false, routerLink: 'supplier'},
@@ -237,7 +238,6 @@ export class AuthorizationManager {
     localStorage.removeItem("Authorization");
     localStorage.removeItem("employee");
     localStorage.removeItem("fullname");
-
     this.router.navigateByUrl("/login");
   }
 }

@@ -75,9 +75,25 @@ public interface ObjectMapper {
 
     List<ProductStatusDto> toProductStatusDtoList(List<ProductStatus> productStatusList);
 
-    List<ProductDto> toProductDtoList(List<Product> all);
+    List<ProductDto> toProductDtoList(List<Product> products);
 
     Product toProduct(ProductDto productDto);
 
     ProductDto toProductDto(Product product);
+
+    Paper toPaper(PaperDto paperDto);
+
+    List<PaperDto> toPaperDtoList(List<Paper> papers);
+
+    List<PaperColorDto> toPaperColorDtoList(List<PaperColor> paperColors);
+
+    List<PaperGsmDto> toPaperGsmDtoList(List<PaperGsm> paperGsms);
+
+    List<PaperStatusDto> toPaperStatusDtoList(List<PaperStatus> paperStatuses);
+
+    List<PaperSizeDto> toPaperSizeDtoList(List<PaperSize> paperSizes);
+
+    List<PaperTypeDto> toPaperTypeDtoList(List<PaperType> paperTypes);
+
+    List<PaperUnitTypeDto> toPaperUnitTypeDtoList(List<PaperUnitType> paperUnitTypes);
 }

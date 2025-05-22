@@ -29,5 +29,5 @@ public class ProductDto {
     private ProductFrequencyDto productfrequency;
     private Set<ProductMaterial> productMaterials;
     private Set<ProductPaper> productPapers;
-
+    private String logger;
 }

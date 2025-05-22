@@ -1,13 +1,11 @@
 package lk.wnl.wijeya.dto;
 
-import lk.wnl.wijeya.entity.Materialstatus;
-import lk.wnl.wijeya.entity.Materialsubcategory;
-import lk.wnl.wijeya.entity.Supply;
-import lk.wnl.wijeya.entity.UnitType;
+import lk.wnl.wijeya.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -33,6 +31,7 @@ public class MaterialDto {
     private Materialstatus materialstatus;
     private Materialsubcategory materialsubcategory;
     private Set<Supply> supplies = new LinkedHashSet<>();
+    private String  logger;
 
     public MaterialDto(Integer id, String name) {
         this.id = id;

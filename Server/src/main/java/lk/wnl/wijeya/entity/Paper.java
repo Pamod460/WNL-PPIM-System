@@ -30,6 +30,65 @@ public class Paper {
     private Set<ProductPaper> productPapers = new LinkedHashSet<>();
 
     @Column(name = "unit_price", precision = 7, scale = 2)
-    private BigDecimal unitprice;
+    private BigDecimal unitPrice;
+
+    @Size(max = 6)
+    @Column(name = "code", length = 6)
+    private String code;
+
+    @Column(name = "dointroduesed")
+    private LocalDate doIntroduced;
+
+    @Lob
+    @Column(name = "discription")
+    private String description;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_gsm_id", nullable = false)
+    private PaperGsm paperGsm;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_size_id", nullable = false)
+    private PaperSize paperSize;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_type_id", nullable = false)
+    private PaperType paperType;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_color_id", nullable = false)
+    private PaperColor paperColor;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_status_id", nullable = false)
+    private PaperStatus paperStatus;
+
+    @Column(name = "rop")
+    private Integer rop;
+
+    @Column(name = "qoh")
+    private Integer qoh;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "created_by_id", nullable = false)
+    private User createdBy;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "paper_unit_type_id", nullable = false)
+    private PaperUnitType paperUnitType;
+
+    @Transient
+    private String logger;
+
+    public String getLogger() {
+        return createdBy.getUsername();
+    }
 
 }

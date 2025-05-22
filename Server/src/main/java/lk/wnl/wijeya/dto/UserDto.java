@@ -31,6 +31,8 @@ public class UserDto {
     private UserType userType;
     private Collection<UserRole> userRoles;
     private boolean isactive;
+    private String logger;
+
     public UserDto(Integer id, String username) {
         this.id = id;
         this.username = username;

@@ -3,6 +3,7 @@ package lk.wnl.wijeya.service;
 import lk.wnl.wijeya.dto.EmployeeDto;
 import lk.wnl.wijeya.dto.UserDto;
 import lk.wnl.wijeya.dto.UserRoleDto;
+import lk.wnl.wijeya.entity.User;
 import lk.wnl.wijeya.util.StandardResponse;
 import lk.wnl.wijeya.util.userPasswdRequest.UserPasswdRequest;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public interface UserService {
     ResponseEntity<StandardResponse> updateUser(UserDto userDto);
 
     EmployeeDto getEmployeeByUsername(String username);
+    User getUserByUsername(String username);
 
     Collection<UserRoleDto> getUserRoleByUsername(String username);
 

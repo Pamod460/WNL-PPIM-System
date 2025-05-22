@@ -1,7 +1,7 @@
 import {Material} from "./Material";
 
 export interface ProductMaterial{
-  linecost: number;
+  lineCost: number;
   id?: number;
   name?: string;
   material?: Material;

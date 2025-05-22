@@ -2,6 +2,12 @@
 <app-common-layout [formCol]="4" [viewCol]="8" [statusImageUrl]="imageurl">
   <div form>
     <form [formGroup]="form">
+
+      <!--      Logger-->
+      <mat-form-field appearance="outline" class="opacity-75">
+        <mat-label>Created by</mat-label>
+        <input matInput formControlName="logger" required readonly>
+      </mat-form-field>
       <!-- Essential Business Details -->
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>

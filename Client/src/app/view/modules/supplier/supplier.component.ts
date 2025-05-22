@@ -136,6 +136,7 @@ export class SupplierComponent implements OnInit {
       "regNo": new FormControl('', [Validators.maxLength(6)]),
       "material": new FormControl(),
       "supplies": new FormControl(),
+      "logger": new FormControl(),
     });
 
 
@@ -151,7 +152,7 @@ export class SupplierComponent implements OnInit {
       startWith(''),
       map(value => this.filter(value || ''))
     );
-
+    this.form.get("logger")?.setValue(this.authService.getUsername());
   }
 
   private filter(value: string): Country[] {

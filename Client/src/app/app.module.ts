@@ -51,6 +51,7 @@ import { SupplierComponent } from './view/modules/supplier/supplier.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { ProductComponent } from './view/modules/product/product.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { PaperComponent } from './view/modules/paper/paper.component';
 
 
 
@@ -73,6 +74,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     LogoutComponent,
     SupplierComponent,
     ProductComponent,
+    PaperComponent,
 
 
   ],
