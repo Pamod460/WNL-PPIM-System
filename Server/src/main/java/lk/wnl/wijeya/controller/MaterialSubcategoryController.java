@@ -1,7 +1,6 @@
 package lk.wnl.wijeya.controller;
 
-import lk.wnl.wijeya.dto.MaterialsubcategoryDto;
-import lk.wnl.wijeya.entity.Materialsubcategory;
+import lk.wnl.wijeya.dto.MaterialSubcategoryDto;
 import lk.wnl.wijeya.service.MaterialSubcategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,7 +18,7 @@ public class MaterialSubcategoryController {
     private final MaterialSubcategoryService materialSubcategoryService;
 
     @GetMapping( produces = "application/json")
-    public List<MaterialsubcategoryDto> get() {
+    public List<MaterialSubcategoryDto> get() {
         return materialSubcategoryService.getAll();
     }
 

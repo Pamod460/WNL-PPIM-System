@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs";
-import { Materialsubcategory } from "../../entity/Materialsubcategory";
+import { MaterialSubcategory } from "../../entity/MaterialSubcategory";
 import {environment} from "../../../environments/environment";
 
 @Injectable({
@@ -17,15 +17,15 @@ export class MaterialsubcategoryService {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  update(entity: Materialsubcategory): Observable<Materialsubcategory> {
-    return this.http.put<Materialsubcategory>(`${this.baseUrl}`, entity);
+  update(entity: MaterialSubcategory): Observable<MaterialSubcategory> {
+    return this.http.put<MaterialSubcategory>(`${this.baseUrl}`, entity);
   }
 
-  getAll(query: string ): Observable<Materialsubcategory[]> {
-    return this.http.get<Materialsubcategory[]>(`${this.baseUrl}` + query);
+  getAll(query: string ): Observable<MaterialSubcategory[]> {
+    return this.http.get<MaterialSubcategory[]>(`${this.baseUrl}` + query);
   }
 
-  add(entity: Materialsubcategory): Observable<Materialsubcategory> {
-    return this.http.post<Materialsubcategory>(`${this.baseUrl}`, entity);
+  add(entity: MaterialSubcategory): Observable<MaterialSubcategory> {
+    return this.http.post<MaterialSubcategory>(`${this.baseUrl}`, entity);
   }
 }

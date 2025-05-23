@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.Transient;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -27,10 +26,9 @@ public class MaterialDto {
     private String description;
     private Date dointroduced;
     private byte[] photo;
-    private UnitType unittype;
-    private Materialstatus materialstatus;
-    private Materialsubcategory materialsubcategory;
-    private Set<Supply> supplies = new LinkedHashSet<>();
+    private UnitType unitType;
+    private MaterialStatus materialStatus;
+    private MaterialSubcategory materialSubcategory;
     private String  logger;
 
     public MaterialDto(Integer id, String name) {

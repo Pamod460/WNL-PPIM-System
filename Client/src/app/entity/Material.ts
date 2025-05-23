@@ -1,7 +1,7 @@
 import {Unittype} from "./Unittype";
 import {Materialstatus} from "./Materialstatus";
-import {Materialsubcategory} from "./Materialsubcategory";
-import {Materialcategory} from "./Materialcategory";
+import {MaterialSubcategory} from "./MaterialSubcategory";
+import {MaterialCategory} from "./MaterialCategory";
 
 export interface Material {
   id?: number;
@@ -13,8 +13,8 @@ export interface Material {
   description?: string;
   dointroduced?: Date;
   photo?: string;
-  unittype?: Unittype;
-  materialstatus?: Materialstatus;
-  materialsubcategory?: Materialsubcategory;
-  materialcategory?: Materialcategory;
+  unitType?: Unittype;
+  materialStatus?: Materialstatus;
+  materialSubcategory?: MaterialSubcategory;
+  materialCategory?: MaterialCategory;
 }

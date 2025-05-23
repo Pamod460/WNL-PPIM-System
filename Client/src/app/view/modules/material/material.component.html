@@ -10,7 +10,7 @@
       <!-- Material Category -->
       <mat-form-field appearance="outline">
         <mat-label>Material Category</mat-label>
-        <mat-select formControlName="materialcategory">
+        <mat-select formControlName="materialCategory">
           <mat-option [value]="null">Not Selected</mat-option>
           <mat-option *ngFor="let category of materialCategories" [value]="category">{{ category.name }}</mat-option>
         </mat-select>
@@ -18,7 +18,7 @@
       <!-- Material Subcategory -->
       <mat-form-field appearance="outline">
         <mat-label>Material Subcategory</mat-label>
-        <mat-select formControlName="materialsubcategory">
+        <mat-select formControlName="materialSubcategory">
           <mat-option [value]="null" >Not Selected</mat-option>
           <mat-option *ngFor="let subcategory of materialSubcategories" [value]="subcategory">{{ subcategory.name }}</mat-option>
         </mat-select>
@@ -55,7 +55,7 @@
       <!-- Unit Type -->
       <mat-form-field appearance="outline">
         <mat-label>Unit Type</mat-label>
-        <mat-select formControlName="unittype">
+        <mat-select formControlName="unitType">
           <mat-option value="">Not Selected</mat-option>
           <mat-option *ngFor="let type of unitTypes" [value]="type">{{ type.name }}</mat-option>
         </mat-select>
@@ -64,7 +64,7 @@
       <!-- Material Status -->
       <mat-form-field appearance="outline">
         <mat-label>Material Status</mat-label>
-        <mat-select formControlName="materialstatus" >
+        <mat-select formControlName="materialStatus" >
           <mat-option value="">Not Selected</mat-option>
           <mat-option *ngFor="let status of materialStatuses" [value]="status">{{ status.name }}</mat-option>
         </mat-select>
