@@ -1,0 +1,88 @@
+<div class="material-checklist-dialog">
+  <div class="dialog-header">
+    <h2 mat-dialog-title class="dialog-title">
+      <mat-icon class="title-icon">{{ icon }}</mat-icon>
+      {{ dialogTitle }}
+    </h2>
+
+    <div class="search-container">
+      <mat-form-field class="search-field" appearance="outline">
+        <mat-label>{{ searchPlaceholder }}</mat-label>
+        <input matInput
+               [(ngModel)]="searchTerm"
+               (input)="onSearchChange($event)"
+               [placeholder]="searchPlaceholder">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="action-buttons">
+      <button mat-stroked-button (click)="selectAll()" class="select-all-btn">
+        <mat-icon>select_all</mat-icon>
+        {{ selectedCount === filteredItems.length ? 'Deselect All' : 'Select All' }}
+      </button>
+
+      <button mat-stroked-button
+              (click)="clearAll()"
+              [disabled]="selectedCount === 0"
+              class="clear-all-btn">
+        <mat-icon>clear_all</mat-icon>
+        Clear All
+      </button>
+    </div>
+  </div>
+
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="form">
+      <div class="materials-grid" formArrayName="selectedItems">
+        <div *ngFor="let item of filteredItems; let i = index; trackBy: trackByItemId"
+             class="material-item"
+             [class.selected]="isSelected(getActualIndex(item.id))"
+             (click)="toggleSelection(getActualIndex(item.id))">
+
+          <div class="item-content">
+            <div class="custom-checkbox">
+              <mat-icon *ngIf="isSelected(getActualIndex(item.id))" class="check-icon">check</mat-icon>
+            </div>
+
+            <div class="item-details">
+              <div class="item-name">{{ displayFn(item) }}</div>
+            </div>
+
+            <div class="selection-indicator">
+              <mat-icon *ngIf="isSelected(getActualIndex(item.id))" class="selected-icon">check_circle</mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="filteredItems.length === 0" class="no-results">
+        <mat-icon class="no-results-icon">search_off</mat-icon>
+        <p>No items found matching "{{ searchTerm }}"</p>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions class="dialog-actions">
+    <div class="selected-count">
+      <mat-icon>checklist</mat-icon>
+      <span>{{ selectedCount }} item{{ selectedCount !== 1 ? 's' : '' }} selected</span>
+    </div>
+
+    <div class="action-buttons">
+      <button mat-button (click)="onCancel()" class="cancel-btn">Cancel</button>
+      <button
+              (click)="onConfirm()"
+              [disabled]="selectedCount === 0 || isApplyDisabled"
+              class="confirm-btn btn btn-dark">
+        Apply
+      </button>
+      <button
+              (click)="onSubmit()"
+              [disabled]="isSubmitDisabled"
+              class="confirm-btn btn btn-dark">
+        OK
+      </button>
+    </div>
+  </mat-dialog-actions>
+</div>

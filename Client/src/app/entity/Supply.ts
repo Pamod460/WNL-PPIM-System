@@ -1,11 +1,11 @@
-import {Material} from "./Material";
+import {MaterialSubcategory} from "./MaterialSubcategory";
 
 export class Supply{
-material: Material;
+
+  materialSubcategory!: MaterialSubcategory;
 
 
-
-  constructor(material:Material) {
-  this.material=material;
-}
+  constructor(materialSubcategory: MaterialSubcategory) {
+    this.materialSubcategory = materialSubcategory;
+  }
 }

@@ -25,7 +25,7 @@ public class PaperType {
     @JsonIgnore
     @OneToMany(mappedBy = "paperType")
     private Set<Paper> papers = new LinkedHashSet<>();
-
+    @JsonIgnore
     @OneToMany(mappedBy = "paperType")
     private Set<PaperSupply> paperSupplies = new LinkedHashSet<>();
 
