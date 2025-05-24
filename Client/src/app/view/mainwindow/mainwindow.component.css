@@ -468,3 +468,21 @@ mat-sidenav.mini .icon {
     color: black;
   }
 }
+.lbl-role {
+  font-size: 14px;
+  color: #8d8d8d;
+  margin-top:-5px;
+}
+lbl-user {
+  font-size: 15px;
+  font-weight: bold;
+  color: black;
+  margin-bottom:-5px;
+}
+
+.proinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content:center;
+}

@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Role} from "../../../entity/role";
 import {Module} from "../../../entity/module";
@@ -9,82 +9,78 @@ import {OperationService} from "../../../service/privilage/operation.service";
 import {MatTableDataSource} from "@angular/material/table";
 import {Privilege} from "../../../entity/privilege";
 import {UiAssist} from "../../../util/ui/ui.assist";
-import {Privilageservice} from "../../../service/privilageservice";
+import {PrivilageService} from "../../../service/privilage/privilage.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
 import {MatDialog} from "@angular/material/dialog";
 import {MessageComponent} from "../../../util/dialog/message/message.component";
-import {Employee} from "../../../entity/employee";
-import {AuthorizationManager} from "../../../service/authorizationmanager";
-import {Opetype} from "../../../entity/opetype";
-import {Opetypeservice} from "../../../service/opetypeservice";
-import {MatSelectChange} from "@angular/material/select";
+import {AuthorizationManager} from "../../../service/auth/authorizationmanager";
+import {ToastrService} from "ngx-toastr";
 
 @Component({
   selector: 'app-privileg',
   templateUrl: './privilage.component.html',
   styleUrls: ['./privilage.component.css']
 })
-export class PrivilageComponent {
+export class PrivilageComponent implements OnInit {
 
-  form!:FormGroup;
-  ssearch!:FormGroup;
+  form!: FormGroup;
+  ssearch!: FormGroup;
 
-  roles!:Array<Role>;
-  modules!:Array<Module>;
-  operations!:Array<Operation>;
-  privilages!:Array<Privilege>;
+  roles!: Role[];
+  modules!: Module[];
+  operations!: Operation[];
+  privilages!: Privilege[];
 
-  privilage!:Privilege;
-  oldprivilage!:Privilege;
+  privilage!: Privilege;
+  oldprivilage!: Privilege;
 
-  columns: string[] = ['role', 'authority','module', 'operation'];
-  headers: string[] = ['Role','Authority', 'Model', 'Operation'];
-  binders: string[] = ['role.name','authority', 'module.name', 'operation.name'];
+  columns: string[] = ['role', 'authority', 'module', 'operation'];
+  headers: string[] = ['Role', 'Authority', 'Model', 'Operation'];
+  binders: string[] = ['role.name', 'authority', 'module.name', 'operation.name'];
 
-  data!:MatTableDataSource<Privilege>
+  data!: MatTableDataSource<Privilege>
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   uiassist: UiAssist;
 
-  imageurl: string = '';
+  enaadd = false;
+  enaupd = false;
+  enadel = false;
 
-  enaadd: boolean = false;
-  enaupd: boolean = false;
-  enadel: boolean = false;
-
-  hasInsertAuthority: boolean = false;
-  hasUpdateAuthority: boolean = false;
-  hasDeleteAuthority: boolean = false;
+  hasInsertAuthority = false;
+  hasUpdateAuthority = false;
+  hasDeleteAuthority = false;
 
   selectedrow: any;
 
-  searechOperations?:Operation[];
+  searechOperations?: Operation[];
 
   constructor(
-    private fb:FormBuilder,
-    private rs:Roleservice,
-    private ms:Moduleservice,
-    private os:Operationservice,
-    private ps:Privilageservice,
-    private dg:MatDialog,
-    public authService:AuthorizationManager
+    private formBuilder: FormBuilder,
+    private roleService: RoleService,
+    private moduleService: ModuleService,
+    private operationService: OperationService,
+    private privilageService: PrivilageService,
+    private matDialog: MatDialog,
+    public authService: AuthorizationManager,
+    private toastrService: ToastrService
   ) {
 
     this.uiassist = new UiAssist(this);
     this.privilages = new Array<Privilege>();
 
-    this.form = this.fb.group({
-      "role":new FormControl('',Validators.required),
-      "module":new FormControl('',Validators.required),
-      "operation":new FormControl('',Validators.required),
-      "authority":new FormControl(),
+    this.form = this.formBuilder.group({
+      "role": new FormControl('', Validators.required),
+      "module": new FormControl('', Validators.required),
+      "operation": new FormControl('', Validators.required),
+      "authority": new FormControl(),
     }, {updateOn: 'change'});
 
-    this.ssearch = this.fb.group({
-      "ssrole":new FormControl(),
-      "ssmodule":new FormControl(),
-      "ssoperation":new FormControl(),
+    this.ssearch = this.formBuilder.group({
+      "ssrole": new FormControl(),
+      "ssmodule": new FormControl(),
+      "ssoperation": new FormControl(),
     });
 
   }
@@ -97,11 +93,11 @@ export class PrivilageComponent {
 
     this.createView();
 
-    this.rs.getAllList().then((rls:Role[])=>{
+    this.roleService.getAllList().subscribe((rls: Role[]) => {
       this.roles = rls;
     });
 
-    this.ms.getAllList().then((mds:Module[])=>{
+    this.moduleService.getAllList().subscribe((mds: Module[]) => {
       this.modules = mds;
     });
 
@@ -121,14 +117,17 @@ export class PrivilageComponent {
     this.form.controls['operation'].setValidators([Validators.required]);
     this.form.controls['authority'].setValidators([Validators.required]);
 
-    Object.values(this.form.controls).forEach( control => { control.markAsTouched(); } );
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
+    });
 
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
       control.valueChanges.subscribe(value => {
 
           if (this.oldprivilage != undefined && control.valid) {
-            // @ts-ignore
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-expect-error
             if (value === this.privilage[controlName]) {
               control.markAsPristine();
             } else {
@@ -144,11 +143,11 @@ export class PrivilageComponent {
 
     this.loadForm();
 
-    this.enableButtons(true,false,false);
+    this.enableButtons(true, false, false);
 
   }
 
-  onOperationSelectionChange(){
+  onOperationSelectionChange() {
     this.clearAuthority();
     this.generateAuthority();
 
@@ -192,32 +191,22 @@ export class PrivilageComponent {
   }
 
   loadForm() {
-    this.os.getAll('').then((ops: Operation[]) => {
+    this.operationService.getAll('').subscribe((ops: Operation[]) => {
       this.operations = ops;
     });
   }
 
 
   createView() {
-    this.imageurl = 'assets/pending.gif';
     this.loadTable("");
   }
 
-  loadTable(query:string):void{
-
-    this.ps.getAll(query)
-      .then((prvgs: Privilege[]) => {
-        this.privilages = prvgs;
-        this.imageurl = 'assets/fullfilled.png';
-      })
-      .catch((error) => {
-        console.log(error);
-        this.imageurl = 'assets/rejected.png';
-      })
-      .finally(() => {
-        this.data = new MatTableDataSource(this.privilages);
-        this.data.paginator = this.paginator;
-      });
+  loadTable(query: string): void {
+    this.privilageService.getAll(query).subscribe((prvgs: Privilege[]) => {
+      this.privilages = prvgs;
+      this.data = new MatTableDataSource(this.privilages);
+      this.data.paginator = this.paginator;
+    });
 
   }
 
@@ -225,9 +214,9 @@ export class PrivilageComponent {
   btnSearchMc(): void {
     const sserchdata = this.ssearch.getRawValue();
 
-    let roleid = sserchdata.ssrole;
-    let moduleid = sserchdata.ssmodule;
-    let operationid = sserchdata.ssoperation;
+    const roleid = sserchdata.ssrole;
+    const moduleid = sserchdata.ssmodule;
+    const operationid = sserchdata.ssoperation;
 
     let query = "";
 
@@ -241,10 +230,9 @@ export class PrivilageComponent {
   }
 
 
-
   btnSearchClearMc(): void {
 
-    const confirm = this.dg.open(ConfirmComponent, {
+    const confirm = this.matDialog.open(ConfirmComponent, {
       width: '400px',
       data: {heading: "Clear Search", message: "Are You Sure You Want To Perform this Operation?"}
     });
@@ -252,18 +240,19 @@ export class PrivilageComponent {
     confirm.afterClosed().subscribe(async result => {
       if (result) {
         this.ssearch.reset();
-        this.searechOperations=[]
+        this.searechOperations = []
         this.loadTable("");
       }
     });
 
   }
+
   add() {
 
-    let errors = this.getErrors();
+    const errors = this.getErrors();
 
     if (errors != "") {
-      const errmsg = this.dg.open(MessageComponent, {
+      const errmsg = this.matDialog.open(MessageComponent, {
         width: '500px',
         data: {heading: "Errors - Privilege Add ", message: "You have following Errors <br> " + errors}
       });
@@ -276,61 +265,34 @@ export class PrivilageComponent {
 
       this.privilage = this.form.getRawValue();
 
-      let prvdata: string = "";
+      let prvdata = "";
 
       prvdata = prvdata + "<br>Role is : " + this.privilage.role.name
       prvdata = prvdata + "<br>Module is : " + this.privilage.module.name;
       prvdata = prvdata + "<br>Operation is : " + this.privilage.operation.name;
       prvdata = prvdata + "<br>Authority is : " + this.privilage.authority;
 
-      const confirm = this.dg.open(ConfirmComponent, {
+      const confirm = this.matDialog.open(ConfirmComponent, {
         width: '500px',
         data: {
           heading: "Confirmation - Privilege Add",
           message: "Are you sure to Add the folowing Employee? <br> <br>" + prvdata
         }
       });
-
-      let addstatus: boolean = false;
-      let addmessage: string = "Server Not Found";
-
       confirm.afterClosed().subscribe(async result => {
         if (result) {
-          this.ps.add(this.privilage).then((responce: [] | undefined) => {
-            if (responce != undefined) { // @ts-ignore
-              console.log("Add-" + responce['id'] + "-" + responce['url'] + "-" + (responce['errors'] == ""));
-              // @ts-ignore
-              addstatus = responce['errors'] == "";
-              console.log("Add Sta-" + addstatus);
-              if (!addstatus) { // @ts-ignore
-                addmessage = responce['errors'];
-              }
-            } else {
-              console.log("undefined");
-              addstatus = false;
-              addmessage = "Content Not Found"
+          this.privilageService.add(this.privilage).subscribe({
+            next: (response) => {
+              this.toastrService.success(response.message).onShown.subscribe(() => {
+                this.form.reset();
+                Object.values(this.form.controls).forEach(control => {
+                  control.markAsTouched();
+                });
+                this.loadTable("");
+              })
+            }, error: (error) => {
+              this.toastrService.error(error.error.data.message)
             }
-          }).finally(() => {
-
-            if (addstatus) {
-              addmessage = "Successfully Saved";
-              this.form.reset();
-              Object.values(this.form.controls).forEach(control => {
-                control.markAsTouched();
-              });
-              this.loadTable("");
-            }
-
-            const stsmsg = this.dg.open(MessageComponent, {
-              width: '500px',
-              data: {heading: "Status -Privilege Add", message: addmessage}
-            });
-
-            stsmsg.afterClosed().subscribe(async result => {
-              if (!result) {
-                return;
-              }
-            });
           });
         }
       });
@@ -339,7 +301,7 @@ export class PrivilageComponent {
 
   getErrors(): string {
 
-    let errors: string = "";
+    let errors = "";
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
       if (control.errors)
@@ -351,7 +313,7 @@ export class PrivilageComponent {
 
   fillForm(privilege: Privilege) {
 
-    this.enableButtons(false,true,true);
+    this.enableButtons(false, true, true);
 
     this.selectedrow = privilege;
 
@@ -359,14 +321,17 @@ export class PrivilageComponent {
     this.oldprivilage = JSON.parse(JSON.stringify(privilege));
 
     // Find and set role
-    //@ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
     this.privilage.role = this.roles.find(r => r.id === this.privilage.role.id);
 
     // Find and set module
-    //@ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
     this.privilage.module = this.modules.find(m => m.id === this.privilage.module.id);
 
-    //@ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
     this.privilage.operation = this.operations.find(o => o.id === this.privilage.operation.id)
 
     console.log(this.privilage.operation.name);
@@ -376,11 +341,11 @@ export class PrivilageComponent {
   }
 
   getUpdates(): string {
-    let updates: string = "";
+    let updates = "";
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
       if (control.dirty) {
-        updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1)+" Changed";
+        updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1) + " Changed";
       }
     }
     return updates;
@@ -388,26 +353,26 @@ export class PrivilageComponent {
 
   update() {
 
-    let errors = this.getErrors();
+    const errors = this.getErrors();
 
     if (errors != "") {
 
-      const errmsg = this.dg.open(MessageComponent, {
+      const errmsg = this.matDialog.open(MessageComponent, {
         width: '500px',
         data: {heading: "Errors - Privilege Update ", message: "You have following Errors <br> " + errors}
       });
-      errmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+      errmsg.afterClosed().subscribe(async result => {
+        if (!result) {
+          return;
+        }
+      });
 
     } else {
 
-      let updates: string = this.getUpdates();
+      const updates: string = this.getUpdates();
 
       if (updates != "") {
-
-        let updstatus: boolean = false;
-        let updmessage: string = "Server Not Found";
-
-        const confirm = this.dg.open(ConfirmComponent, {
+        const confirm = this.matDialog.open(ConfirmComponent, {
           width: '500px',
           data: {
             heading: "Confirmation - Privilege Update",
@@ -416,47 +381,35 @@ export class PrivilageComponent {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("EmployeeService.update()");
             this.privilage = this.form.getRawValue();
 
             this.privilage.id = this.oldprivilage.id;
-
-            this.ps.update(this.privilage).then((responce: [] | undefined) => {
-              if (responce != undefined) {
-                // @ts-ignore
-                updstatus = responce['errors'] == "";
-                if (!updstatus) { // @ts-ignore
-                  updmessage = responce['errors'];
-                }
-              } else {
-                updstatus = false;
-                updmessage = "Content Not Found"
+            this.privilageService.update(this.privilage).subscribe({
+              next: (response) => {
+                this.toastrService.success(response.message).onShown.subscribe(() => {
+                  this.form.reset();
+                  Object.values(this.form.controls).forEach(control => {
+                    control.markAsTouched();
+                  });
+                  this.loadTable("");
+                })
+              }, error: (error) => {
+                this.toastrService.error(error.error.data.message)
               }
-            }).finally(() => {
-              if (updstatus) {
-                updmessage = "Successfully Updated";
-                this.form.reset();
-                Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-                this.loadTable("");
-              }
-
-              const stsmsg = this.dg.open(MessageComponent, {
-                width: '500px',
-                data: {heading: "Status -Privilege Update", message: updmessage}
-              });
-              stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-
             });
           }
         });
-      }
-      else {
+      } else {
 
-        const updmsg = this.dg.open(MessageComponent, {
+        const updmsg = this.matDialog.open(MessageComponent, {
           width: '500px',
           data: {heading: "Confirmation - Privilege Update", message: "Nothing Changed"}
         });
-        updmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+        updmsg.afterClosed().subscribe(async result => {
+          if (!result) {
+            return;
+          }
+        });
 
       }
     }
@@ -466,52 +419,35 @@ export class PrivilageComponent {
 
   delete() {
 
-    const confirm = this.dg.open(ConfirmComponent, {
+    const confirm = this.matDialog.open(ConfirmComponent, {
       width: '450px',
       data: {
         heading: "Confirmation - Privilege Delete",
         message: "Are you sure to Delete folowing Authority? <br> <br>" + this.privilage.authority
       }
     });
-
     confirm.afterClosed().subscribe(async result => {
       if (result) {
-        let delstatus: boolean = false;
-        let delmessage: string = "Server Not Found";
-
-        this.ps.delete(this.privilage.id).then((responce: [] | undefined) => {
-
-          if (responce != undefined) { // @ts-ignore
-            delstatus = responce['errors'] == "";
-            if (!delstatus) { // @ts-ignore
-              delmessage = responce['errors'];
-            }
-          } else {
-            delstatus = false;
-            delmessage = "Content Not Found"
+        this.privilageService.delete(this.privilage.id).subscribe({
+          next: (response) => {
+            this.toastrService.success(response.message).onShown.subscribe(() => {
+              this.form.reset();
+              Object.values(this.form.controls).forEach(control => {
+                control.markAsTouched();
+              });
+              this.loadTable("");
+            })
+          }, error: (error) => {
+            this.toastrService.error(error.error.message)
           }
-        } ).finally(() => {
-          if (delstatus) {
-            delmessage = "Successfully Deleted";
-            this.form.reset();
-            Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-            this.loadTable("");
-          }
-
-          const stsmsg = this.dg.open(MessageComponent, {
-            width: '500px',
-            data: {heading: "Status - Privilege Delete ", message: delmessage}
-          });
-          stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-
-        });
+        })
       }
     });
   }
 
-  clear():void{
+  clear(): void {
 
-    const confirm = this.dg.open(ConfirmComponent, {
+    const confirm = this.matDialog.open(ConfirmComponent, {
       width: '400px',
       data: {
         heading: "Confirmation - Employee Clear",
@@ -528,8 +464,8 @@ export class PrivilageComponent {
     });
   }
 
-  loadSearchOperations(){
-    this.os.getAll('').then((ops: Operation[]) => {
+  loadSearchOperations() {
+    this.operationService.getAll('').subscribe((ops: Operation[]) => {
       this.searechOperations = ops;
     });
   }

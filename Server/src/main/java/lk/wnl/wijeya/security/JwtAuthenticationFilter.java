@@ -1,7 +1,6 @@
 package lk.wnl.wijeya.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lk.wnl.wijeya.entity.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,27 +34,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
 
             LoginRequest loginRequest = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
-
-            User user = userService.getByUsername(loginRequest.getUsername());
-
-                String salt = user.getSalt();
-                String hashedPassword = "";
-
-                if (salt != null){
-                     hashedPassword = salt + loginRequest.getPassword();
-                }else {
-                     hashedPassword =  loginRequest.getPassword();
-                }
-
-            Authentication auth = authenticationManager.authenticate( new UsernamePasswordAuthenticationToken( loginRequest.getUsername(), hashedPassword ) );
-
+            Authentication auth = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
             return auth;
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse login request", e);
-        }
-        catch (AuthenticationException e2) {
-            throw new RuntimeException("Failed "+e2.getMessage());
+        } catch (AuthenticationException e2) {
+            throw new RuntimeException(e2.getMessage());
         }
     }
 

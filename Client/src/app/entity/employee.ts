@@ -9,7 +9,7 @@ export class Employee{
   public fullname !: string;
   public number !: string;
   public callingname !: string;
-  public photo !: string;
+  public photo !: string |null;
   public dobirth !: string;
   public nic !: string;
   public address !: string;
