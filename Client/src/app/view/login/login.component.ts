@@ -3,8 +3,8 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
 import {MessageComponent} from "../../util/dialog/message/message.component";
-import {AuthenticateService} from "../../service/auth/Authenticate.Service";
-import {AuthorizationManager} from "../../service/auth/authorizationmanager";
+import {AuthenticateService} from "../../service/Authenticate.Service";
+import {AuthorizationManager} from "../../service/authorizationmanager";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 
 @Component({
@@ -47,9 +47,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private fb: FormBuilder,
     private router: Router,
     private dialog: MatDialog,
-    private authenticateService: AuthenticateService,
+    private as: AuthenticateService,
     protected breakpointObserver: BreakpointObserver,
-    private authorizationManager: AuthorizationManager
+    private ut: AuthorizationManager
   ) {
     this.loginform = this.fb.group({
       "username": new FormControl("", [
@@ -129,7 +129,8 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.tile2Rows = 6;
         this.tile3Cols = 6;
         this.tile3Rows = 6;
-      } else if (result.breakpoints[Breakpoints.Large]) {
+      } else if (result.breakpoints[Breakpoints.Large])
+      {
         // Large desktop view
         this.gridColumns = 12;
         this.tile1Cols = 6;
@@ -138,7 +139,9 @@ export class LoginComponent implements OnInit, AfterViewInit {
         this.tile2Rows = 6;
         this.tile3Cols = 6;
         this.tile3Rows = 8;
-      } else if (
+      }
+        else
+      if (
 
         result.breakpoints[Breakpoints.XLarge]) {
         // Large desktop view
@@ -161,29 +164,18 @@ export class LoginComponent implements OnInit, AfterViewInit {
 
     const username = this.loginform.get('username')?.value;
     const password = this.loginform.get('password')?.value;
-    this.authenticateService.post(username, password).subscribe({
-      next: (response: any) => {
+
+    this.as.post(username, password)
+      .then((response: any) => {
         const token = response.headers.get('Authorization');
         localStorage.setItem('Authorization', token);
-        this.router.navigateByUrl("main/home").then(() => this.authorizationManager.getAuth(username));
-      },
-      error: (error) => {
-        let header = "Login Failed";
-        let message = ""
-        if (error.error.message.includes("/")) {
-          if (error.error.message.split("/").length > 0) {
-            header = error.error.message.split("/")[0]
-            message = error.error.message.split("/")[1]
-          }
-        } else if (error.error.message === "Bad credentials") {
-          message = "Invalid username or password. Please check and try again."
-        } else {
-          message = error.error.message
-        }
-        this.showErrorDialog(header, message);
+        this.router.navigateByUrl("main/home");
+        this.ut.getAuth(username);
+      })
+      .catch((error) => {
+        this.showErrorDialog("Invalid Login Details", "Username/Password Empty or Invalid. Check for Username Length");
         this.router.navigateByUrl("login");
-      }
-    });
+      });
   }
 
   signup(): void {

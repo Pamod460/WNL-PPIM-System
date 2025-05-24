@@ -4,8 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { Router } from '@angular/router';
-import {AuthorizationManager} from "../service/auth/authorizationmanager";
-
+import {AuthorizationManager} from "./authorizationmanager";
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
