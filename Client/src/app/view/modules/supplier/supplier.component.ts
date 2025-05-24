@@ -1,7 +1,7 @@
 import {Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Employee} from "../../../entity/employee";
-import {MatListOption, MatSelectionList} from "@angular/material/list";
+import {MatSelectionList} from "@angular/material/list";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {UiAssist} from "../../../util/ui/ui.assist";
@@ -19,13 +19,16 @@ import {SupplierTypeService} from "../../../service/supplier/supplier-type.servi
 import {SupplierService} from "../../../service/supplier/supplier.service";
 import {Supplier} from "../../../entity/Supplier";
 import {SupplierStatusService} from "../../../service/supplier/supplier-status.service";
-import {Material} from "../../../entity/Material";
-import {MaterialService} from "../../../service/material/material.service";
 import {Supply} from "../../../entity/Supply";
 import {TableUtilsService} from "../../../service/Shared/table-utils.service";
 import {Country} from "../../../entity/Country";
 import {map, Observable, startWith} from "rxjs";
 import {CountryService} from "../../../service/supplier/country.service";
+import {MaterialSubcategory} from "../../../entity/MaterialSubcategory";
+import {MaterialsubcategoryService} from "../../../service/material/materialsubcategory.service";
+import {PaperSupply} from "../../../entity/PaperSupply";
+import {PaperType} from "../../../entity/PaperType";
+import {PaperTypeService} from "../../../service/Paper/paper-type.service";
 
 
 @Component({
@@ -36,6 +39,7 @@ import {CountryService} from "../../../service/supplier/country.service";
 })
 export class SupplierComponent implements OnInit {
   @ViewChild('dialogTemplate', {static: true}) dialogTemplate!: TemplateRef<any>;
+  @ViewChild('dialogTemplate2', {static: true}) dialogTemplate2!: TemplateRef<any>;
   public form!: FormGroup;
   public ssearch!: FormGroup;
 
@@ -43,9 +47,9 @@ export class SupplierComponent implements OnInit {
 
   suppliers: Supplier[] = [];
 
-  materials: Material[] = [];
+  materialSubcategories: MaterialSubcategory[] = [];
 
-  oldmaterials: Material[] = [];
+  oldmaterialSubcategories: MaterialSubcategory[] = [];
   countries: Country[] = [];
 
   filteredCountries: Observable<Country[]>;
@@ -95,13 +99,18 @@ export class SupplierComponent implements OnInit {
   supplies: Supply[] = [];
   dataSource = new MatTableDataSource<Supplier>([]);
   lastSupCode = "";
+  paperSupplies: PaperSupply[] = [];
+  paperTypes: PaperType[] = [];
+  oldPaperTypes: PaperType[] = [];
+  btnPaperText = "Add Papers";
 
   constructor(
     private formBuilder: FormBuilder,
     private employeeService: EmployeeService,
     private supplierTypeService: SupplierTypeService,
     private supplierStatusService: SupplierStatusService,
-    private materialService: MaterialService,
+    private materialSubcategoryService: MaterialsubcategoryService,
+    private paperTypesService: PaperTypeService,
     private supplierService: SupplierService,
     private datePipe: DatePipe,
     private matDialog: MatDialog,
@@ -136,6 +145,7 @@ export class SupplierComponent implements OnInit {
       "regNo": new FormControl('', [Validators.maxLength(6)]),
       "material": new FormControl(),
       "supplies": new FormControl(),
+      "paperSupplies": new FormControl(),
       "logger": new FormControl(),
     });
 
@@ -187,9 +197,13 @@ export class SupplierComponent implements OnInit {
       this.countries = countries;
     });
 
-    this.materialService.getAllList().subscribe((materials: Material[]) => {
-      this.materials = materials;
-      this.oldmaterials = Array.from(this.materials)
+    this.materialSubcategoryService.getAll("").subscribe((materialSubcategories: MaterialSubcategory[]) => {
+      this.materialSubcategories = materialSubcategories;
+      // this.oldmaterialSubcategories = Array.from(this.materialSubcategories)
+    });
+    this.paperTypesService.getAll().subscribe((paperTypes: PaperType[]) => {
+      this.paperTypes = paperTypes;
+      // this.oldmaterialSubcategories = Array.from(this.materialSubcategories)
     });
 
 
@@ -407,9 +421,14 @@ export class SupplierComponent implements OnInit {
     } else {
       this.btnMaterialText = "Add Materials";
     }
+    if (supplier.paperSupplies.length > 0) {
+      this.btnPaperText = "View Papers";
+    } else {
+      this.btnPaperText = "Add Papers";
+    }
     this.enableButtons(false, true, true);
 
-    this.materials = Array.from(this.oldmaterials);
+    // this.materialSubcategories = Array.from(this.oldmaterialSubcategories);
 
     this.selectedrow = supplier;
 
@@ -421,10 +440,11 @@ export class SupplierComponent implements OnInit {
     //
     //@ts-ignore
     this.supplier.suppliertype = this.supplierTypes.find(s => s.id === this.supplier.suppliertype.id);
-    this.supplies = this.supplier.supplies; // Load User Roles
-
-    this.supplier.supplies.forEach((ur) => this.materials = this.materials.filter((r) => r.id != ur.material.id));
-
+    this.supplies = this.supplier.supplies;
+    this.paperSupplies = this.supplier.paperSupplies;
+    // this.supplier.supplies.forEach((ur) => this.materialSubcategories = this.materialSubcategories.filter((r) => r.id != ur.materialSubcategory.id));
+    this.oldmaterialSubcategories = this.supplies.map((ur) => ur.materialSubcategory);
+    this.oldPaperTypes = this.supplier.paperSupplies.map((ur) => ur.paperType);
     const supplierData = {...this.supplier}; // Clone the supplier object
 
     this.form.patchValue(supplierData);// Patch only allowed fields
@@ -480,7 +500,8 @@ export class SupplierComponent implements OnInit {
             this.supplier = this.form.getRawValue();
             this.supplier.id = this.oldSupplier.id
             this.supplier.supplies = this.supplies
-           // @ts-ignore
+            this.supplier.paperSupplies = this.paperSupplies
+            // @ts-ignore
             this.supplier.country = this.countries.filter(country => country.name === this.supplier.country)[0];
             this.supplierService.update(this.supplier).subscribe({
               next: (response) => {
@@ -558,6 +579,7 @@ export class SupplierComponent implements OnInit {
     this.btnMaterialText = "Add Materials";
     this.selectedrow = null;
     this.supplies = []
+    this.paperSupplies = []
     this.createForm();
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
@@ -578,39 +600,6 @@ export class SupplierComponent implements OnInit {
     }
   }
 
-  // addToList() {
-  //   const value = this.form.controls['material'].value
-  //     if (value) {
-  //       const supply: Supply = new Supply(value);
-  //       this.materials = this.materials.filter(item => item !== value);
-  //       this.supplies.push(supply);
-  //       console.log(this.supplies)
-  //       this.form.controls['material'].reset();
-  //       this.form.controls["supplies"].clearValidators();
-  //       this.form.controls["supplies"].updateValueAndValidity();
-  //     }
-  // }
-
-
-  removeFromList(selectedItems: MatListOption[]) {
-    if (!selectedItems || selectedItems.length === 0) return;
-
-    selectedItems.forEach((selectedItem) => {
-      const supply: Supply = selectedItem.value;
-
-      // Remove from supplies
-      this.supplies = this.supplies.filter(item => item !== supply);
-
-      // Add back to materials list
-      this.materials.push(supply.material);
-    });
-
-    // Ensure "supplies" field validation is updated
-    if (this.supplies.length === 0) {
-      this.form.controls['supplies'].setValidators([Validators.required]);
-    }
-    this.form.controls['supplies'].updateValueAndValidity();
-  }
 
   getColumnClass(columnIndex: number): string {
     return this.tableUtils.getColumnSizeClass(this.data, this.binders, columnIndex, this.uiassist);
@@ -625,48 +614,79 @@ export class SupplierComponent implements OnInit {
 
   }
 
-  rightSelected(): void {
-    this.supplier.supplies = this.availablelist.selectedOptions.selected.map(option => {
-      const supply = new Supply(option.value);
-      this.materials = this.materials.filter(role => role !== option.value); //Remove Selected
-      this.supplies.push(supply); // Add selected to Right Side
-      return supply;
-    });
-
-    this.form.controls["supplies"].clearValidators();
-    this.form.controls["supplies"].updateValueAndValidity(); // Update status
-  }
-
-  leftSelected(): void {
-    const selectedOptions = this.selectedlist.selectedOptions.selected; // Right Side
-    for (const option of selectedOptions) {
-      const extSupply = option.value;
-      this.supplies = this.supplies.filter(supply => supply !== extSupply);
-      this.materials.push(extSupply.material);
-    }
-
-  }
-
-
-  rightAll(): void {
-    this.supplier.supplies = this.availablelist.selectAll().map(option => {
-      const supply = new Supply(option.value);
-      this.materials = this.materials.filter(role => role !== option.value);
+  onMaterialsPicked(selected: MaterialSubcategory[]) {
+    this.supplies = [];
+    selected.map(option => {
+      const supply = new Supply(option);
       this.supplies.push(supply);
       return supply;
     });
+    this.oldmaterialSubcategories = selected
+  }
 
+  onPickCancelled() {
+    this.dialog.closeAll()
+  }
+
+  openMaterialDialog(): void {
+
+    const dialogRef = this.dialog.open(this.dialogTemplate, {
+      width: '90vw',
+      maxWidth: '900px',
+      maxHeight: '90vh',
+      disableClose: false,
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.dialog.closeAll()
+        console.log(result)
+        // this.addMaterials(result);
+      }
+    });
+  }
+
+  addMaterials(selected: MaterialSubcategory[]) {
+    this.form.get("supplies")?.setValue(selected);
     this.form.controls["supplies"].clearValidators();
     this.form.controls["supplies"].updateValueAndValidity();
+    this.dialog.closeAll()
   }
 
-  leftAll(): void {
-    for (const supplies of this.supplies) this.materials.push(supplies.material);
-    this.supplies = [];
+  onPapersPicked(paperTypes: PaperType[]) {
+    this.paperSupplies = [];
+    paperTypes.map(option => {
+      const paperSupply = new PaperSupply(option);
+      this.paperSupplies.push(paperSupply);
+      return paperSupply;
+    });
+    this.oldmaterialSubcategories = paperTypes
   }
 
-  addMaterials() {
-    console.log(this.supplies)
+  openPaperDialog() {
+
+    const dialogRef = this.dialog.open(this.dialogTemplate2, {
+      width: '90vw',
+      maxWidth: '900px',
+      maxHeight: '90vh',
+      disableClose: false,
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.dialog.closeAll()
+        console.log(result)
+        // this.addMaterials(result);
+      }
+    });
+  }
+
+  addPapers(paperTypes: PaperType[]) {
+    this.form.get("paperSupplies")?.setValue(paperTypes);
+    this.form.controls["paperSupplies"].clearValidators();
+    this.form.controls["paperSupplies"].updateValueAndValidity();
     this.dialog.closeAll()
   }
 }

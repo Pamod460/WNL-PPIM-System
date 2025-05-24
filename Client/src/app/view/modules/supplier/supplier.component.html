@@ -111,47 +111,55 @@
       <div class="d-flex mb-3">
         <div class="list">
           <mat-selection-list>
-            <mat-list-option *ngFor="let supply of supplies" [value]="supply">{{ supply.material.name }}
+            <mat-list-option *ngFor="let supply of supplies" [value]="supply">{{ supply.materialSubcategory.name }}
             </mat-list-option>
           </mat-selection-list>
         </div>
 
-        <button (click)="openDialog()" class="btn btn-dark mx-auto btn-lg my-auto h-25 ">
+        <button (click)="openMaterialDialog()" class="btn btn-dark mx-auto btn-lg my-auto h-25 ">
           {{ btnMaterialText }}
         </button>
       </div>
-
-
       <ng-template #dialogTemplate>
-        <div class="list-dialog">
-          <div id="listtrnasfer">
-            <div class="list">
-              <mat-selection-list #availablelist>
-                <mat-list-option multiple *ngFor="let material of materials" [value]="material">{{ material.name }}
-                </mat-list-option>
-              </mat-selection-list>
-            </div>
-
-            <div id="pnlmiddle">
-              <button mat-raised-button (click)="rightSelected()">&gt;</button>
-              <button mat-raised-button (click)="leftSelected()">&lt;</button>
-              <button mat-raised-button (click)="rightAll()">&gt;&gt;</button>
-              <button mat-raised-button (click)="leftAll()">&lt;&lt;</button>
-            </div>
-
-            <div class="list">
-              <mat-selection-list formControlName="supplies" #selectedlist>
-                <mat-list-option *ngFor="let supply of supplies" [value]="supply">{{ supply.material.name }}
-                </mat-list-option>
-              </mat-selection-list>
-            </div>
-          </div>
-
-          <button (click)="addMaterials()" class="btn btn-dark mx-auto btn-lg">
-            OK
-          </button>
-        </div>
+        <app-checklist-dialog
+          [allItems]="materialSubcategories"
+          [preselectedItems]="oldmaterialSubcategories"
+          [dialogTitle]="'Choose your materials'"
+          [searchPlaceholder]="'Filter list…'"
+          [icon]="'inventory_2'"
+          (confirmed)="onMaterialsPicked($event)"
+          (cancelled)="onPickCancelled()"
+          (submitted)="addMaterials($event)"
+        >
+        </app-checklist-dialog>
       </ng-template>
+
+      <div class="d-flex mb-3">
+        <div class="list">
+          <mat-selection-list>
+            <mat-list-option *ngFor="let ps of paperSupplies" [value]="ps">{{ ps.paperType.name }}
+            </mat-list-option>
+          </mat-selection-list>
+        </div>
+
+        <button (click)="openPaperDialog()" class="btn btn-dark mx-auto btn-lg my-auto h-25 ">
+          {{ btnPaperText }}
+        </button>
+      </div>
+      <ng-template #dialogTemplate2>
+        <app-checklist-dialog
+          [allItems]="paperTypes"
+          [preselectedItems]="oldPaperTypes"
+          [dialogTitle]="'Choose your materials'"
+          [searchPlaceholder]="'Filter list…'"
+          [icon]="'inventory_2'"
+          (confirmed)="onPapersPicked($event)"
+          (cancelled)="onPickCancelled()"
+          (submitted)="addPapers($event)"
+        >
+        </app-checklist-dialog>
+      </ng-template>
+
 
       <!-- Supplier Details -->
       <mat-form-field appearance="outline">
@@ -261,7 +269,8 @@
 
         <select formControlName="material" class="form-select usstatus-drop-down">
           <option [value]="null" selected disabled>Material</option>
-          <option *ngFor="let userstatus of materials" [value]="userstatus.id">{{ userstatus.name }}</option>
+          <option *ngFor="let userstatus of materialSubcategories" [value]="userstatus.id">{{ userstatus.name }}
+          </option>
         </select>
 
         <button class="btn btn-dark" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
@@ -276,8 +285,7 @@
 </app-common-layout>
 
 
-<!--
-            <div id="listtrnasfer">
+<!-- <div id="listtrnasfer">
 
               <div class="w-50">
                 <mat-form-field appearance="outline" class="mt-2 material-dropdown ">
@@ -307,3 +315,34 @@
               </div>
 
             </div>-->
+
+<!--      <ng-template #dialogTemplate>-->
+<!--        <div class="list-dialog">-->
+<!--          <div id="listtrnasfer">-->
+<!--            <div class="list">-->
+<!--              <mat-selection-list #availablelist>-->
+<!--                <mat-list-option multiple *ngFor="let materialSubcategory of materialSubcategories" [value]="materialSubcategory">{{ materialSubcategory.name }}-->
+<!--                </mat-list-option>-->
+<!--              </mat-selection-list>-->
+<!--            </div>-->
+
+<!--            <div id="pnlmiddle">-->
+<!--              <button mat-raised-button (click)="rightSelected()">&gt;</button>-->
+<!--              <button mat-raised-button (click)="leftSelected()">&lt;</button>-->
+<!--              <button mat-raised-button (click)="rightAll()">&gt;&gt;</button>-->
+<!--              <button mat-raised-button (click)="leftAll()">&lt;&lt;</button>-->
+<!--            </div>-->
+
+<!--            <div class="list">-->
+<!--              <mat-selection-list formControlName="supplies" #selectedlist>-->
+<!--                <mat-list-option *ngFor="let supply of supplies" [value]="supply">{{ supply.materialSubcategory.name }}-->
+<!--                </mat-list-option>-->
+<!--              </mat-selection-list>-->
+<!--            </div>-->
+<!--          </div>-->
+
+<!--          <button (click)="addMaterials()" class="btn btn-dark mx-auto btn-lg">-->
+<!--            OK-->
+<!--          </button>-->
+<!--        </div>-->
+<!--      </ng-template>-->

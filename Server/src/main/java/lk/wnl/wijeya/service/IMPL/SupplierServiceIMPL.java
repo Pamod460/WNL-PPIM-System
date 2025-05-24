@@ -1,11 +1,14 @@
 package lk.wnl.wijeya.service.IMPL;
 
 import lk.wnl.wijeya.dto.SupplierDto;
+import lk.wnl.wijeya.entity.PaperSupply;
 import lk.wnl.wijeya.entity.Supplier;
 import lk.wnl.wijeya.entity.Supply;
+import lk.wnl.wijeya.entity.User;
 import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
 import lk.wnl.wijeya.exception.ResourceNotFoundException;
 import lk.wnl.wijeya.repository.SupplierRepository;
+import lk.wnl.wijeya.repository.UserRepository;
 import lk.wnl.wijeya.service.SupplierService;
 import lk.wnl.wijeya.util.StandardResponse;
 import lk.wnl.wijeya.util.mapper.ObjectMapper;
@@ -26,6 +29,8 @@ import java.util.stream.Stream;
 public class SupplierServiceIMPL implements SupplierService {
     private final SupplierRepository supplierRepository;
     private final ObjectMapper objectMapper;
+    private final UserRepository userRepository;
+
     @Override
     public ResponseEntity<StandardResponse> delete(Integer id) {
         Supplier existingSupplier = supplierRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Supplier Not Found"));
@@ -37,18 +42,24 @@ public class SupplierServiceIMPL implements SupplierService {
     public ResponseEntity<StandardResponse> update(SupplierDto supplierDto) {
         Supplier supplier = objectMapper.toSupplier(supplierDto);
         Supplier existingSupplier = supplierRepository.findById(supplier.getId()).orElseThrow(() -> new ResourceNotFoundException("Supplier Not Found"));
-
-        if (supplierRepository.existsByAccontHolderAndBankAccNoAndIdNot(supplier.getAccontHolder(), supplier.getBankAccNo(),supplier.getId())) {
+        supplier.setCreatedBy(existingSupplier.getCreatedBy());
+        if (supplierRepository.existsByAccontHolderAndBankAccNoAndIdNot(supplier.getAccontHolder(), supplier.getBankAccNo(), supplier.getId())) {
             throw new ResourceAlreadyExistException("Bank Account Already Exists");
         }
 
         try {
             existingSupplier.getSupplies().clear();
+            existingSupplier.getPaperSupplies().clear();
             supplier.getSupplies().forEach(newSupplies -> {
                 newSupplies.setSupplier(existingSupplier);
                 existingSupplier.getSupplies().add(newSupplies);
             });
-            BeanUtils.copyProperties(supplier, existingSupplier, "id", "supplies");
+
+            supplier.getPaperSupplies().forEach(newPaperSupplies -> {
+                newPaperSupplies.setPaperSupplier(existingSupplier);
+                existingSupplier.getPaperSupplies().add(newPaperSupplies);
+            });
+            BeanUtils.copyProperties(supplier, existingSupplier, "id", "supplies", "paperSupplies", "createdBy");
             Supplier updatedSupplier = supplierRepository.save(existingSupplier);
 
             return ResponseEntity.ok(new StandardResponse(
@@ -84,7 +95,7 @@ public class SupplierServiceIMPL implements SupplierService {
             supplierStream = supplierStream.filter(s -> s.getSuppliertype().getId() == Integer.parseInt(typeid));
         if (number != null) supplierStream = supplierStream.filter(s -> s.getRegNo().equals(number));
         if (materialid != null)
-            supplierStream = supplierStream.filter(s -> s.getSupplies().stream().anyMatch(ms -> ms.getMaterial().getId() == Integer.parseInt(materialid)));
+            supplierStream = supplierStream.filter(s -> s.getSupplies().stream().anyMatch(ms -> ms.getMaterialSubcategory().getMaterials().stream().anyMatch(m -> m.getId() == Integer.parseInt(materialid))));
         if (name != null) supplierStream = supplierStream.filter(s -> s.getName().contains(name));
 
         return objectMapper.toSupplierDtoList(supplierStream.collect(Collectors.toList()));
@@ -113,7 +124,10 @@ public class SupplierServiceIMPL implements SupplierService {
 
     @Override
     public ResponseEntity<StandardResponse> save(SupplierDto supplierDto) {
+        User user = userRepository.findByUsername(supplierDto.getLogger());
         Supplier supplier = objectMapper.toSupplier(supplierDto);
+        supplier.setCreatedBy(user);
+
         if (supplierRepository.existsByName(supplier.getName()))
             throw new ResourceAlreadyExistException("Existing Supplier");
 
@@ -121,6 +135,7 @@ public class SupplierServiceIMPL implements SupplierService {
             throw new ResourceAlreadyExistException("Bank Account Already Exists");
         }
         for (Supply s : supplier.getSupplies()) s.setSupplier(supplier);
+        for (PaperSupply ps : supplier.getPaperSupplies()) ps.setPaperSupplier(supplier);
 
         Supplier sup = supplierRepository.save(supplier);
         return ResponseEntity.status(HttpStatus.CREATED)

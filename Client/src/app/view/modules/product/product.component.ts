@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {Materialsubcategory} from "../../../entity/Materialsubcategory";
+import {MaterialSubcategory} from "../../../entity/MaterialSubcategory";
 import {Unittype} from "../../../entity/Unittype";
 import {UiAssist} from "../../../util/ui/ui.assist";
 import {RegexService} from "../../../service/Shared/regex.service";
@@ -65,7 +65,7 @@ export class ProductComponent implements OnInit {
 
   productStatuses: ProductStatus[] = [];
   protected readonly document = document;
-  materialSubcategories: Materialsubcategory[] = [];
+  materialSubcategories: MaterialSubcategory[] = [];
   unitTypes: Unittype[] = [];
 
 

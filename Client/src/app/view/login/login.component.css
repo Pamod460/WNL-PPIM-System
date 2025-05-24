@@ -4,10 +4,11 @@
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
+:root{
 
+}
 :host {
   height: 100vh;
-  background: linear-gradient(135deg, #4b6cb7, #182848);
   color: white;
 }
 
@@ -17,6 +18,9 @@
   height: 100%;
   overflow: hidden;
   z-index: 0;
+  /*background: linear-gradient(135deg, #4b6cb7, #182848) !important;*/
+  background: linear-gradient(135deg, #75787e, #43474d) !important;
+
 }
 
 .circle {

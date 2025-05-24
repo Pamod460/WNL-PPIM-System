@@ -1,0 +1,265 @@
+.material-checklist-dialog {
+  width: 100%;
+  max-width: 900px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #444;
+  .dialog-header {
+    padding: 24px 24px 0 24px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 16px;
+
+    .dialog-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      color: #333;
+      font-weight: 600;
+
+      .title-icon {
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+        color: #555;
+      }
+    }
+
+    .search-container {
+      margin-bottom: 16px;
+
+      .search-field {
+        width: 100%;
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+
+      .select-all-btn, .clear-all-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+  }
+
+  .dialog-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 24px;
+
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+      padding: 16px 0;
+    }
+
+    .material-item {
+      background: white;
+      border: 2px solid #f0f0f0;
+      border-radius: 12px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(45deg, #333, #777);;
+        transform: scaleX(0);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      &:hover {
+        border-color: #1976d2;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(25, 118, 210, 0.15);
+      }
+
+      &.selected {
+        border-color: #1976d2;
+        background: linear-gradient(135deg, rgba(25, 118, 210, 0.05), rgba(66, 165, 245, 0.05));
+
+        &::before {
+          transform: scaleX(1);
+        }
+      }
+
+      .item-content {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .custom-checkbox {
+        width: 24px;
+        height: 24px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-shrink: 0;
+        margin-top: 2px;
+
+        .check-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          color: white;
+        }
+      }
+
+      &.selected .custom-checkbox {
+        background: linear-gradient(45deg, #1976d2, #42a5f5);
+        border-color: #1976d2;
+      }
+
+      .item-details {
+        flex: 1;
+        min-width: 0;
+
+        .item-name {
+          font-weight: 600;
+          font-size: 16px;
+          color: #333;
+          margin-bottom: 4px;
+          line-height: 1.4;
+        }
+
+        .item-description {
+          font-size: 14px;
+          color: #666;
+          margin-bottom: 8px;
+          line-height: 1.4;
+        }
+
+        .item-category {
+          .category-chip {
+            font-size: 12px;
+            height: 24px;
+            background: #e3f2fd;
+            color: #1976d2;
+          }
+        }
+      }
+
+      .selection-indicator {
+        .selected-icon {
+          color: #1976d2;
+          font-size: 24px;
+          width: 24px;
+          height: 24px;
+          animation: checkAppear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+      }
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px 20px;
+      color: #666;
+
+      .no-results-icon {
+        font-size: 48px;
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+      }
+
+      p {
+        font-size: 16px;
+        margin: 0;
+      }
+    }
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-top: 1px solid #e0e0e0;
+    background: #fafafa;
+
+    .selected-count {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(45deg, #333, #777);;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+
+      .confirm-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0 24px;
+      }
+    }
+  }
+}
+
+@keyframes checkAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .material-checklist-dialog {
+    .dialog-content .materials-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .dialog-header .action-buttons {
+      flex-direction: column;
+
+      .select-all-btn, .clear-all-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .dialog-actions {
+      flex-direction: column;
+      gap: 16px;
+
+      .action-buttons {
+        width: 100%;
+
+        .cancel-btn, .confirm-btn {
+          flex: 1;
+        }
+      }
+    }
+  }
+}

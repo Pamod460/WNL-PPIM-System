@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -12,8 +13,8 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "paper_type")
-public class PaperType {
+@Table(name = "material_subcategory")
+public class MaterialSubcategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -22,11 +23,17 @@ public class PaperType {
     @Size(max = 45)
     @Column(name = "name", length = 45)
     private String name;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "material_category_id", nullable = false)
+    private MaterialCategory materialCategory;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "paperType")
-    private Set<Paper> papers = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "materialSubcategory")
+    private Set<Material> materials = new LinkedHashSet<>();
     @JsonIgnore
-    @OneToMany(mappedBy = "paperType")
-    private Set<PaperSupply> paperSupplies = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "materialSubcategory")
+    private Set<Supply> supplies = new LinkedHashSet<>();
 
 }

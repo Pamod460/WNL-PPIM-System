@@ -23,9 +23,10 @@ public class Supply {
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;
 
+
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "material_id", nullable = false)
-    private Material material;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "material_subcategory_id", nullable = false)
+    private MaterialSubcategory materialSubcategory;
 
 }

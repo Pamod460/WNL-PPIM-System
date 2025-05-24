@@ -48,18 +48,7 @@ public class Material {
     @Basic
     @Column(name = "photo")
     private byte[] photo;
-    @ManyToOne
-    @JoinColumn(name = "unittype_id", referencedColumnName = "id", nullable = false)
-    private UnitType unittype;
-    @ManyToOne
-    @JoinColumn(name = "materialstatus_id", referencedColumnName = "id", nullable = false)
-    private Materialstatus materialstatus;
-    @ManyToOne
-    @JoinColumn(name = "materialsubcategory_id", referencedColumnName = "id", nullable = false)
-    private Materialsubcategory materialsubcategory;
-    @JsonIgnore
-    @OneToMany(mappedBy = "material")
-    private Set<Supply> supplies = new LinkedHashSet<>();
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "material")
@@ -69,6 +58,22 @@ public class Material {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
     private User createdBy;
+
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "material_status_id", nullable = false)
+    private MaterialStatus materialStatus;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "unit_type_id", nullable = false)
+    private UnitType unitType;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "material_subcategory_id", nullable = false)
+    private MaterialSubcategory materialSubcategory;
 
     @Transient
     private String logger;

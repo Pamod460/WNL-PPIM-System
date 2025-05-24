@@ -17,14 +17,14 @@ public class PaperSupply {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-
+    @JsonIgnore
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "supplier_id", nullable = false)
-    private Supplier supplier;
+    private Supplier paperSupplier;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "paper_type_id", nullable = false)
     private PaperType paperType;
 

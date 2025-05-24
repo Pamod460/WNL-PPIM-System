@@ -1,7 +1,7 @@
 package lk.wnl.wijeya.controller;
 
-import lk.wnl.wijeya.repository.UnittypeRepository;
 import lk.wnl.wijeya.entity.UnitType;
+import lk.wnl.wijeya.repository.UnittypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

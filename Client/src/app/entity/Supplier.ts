@@ -2,6 +2,7 @@ import {Supply} from "./Supply";
 import {SupplierStatus} from "./SupplierStatus";
 import {SupplierType} from "./SupplierType";
 import {Country} from "./Country";
+import {PaperSupply} from "./PaperSupply";
 
 export class Supplier {
   id!: number;
@@ -20,4 +21,5 @@ export class Supplier {
   suppliertype?: SupplierType;
   supplies!: Supply[];
   regNo?: string;
+  paperSupplies!: PaperSupply[];
 }

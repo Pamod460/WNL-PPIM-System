@@ -52,6 +52,9 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { ProductComponent } from './view/modules/product/product.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
 import { PaperComponent } from './view/modules/paper/paper.component';
+import {
+  ChecklistDialogComponent
+} from "./util/dialog/material-checklist-dialog/checklist-dialog.component";
 
 
 
@@ -78,45 +81,46 @@ import { PaperComponent } from './view/modules/paper/paper.component';
 
 
   ],
-    imports: [
-        MatDatepickerModule,
-        MatNativeDateModule,
-        MatSelectModule,
-        MatTableModule,
-        MatPaginatorModule,
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatGridListModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatButtonModule,
-        MatInputModule,
-        MatToolbarModule,
-        MatSidenavModule,
-        MatListModule,
-        MatExpansionModule,
-        MatIconModule,
-        MatDialogModule,
-        HttpClientModule,
-        MatChipsModule,
-        ReactiveFormsModule,
-        MatSlideToggleModule,
-        MatPseudoCheckboxModule,
-        MatCheckboxModule,
-        CommonLayoutComponent,
-        NgbModule,
-        MatMenuModule,
-        ToastrModule.forRoot({
-            positionClass: 'toast-top-right',
-            timeOut: 5000,
-            preventDuplicates: true
-        }),
-        FormsModule,
-        MatAutocompleteModule,
-        MatTooltipModule
+  imports: [
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
+    MatTableModule,
+    MatPaginatorModule,
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatGridListModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatButtonModule,
+    MatInputModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatListModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatDialogModule,
+    HttpClientModule,
+    MatChipsModule,
+    ReactiveFormsModule,
+    MatSlideToggleModule,
+    MatPseudoCheckboxModule,
+    MatCheckboxModule,
+    CommonLayoutComponent,
+    NgbModule,
+    MatMenuModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+      timeOut: 5000,
+      preventDuplicates: true
+    }),
+    FormsModule,
+    MatAutocompleteModule,
+    MatTooltipModule,
+    ChecklistDialogComponent
 
-    ],
+  ],
   providers: [
     EmployeeService,
     DatePipe,

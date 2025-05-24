@@ -25,17 +25,17 @@ public interface ObjectMapper {
 
     List<GenderDto> toGenderDtoList(List<Gender> genderList);
 
-    List<MaterialCategoryDto> toMaterialCategoryDtoList(List<Materialcategory> materialcategoryList);
+    List<MaterialCategoryDto> toMaterialCategoryDtoList(List<MaterialCategory> materialCategoryList);
 
-    MaterialCategoryDto toMaterialCategoryDto(Materialcategory materialcategory);
+    MaterialCategoryDto toMaterialCategoryDto(MaterialCategory materialcategory);
 
     List<MaterialDto> toMaterialDtoList(List<Material> materials);
 
-    List<MaterialstatusDto> toMaterialStatusDtoList(List<Materialstatus> materialstatusList);
+    List<MaterialstatusDto> toMaterialStatusDtoList(List<MaterialStatus> materialStatusList);
 
     Employee toEmployeeEntity(EmployeeDto employeeDto);
 
-    List<MaterialsubcategoryDto> toMaterialsubcategoryDTOList(List<Materialsubcategory> materialsubcategoryList);
+    List<MaterialSubcategoryDto> toMaterialsubcategoryDTOList(List<MaterialSubcategory> materialsubcategoryList);
 
     List<ModuleDto> toModuleDtoList(List<Module> moduleList);
 

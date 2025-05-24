@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Getter
@@ -76,7 +75,7 @@ public class Supplier {
     private SupplierType suppliertype;
 
     @OneToMany(mappedBy = "supplier", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<Supply> supplies;
+    private Set<Supply> supplies;
 
     @Size(max = 6)
     @Column(name = "reg_no", length = 6)
@@ -91,7 +90,7 @@ public class Supplier {
     private String bankBranch;
 
     @Size(max = 100)
-    @Column(name = "accont_holder", length = 100)
+    @Column(name = "account_holder", length = 100)
     private String accontHolder;
 
     @NotNull
@@ -99,9 +98,8 @@ public class Supplier {
     @JoinColumn(name = "country_id", nullable = false, referencedColumnName = "id")
     private Country country;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "supplier")
-    private Set<PaperSupply> paperSupplies = new LinkedHashSet<>();
+    @OneToMany(mappedBy = "paperSupplier", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<PaperSupply> paperSupplies;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -110,6 +108,7 @@ public class Supplier {
 
     @Transient
     private String logger;
+
     public String getLogger() {
         return this.createdBy.getUsername();
     }

@@ -41,9 +41,9 @@ public class MaterialServiceIMPL implements MaterialService {
         Stream<Material> mstream = materials.stream();
 
         if (materialsubcategoryid != null)
-            mstream = mstream.filter(m -> m.getMaterialsubcategory().getId() == Integer.parseInt(materialsubcategoryid));
+            mstream = mstream.filter(m -> m.getMaterialSubcategory().getId() == Integer.parseInt(materialsubcategoryid));
         if (materialstatusid != null)
-            mstream = mstream.filter(m -> m.getMaterialstatus().getId() == Integer.parseInt(materialstatusid));
+            mstream = mstream.filter(m -> m.getMaterialStatus().getId() == Integer.parseInt(materialstatusid));
         if (code != null) mstream = mstream.filter(m -> m.getCode().equals(code));
         if (name != null) mstream = mstream.filter(m -> m.getName().contains(name));
 
@@ -71,20 +71,21 @@ public class MaterialServiceIMPL implements MaterialService {
         }
         Material mat = materialRepository.save(material);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new StandardResponse("Material Added Successfully", new Material(mat.getId(), mat.getName())));
+                .body(new StandardResponse("Material Added Successfully", new MaterialDto(mat.getId(), mat.getName())));
     }
 
     @Override
     public ResponseEntity<StandardResponse> update(MaterialDto materialDto) {
         Material material = objectMapper.toMaterial(materialDto);
-        Material emprec = materialRepository.findById(material.getId()).orElseThrow(() -> new ResourceNotFoundException("Material Not Found"));
-        if (!emprec.getCode().equals(material.getCode()) && materialRepository.existsByCode(material.getCode())) {
+        Material extMaterial = materialRepository.findById(material.getId()).orElseThrow(() -> new ResourceNotFoundException("Material Not Found"));
+        material.setCreatedBy(extMaterial.getCreatedBy());
+        if (!extMaterial.getCode().equals(material.getCode()) && materialRepository.existsByCode(material.getCode())) {
             throw new ResourceAlreadyExistException("Code Already Exists");
         }
         Material mat = this.materialRepository.save(material);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new StandardResponse("Material Updated Successfully",
-                        new Material(mat.getId(), mat.getName())));
+                        new MaterialDto(mat.getId(), mat.getName())));
     }
 
     @Override
