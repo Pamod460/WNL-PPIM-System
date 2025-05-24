@@ -76,8 +76,13 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<User> users = new LinkedHashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<Agent> agents = new LinkedHashSet<>();
+
     @Transient
     private String logger;
+
     public String getLogger() {
         return this.createdBy.getUsername();
     }
