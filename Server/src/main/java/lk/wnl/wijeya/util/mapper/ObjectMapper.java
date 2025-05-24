@@ -96,4 +96,27 @@ public interface ObjectMapper {
     List<PaperTypeDto> toPaperTypeDtoList(List<PaperType> paperTypes);
 
     List<PaperUnitTypeDto> toPaperUnitTypeDtoList(List<PaperUnitType> paperUnitTypes);
+
+
+   
+
+    List<DistrictDto> toDistrictDtoList(List<District> districtList);
+
+    List<AgentStatusDto> toAgentStatusDtoList(List<AgentStatus> agentStatusList);
+
+    List<RouteDto> toRouteDtoList(List<Route> routeList);
+
+    List<AgentDto> toAgentDtoList(List<Agent> agentList);
+
+    Agent toAgentEntity(AgentDto agentDto);
+
+    DistrictDto toDistrictDto(District district);
+
+    AgentStatusDto toAgentStatusDto(AgentStatus agentStatus);
+
+    RouteDto toRouteDto(Route route);
+
+    UserDto toUserDto(User createdBy);
+
+    Object toAgentDto(Agent savedAgent);
 }

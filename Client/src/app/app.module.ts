@@ -55,7 +55,7 @@ import { PaperComponent } from './view/modules/paper/paper.component';
 import {
   ChecklistDialogComponent
 } from "./util/dialog/material-checklist-dialog/checklist-dialog.component";
-
+import { AgentComponent } from './view/modules/agent/agent.component';
 
 
 @NgModule({
@@ -78,6 +78,7 @@ import {
     SupplierComponent,
     ProductComponent,
     PaperComponent,
+    AgentComponent,
 
 
   ],

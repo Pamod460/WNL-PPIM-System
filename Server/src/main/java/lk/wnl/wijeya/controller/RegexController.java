@@ -44,6 +44,9 @@ public class RegexController {
     @GetMapping(path = "/paper", produces = "application/json")
     public HashMap<String, HashMap<String, String>> paper() {
         return RegexProvider.get(new PaperDto());
+    } @GetMapping(path = "/agent", produces = "application/json")
+    public HashMap<String, HashMap<String, String>> agent() {
+        return RegexProvider.get(new AgentDto());
     }
 
 
