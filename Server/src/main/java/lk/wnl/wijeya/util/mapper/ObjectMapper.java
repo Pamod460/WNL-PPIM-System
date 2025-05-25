@@ -119,4 +119,14 @@ public interface ObjectMapper {
     UserDto toUserDto(User createdBy);
 
     Object toAgentDto(Agent savedAgent);
+
+    Vehicle vehicleDtoToVehicle(VehicleDto vehicleDTO);
+
+    List<VehicleDto> vehicleListToDtoList(List<Vehicle> vehicles);
+
+    List<VehicleModelDto> vehicleModelListToDtoList(List<VehicleModel> vehicleModelList);
+
+    List<VehicleStatusDto> vehicleStatusListToDtoList(List<VehicleStatus> vehiclestatuses);
+
+    List<VehicleTypeDto> vehicleTypeListToDtoList(List<VehicleType> vehicletypes);
 }
