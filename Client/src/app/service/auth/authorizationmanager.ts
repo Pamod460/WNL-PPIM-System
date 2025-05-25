@@ -41,6 +41,7 @@ export class AuthorizationManager {
   Registration = [
     {name: 'Supplier', isVisible: false, routerLink: 'supplier'},
     {name: 'Agent', isVisible: false, routerLink: 'agent'},
+    {name: 'Vehicle', isVisible: false, routerLink: 'vehicle'},
   ]
 
 
