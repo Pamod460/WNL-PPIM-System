@@ -57,6 +57,7 @@ import {
 } from "./util/dialog/material-checklist-dialog/checklist-dialog.component";
 import { AgentComponent } from './view/modules/agent/agent.component';
 import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
+import { RouteComponent } from './view/modules/route/route.component';
 
 
 @NgModule({
@@ -80,7 +81,8 @@ import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
     ProductComponent,
     PaperComponent,
     AgentComponent,
-    VehicleComponent
+    VehicleComponent,
+    RouteComponent
 
   ],
   imports: [

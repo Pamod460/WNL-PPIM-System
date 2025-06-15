@@ -16,6 +16,7 @@ import {ProductComponent} from "./view/modules/product/product.component";
 import {PaperComponent} from "./view/modules/paper/paper.component";
 import {AgentComponent} from "./view/modules/agent/agent.component";
 import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
+import {RouteComponent} from "./view/modules/route/route.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -36,6 +37,7 @@ const routes: Routes = [
       {path: "paper", component: PaperComponent},
       {path: "agent", component: AgentComponent},
       {path: "vehicle", component: VehicleComponent},
+      {path: "route", component: RouteComponent},
       {path: "reports", component: ArrearsByProgramComponent},
     ],canActivate:[AuthGuard]
   }];

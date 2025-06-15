@@ -41,15 +41,19 @@ export class AuthorizationManager {
   Registration = [
     {name: 'Supplier', isVisible: false, routerLink: 'supplier'},
     {name: 'Agent', isVisible: false, routerLink: 'agent'},
-    {name: 'Vehicle', isVisible: false, routerLink: 'vehicle'},
   ]
+  Distribution = [
+    {name: 'Vehicle', isVisible: false, routerLink: 'vehicle'},
+    {name: 'Route', isVisible: false, routerLink: 'route'},
 
+  ]
 
   getNavListItem() {
     return [
       {Menu: 'ADMIN', MenuItems: this.Admin},
       {Menu: 'INVENTORY', MenuItems: this.Inventory},
-      {Menu: 'Registration', MenuItems: this.Registration}
+      {Menu: 'Registration', MenuItems: this.Registration},
+      {Menu: 'Distribution', MenuItems: this.Distribution}
     ]
   }
 
