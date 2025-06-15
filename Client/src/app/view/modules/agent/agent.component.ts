@@ -18,7 +18,7 @@ import {Route} from "../../../entity/Route";
 import {AgentStatus} from "../../../entity/AgentStatus";
 import {AgentStatusService} from "../../../service/agent/agent-status.service";
 import {DistrictService} from "../../../service/agent/district.service";
-import {RouteService} from "../../../service/agent/route.service";
+import {RouteService} from "../../../service/route/route.service";
 
 @Component({
   selector: 'app-agent',
