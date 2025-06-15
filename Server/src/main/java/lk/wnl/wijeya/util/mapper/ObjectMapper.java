@@ -129,4 +129,8 @@ public interface ObjectMapper {
     List<VehicleStatusDto> vehicleStatusListToDtoList(List<VehicleStatus> vehiclestatuses);
 
     List<VehicleTypeDto> vehicleTypeListToDtoList(List<VehicleType> vehicletypes);
+
+    List<RouteStatusDto> toRouteStatusDto(List<RouteStatus> routeStatuses);
+
+    Route toRoute(RouteDto routeDto);
 }
