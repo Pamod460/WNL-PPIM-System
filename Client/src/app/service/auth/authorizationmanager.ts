@@ -17,43 +17,45 @@ export class AuthorizationManager {
   private readonly localStorageUsreName = 'username';
   private readonly localStorageFullName = 'fullname';
 
-  // please define all local storage suitable for relevant Main Menu name like below
-  // Ex : Main Menu -> Report
-  //  Then LocalStorage -> 'localstorageReportMenus'
-
-  private readonly localStorageAdminMenus = 'admMenuState';
-  private readonly localStorageAcademicMenus = 'acdMenuState';
-  private readonly localStorageRegistrationMenus = 'regMenuState';
-  private readonly localStorageClassMenus = 'clsMenuState';
 
   Admin = [
-    {name: 'Employee', isVisible: false, routerLink: 'employee'},
-    {name: 'User', isVisible: false, routerLink: 'user'},
-    {name: 'Privilege', isVisible: false, routerLink: 'privilege'}
-    // { name: 'Operations', isVisible: false, routerLink: 'operation' }
+    {name: 'Employee', isVisible: false, routerLink: 'employee', icon: 'person'},
+    {name: 'User', isVisible: false, routerLink: 'user', icon: 'event_note'},
+    {name: 'Privilege', isVisible: false, routerLink: 'privilege', icon: 'assignment'}
+
   ];
 
   Inventory = [
-    {name: 'Material', isVisible: false, routerLink: 'material'},
-    {name: 'Product', isVisible: false, routerLink: 'product'},
-    {name: 'Paper', isVisible: false, routerLink: 'paper'},
+    {name: 'Material', isVisible: false, routerLink: 'material', icon: 'widgets'},
+    {name: 'Product', isVisible: false, routerLink: 'product', icon: 'widgets'},
+    {name: 'Paper', isVisible: false, routerLink: 'paper', icon: 'inventory'},
   ];
   Registration = [
-    {name: 'Supplier', isVisible: false, routerLink: 'supplier'},
-    {name: 'Agent', isVisible: false, routerLink: 'agent'},
+    {name: 'Supplier', isVisible: false, routerLink: 'supplier', icon: 'store'},
+    {name: 'Agent', isVisible: false, routerLink: 'agent', icon: 'person'},
   ]
   Distribution = [
-    {name: 'Vehicle', isVisible: false, routerLink: 'vehicle'},
-    {name: 'Route', isVisible: false, routerLink: 'route'},
-
+    {name: 'Vehicle', isVisible: false, routerLink: 'vehicle', icon: 'directions_car'},
+    {name: 'Route', isVisible: false, routerLink: 'route', icon: 'map'},
   ]
+  PurchaseOrder = [
+    {name: 'Material POrder', isVisible: false, routerLink: 'materialpurchaseorder', icon: 'inventory'},
+    {name: 'Paper POrder', isVisible: false, routerLink: 'paperpurchaseorder', icon: 'description'}
+  ]
+  Report = [
+    {name: 'Agents Report', isVisible: false, routerLink: 'agentsreport', icon: 'assignment'},
+    {name: 'Employees Report', isVisible: false, routerLink: 'employeesreport', icon: 'assignment'},
+    {name: 'Purchase Order Report', isVisible: false, routerLink: 'purchaseorderreport', icon: 'assignment'}
+  ];
 
   getNavListItem() {
     return [
       {Menu: 'ADMIN', MenuItems: this.Admin},
       {Menu: 'INVENTORY', MenuItems: this.Inventory},
-      {Menu: 'Registration', MenuItems: this.Registration},
-      {Menu: 'Distribution', MenuItems: this.Distribution}
+      {Menu: 'REGISTRATION', MenuItems: this.Registration},
+      {Menu: 'DISTRIBUTION', MenuItems: this.Distribution},
+      {Menu: 'PURCHASE ORDER', MenuItems: this.PurchaseOrder},
+      {Menu: 'REPORTS', MenuItems: this.Report}
     ]
   }
 
@@ -74,15 +76,13 @@ export class AuthorizationManager {
     });
 
     menus.forEach(menuGroup => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      localStorage.setItem(this["localStorage" + menuGroup.Menu + "Menus"], JSON.stringify(menuGroup));
+
+      localStorage.setItem(menuGroup.Menu + "Menus", JSON.stringify(menuGroup));
     });
 
   }
 
   getAuth(username: string) {
-    console.log("username", username)
     if (username) {
       this.setFullName();
       this.setUsername(username);
@@ -201,9 +201,8 @@ export class AuthorizationManager {
     const menus = this.getNavListItem();
 
     menus.forEach(menuState => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      const localStorageState = localStorage.getItem(this['localStorage' + menuState.Menu + 'Menus']);
+
+      const localStorageState = localStorage.getItem(menuState.Menu + 'Menus');
       if (localStorageState) {
         menuState.Menu = JSON.parse(localStorageState);
       }
@@ -217,9 +216,8 @@ export class AuthorizationManager {
   clearMenuState(): void {
     const menus = this.getNavListItem();
     menus.forEach(menu => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      localStorage.removeItem(this['localStorage' + menu.Menu + 'Menus']);
+
+      localStorage.removeItem(menu.Menu + 'Menus');
     });
   }
 

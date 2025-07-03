@@ -83,6 +83,8 @@ import { RouteComponent } from './view/modules/route/route.component';
     AgentComponent,
     VehicleComponent,
     RouteComponent
+    MaterialporderComponent,
+    PaperporderComponent,
 
   ],
   imports: [

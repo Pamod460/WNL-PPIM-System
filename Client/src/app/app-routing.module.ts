@@ -39,6 +39,8 @@ const routes: Routes = [
       {path: "vehicle", component: VehicleComponent},
       {path: "route", component: RouteComponent},
       {path: "reports", component: ArrearsByProgramComponent},
+      {path: "materialpurchaseorder", component: MaterialporderComponent},
+      {path: "paperpurchaseorder", component: PaperporderComponent},
     ],canActivate:[AuthGuard]
   }];
 
