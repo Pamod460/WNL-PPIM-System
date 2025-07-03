@@ -133,4 +133,16 @@ public interface ObjectMapper {
     List<RouteStatusDto> toRouteStatusDto(List<RouteStatus> routeStatuses);
 
     Route toRoute(RouteDto routeDto);
+
+    List<MaterialPorderStatusDto> toMaterialPoderStatusDtoList(List<MaterialPorderStatus> materialPorderStatuses);
+
+    List<MaterialPorderDto> toMaterialPoderDtoList(List<MaterialPorder> materialPorders);
+
+    MaterialPorder toMaterialPoder(MaterialPorderDto materialPorderDto);
+
+    List<PaperPorderStatusDto> toPaperPoderStatusDtoList(List<PaperPorderStatus> all);
+
+    List<PaperPorderDto> toPaperPoderDtoList(List<PaperPorder> all);
+
+    PaperPorder toPaperPoder(PaperPorderDto paperPorderDto);
 }
