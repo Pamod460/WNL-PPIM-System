@@ -37,7 +37,7 @@
                         [attr.data-bs-target]="'#flush-collapse' + i"
                         aria-expanded="false"
                         [attr.aria-controls]="'flush-collapse' + i">
-                  {{ menuItem.Menu }}
+                  {{ menuItem.Menu  }}
                 </button>
               </h2>
               <div [id]="'flush-collapse' + i" class="accordion-collapse collapse"
@@ -48,9 +48,9 @@
                        routerLinkActive="active-link">
                     <a class="nav-link">
                     <span class="icon">
-                      <mat-icon>{{ matSubMenuIcons[subMenuItem.name] }}</mat-icon>
+                      <mat-icon>{{ subMenuItem.icon }}</mat-icon>
                     </span>
-                      <span class="title">{{ subMenuItem.name }}</span>
+                      <span class="title">{{ subMenuItem.name | capitalize}}</span>
                     </a>
                   </div>
                 </div>

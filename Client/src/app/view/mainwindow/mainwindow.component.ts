@@ -27,8 +27,9 @@ export class MainwindowComponent implements OnInit{
     'Employee': 'person',
     'User': 'event_note',
     'Privilege': 'assignment',
-    'Class': 'schedule',
-    'Material': 'description',
+    'Material': 'widgets',
+    'Product': 'inventory',
+    'Paper': 'receipt_long',
     'Supplier': 'store'
   };
   userImage = 'assets/default.png'
@@ -61,6 +62,12 @@ export class MainwindowComponent implements OnInit{
 
    ngOnInit() {
     this.menuGroup = this.authorizationManager.getNavListItem();
+     this.menuGroup.forEach(e => {
+
+       if (e.Menu === "REPORTS" && this.authorizationManager.getRoles()?.some(role => role.name === "Admin")) {
+         e.MenuItems = e.MenuItems.map((item: any) => ({ ...item, isVisible: true }));
+       }
+     });
     this.authorizationManager.getAuth(this.authorizationManager.getUsername());
     this.userImage = this.authorizationManager.getUserProfile();
      // @ts-ignore
