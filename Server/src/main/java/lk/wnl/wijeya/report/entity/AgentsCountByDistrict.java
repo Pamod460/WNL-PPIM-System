@@ -9,17 +9,17 @@ import javax.persistence.Id;
 @Setter
 @Getter
 @Entity
-public class CountByDesignation {
+public class AgentsCountByDistrict {
 
     private Integer id;
-    private String designation;
+    private String district;
     private Long count;
     private double percentage;
 
-    public CountByDesignation() {  }
+    public AgentsCountByDistrict() {  }
 
-    public CountByDesignation(String designation, Long count) {
-        this.designation = designation;
+    public AgentsCountByDistrict(String district, Long count) {
+        this.district = district;
         this.count = count;
     }
 

@@ -31,7 +31,6 @@ import {ConfirmComponent} from "./util/dialog/confirm/confirm.component";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule, MatPseudoCheckboxModule} from "@angular/material/core";
 import {DatePipe} from "@angular/common";
-import { ArrearsByProgramComponent } from './report/view/arrearsbyprogram/arrearsbyprogram.component';
 import {CountByDesignationComponent} from "./report/view/countbydesignation/countbydesignation.component";
 import {MatChipsModule} from "@angular/material/chips";
 import { PrivilageComponent } from './view/modules/privilage/privilage.component';
@@ -58,6 +57,18 @@ import {
 import { AgentComponent } from './view/modules/agent/agent.component';
 import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
 import { RouteComponent } from './view/modules/route/route.component';
+import { MaterialporderComponent } from './view/modules/materialporder/materialporder.component';
+import { PurchaseOrderComponent } from './view/modules/purchase-order/purchase-order.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import { PaperporderComponent } from './view/modules/paperporder/paperporder.component';
+import {ReportsChartComponent} from "./util/report-chart/reports-chart.component";
+import {CustomFormFieldComponent} from "./util/custom-form-field/custom-form-field.component";
+import { CountByDisctrictComponent } from './report/view/count-by-disctrict/count-by-disctrict.component';
+import { PurchaseOrderReportComponent } from './report/view/purchase-order-report/purchase-order-report.component';
+import {CapitalizePipe} from "./util/layout/pipe/capitalize.pipe";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+
 
 
 @NgModule({
@@ -69,7 +80,6 @@ import { RouteComponent } from './view/modules/route/route.component';
     EmployeeComponent,
     UserComponent,
     ConfirmComponent,
-    ArrearsByProgramComponent,
     CountByDesignationComponent,
     MessageComponent,
     PrivilageComponent,
@@ -82,9 +92,12 @@ import { RouteComponent } from './view/modules/route/route.component';
     PaperComponent,
     AgentComponent,
     VehicleComponent,
-    RouteComponent
+    RouteComponent,
     MaterialporderComponent,
+    PurchaseOrderComponent,
     PaperporderComponent,
+    CountByDisctrictComponent,
+    PurchaseOrderReportComponent
 
   ],
   imports: [
@@ -124,7 +137,13 @@ import { RouteComponent } from './view/modules/route/route.component';
     FormsModule,
     MatAutocompleteModule,
     MatTooltipModule,
-    ChecklistDialogComponent
+    ChecklistDialogComponent,
+    MatTabsModule,
+    ReportsChartComponent,
+    CustomFormFieldComponent,
+    CapitalizePipe,
+    MatRadioModule,
+    MatButtonToggleModule,
 
   ],
   providers: [
