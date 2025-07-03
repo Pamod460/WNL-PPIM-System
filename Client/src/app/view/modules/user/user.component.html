@@ -12,8 +12,8 @@
       <mat-form-field appearance="outline">
         <mat-label>Employee</mat-label>
         <mat-select formControlName="employee">
-          <mat-option [value]="null" selected disabled>Not Selected</mat-option>
-          <mat-option *ngFor="let employee of employees" [value]="employee">{{ employee.callingname }}</mat-option>
+          <mat-option [value]="null" selected>Not Selected</mat-option>
+          <mat-option *ngFor="let employee of employees" [value]="employee">{{ employee.callingname +" - "+employee.designation.name }}</mat-option>
         </mat-select>
       </mat-form-field>
 
