@@ -44,9 +44,17 @@ public class RegexController {
     @GetMapping(path = "/paper", produces = "application/json")
     public HashMap<String, HashMap<String, String>> paper() {
         return RegexProvider.get(new PaperDto());
-    } @GetMapping(path = "/agent", produces = "application/json")
+    }
+
+    @GetMapping(path = "/agent", produces = "application/json")
     public HashMap<String, HashMap<String, String>> agent() {
         return RegexProvider.get(new AgentDto());
+    }   @GetMapping(path = "/materialporder", produces = "application/json")
+    public HashMap<String, HashMap<String, String>> materialPOrder() {
+        return RegexProvider.get(new MaterialPorderDto());
+    }@GetMapping(path = "/paperporder", produces = "application/json")
+    public HashMap<String, HashMap<String, String>> paperPOrder() {
+        return RegexProvider.get(new MaterialPorderDto());
     }
 
 
