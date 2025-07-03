@@ -1,173 +1,113 @@
-<!-- inventory-dashboard.component.html -->
-<div class="dashboard-container">
-  <header class="dashboard-header d-flex justify-content-center">
-    <h1>Dashboard</h1>
-  </header>
+<!--<div class="dashboard-container">-->
+<app-common-layout [viewCol]="0" [formCol]="0" [fullpagecol]="12" [fullpageRow]="14">
+<div fullpage >
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Dashboard Content -->
+    <div class="dashboard-main">
+      <!-- Stats Cards Row -->
+      <div class="stats-container">
+        <!-- Available Vehicles -->
+        <div class="stat-card green-card">
+          <div class="card-header">
+            <span class="card-title">AVAILABLE VEHICLES</span>
+            <div class="card-icon green-icon">
+              <i class="fas fa-truck"></i>
+            </div>
+          </div>
+          <div class="card-number">{{ totalVehicles }}</div>
+          <button class="details-btn" (click)="onSeeMoreDetails('vehicles')">
+            See More Details
+          </button>
+        </div>
 
-  <section class="dashboard-summary ">
-    <div class="summary-card total-items">
-      <h3>Total Items</h3>
-      <p class="large-number">{{ totalItems }}</p>
+        <!-- Total Suppliers -->
+        <div class="stat-card blue-card">
+          <div class="card-header">
+            <span class="card-title">TOTAL SUPPLIERS</span>
+            <div class="card-icon blue-icon">
+              <i class="fas fa-industry"></i>
+            </div>
+          </div>
+          <div class="card-number">{{ totalSuppliers }}</div>
+          <button class="details-btn" (click)="onSeeMoreDetails('suppliers')">
+            See More Details
+          </button>
+        </div>
+
+        <!-- Total Employees -->
+        <div class="stat-card orange-card">
+          <div class="card-header">
+            <span class="card-title">TOTAL PRODUCTS</span>
+            <div class="card-icon orange-icon">
+              <i class="fas fa-newspaper"></i>
+            </div>
+          </div>
+          <div class="card-number">{{ totalAgents }}</div>
+          <button class="details-btn" (click)="onSeeMoreDetails('employees')">
+            See More Details
+          </button>
+        </div>
+
+        <!-- Total Customers -->
+        <div class="stat-card teal-card">
+          <div class="card-header">
+            <span class="card-title">TOTAL AGENTS</span>
+            <div class="card-icon teal-icon">
+              <i class="fas fa-user-friends"></i>
+            </div>
+          </div>
+          <div class="card-number">{{ totalProducts }}</div>
+          <button class="details-btn" (click)="onSeeMoreDetails('customers')">
+            See More Details
+          </button>
+        </div>
+      </div>
+
+      <!-- Bottom Section -->
+      <div class="bottom-container">
+        <!-- Contact Details -->
+        <div class="contact-panel">
+          <h3 class="panel-title">Contact Details</h3>
+          <div class="contact-list">
+            <div class="contact-row" *ngFor="let contact of contactDetails">
+              <div class="contact-icon-wrapper">
+                <i [class]="getIconClass(contact.icon)" [style.color]="contact.color"></i>
+              </div>
+              <div class="contact-details">
+                <div class="contact-name">{{ contact.department }}</div>
+                <div class="contact-email">{{ contact.email }}</div>
+                <div class="contact-desc">{{ contact.description }}</div>
+                <div class="contact-phone" *ngIf="contact.phone">Tel: {{ contact.phone }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart Panel -->
+        <div class="chart-panel">
+          <h3 class="panel-title">Percentage of Items Below and Above Reorder Point (ROP)</h3>
+          <div class="chart-content">
+            <div class="pie-chart-container">
+              <canvas #pieChart width="300" height="300"></canvas>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <div class="legend-dot green-dot"></div>
+                  <span>Above</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot yellow-dot"></div>
+                  <span>Below</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button class="details-btn chart-details-btn" (click)="onSeeMoreDetails('chart')">
+            See More Details
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="summary-card low-stock">
-      <h3>Low Stock Items</h3>
-      <p class="large-number">{{ lowStockItems }}</p>
     </div>
-    <div class="summary-card out-of-stock">
-      <h3>Out of Stock</h3>
-      <p class="large-number">{{ outOfStockItems }}</p>
-    </div>
-    <div class="summary-card total-value">
-      <h3>Total Inventory Value</h3>
-      <p class="large-number">${{ totalInventoryValue.toLocaleString() }}</p>
-    </div>
-  </section>
-
-  <section class="dashboard-charts">
-    <div class="chart-container">
-      <canvas id="inventoryStatusChart"></canvas>
-    </div>
-    <div class="chart-container">
-      <canvas id="categoryDistributionChart"></canvas>
-    </div>
-  </section>
-
-  <section class="stock-alerts">
-    <h2>Stock Alerts</h2>
-    <table>
-      <thead>
-      <tr>
-        <th>Item Name</th>
-        <th>Current Stock</th>
-        <th>Minimum Threshold</th>
-        <th>Status</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let alert of stockAlerts">
-        <td>{{ alert.itemName }}</td>
-        <td>{{ alert.currentStock }}</td>
-        <td>{{ alert.minimumThreshold }}</td>
-        <td>
-            <span class="badge"
-                  [ngClass]="{
-                    'badge-danger': alert.currentStock === 0,
-                    'badge-warning': alert.currentStock > 0 && alert.currentStock < alert.minimumThreshold
-                  }">
-              {{ alert.currentStock === 0 ? 'Out of Stock' : 'Low Stock' }}
-            </span>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </section>
-
-  <section class="recent-inventory">
-    <h2>Recent Inventory</h2>
-    <table>
-      <thead>
-      <tr>
-        <th>Item Name</th>
-        <th>Category</th>
-        <th>Quantity</th>
-        <th>Status</th>
-        <th>Last Updated</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let item of inventoryItems">
-        <td>{{ item.name }}</td>
-        <td>{{ item.category }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>
-            <span class="badge"
-                  [ngClass]="{
-                    'badge-success': item.status === 'In Stock',
-                    'badge-warning': item.status === 'Low Stock',
-                    'badge-danger': item.status === 'Out of Stock'
-                  }">
-              {{ item.status }}
-            </span>
-        </td>
-        <td>{{ item.lastUpdated | date:'mediumDate' }}</td>
-      </tr>
-      </tbody>
-    </table>
-  </section>
-</div>
-
-
-
-
-
-<!--<mat-grid-list gutterSize="7" [cols]="4" rowHeight="4rem">-->
-
-<!--  <mat-grid-tile [colspan]="4" [rowspan]="2" >-->
-<!--    <mat-card  style="background-image: url('assets/header2img.png')"><img id="headImg" src="assets/logo_.png"></mat-card>-->
-<!--  </mat-grid-tile>-->
-
-
-<!--  <mat-grid-tile [colspan]="4" [rowspan]="4" id="quicklinks">-->
-<!--    <mat-card>-->
-<!--      <mat-card-content><img  src="assets/payment.png"></mat-card-content>-->
-<!--      <mat-card-footer ><a routerLink="payments">Payments</a></mat-card-footer>-->
-<!--    </mat-card>-->
-
-<!--    <mat-card>-->
-<!--      <mat-card-content><img  src="assets/register.png"></mat-card-content>-->
-<!--      <mat-card-footer ><a routerLink="batchregistration" >Register</a></mat-card-footer>-->
-<!--    </mat-card>-->
-
-<!--    <mat-card>-->
-<!--      <mat-card-content><img  src="assets/studnet.png"></mat-card-content>-->
-<!--      <mat-card-footer ><a routerLink="students">Student</a></mat-card-footer>-->
-<!--    </mat-card>-->
-
-<!--    <mat-card>-->
-<!--      <mat-card-content><img  src="assets/classshedule.png"></mat-card-content>-->
-<!--      <mat-card-footer ><a routerLink="classes">Classes</a></mat-card-footer>-->
-<!--    </mat-card>-->
-
-<!--    <mat-card>-->
-<!--      <mat-card-content><img  src="assets/tutes.png"></mat-card-content>-->
-<!--      <mat-card-footer ><a routerLink="books">Books</a></mat-card-footer>-->
-<!--    </mat-card>-->
-
-<!--    <mat-card>-->
-<!--      <mat-card-content><img  src="assets/attendence.png"></mat-card-content>-->
-<!--      <mat-card-footer ><a routerLink="attendance">Attendance</a></mat-card-footer>-->
-<!--    </mat-card>-->
-<!--  </mat-grid-tile>-->
-
-<!--  <mat-grid-tile [colspan]="2" [rowspan]="4" >-->
-<!--    <mat-card>-->
-<!--      <mat-card-title style="background-image: url('assets/header2img.png')">User Specific Messages</mat-card-title>-->
-<!--      <mat-card-content >-->
-<!--        <mat-list>-->
-<!--          <mat-list-item *ngFor="let message of userspecmessages">-->
-<!--            <mat-icon matListItemIcon> email</mat-icon>-->
-<!--            <div matListItemTitle >{{message.name}}</div>-->
-<!--            <div matListItemLine>{{message.updated | date}}</div>-->
-<!--          </mat-list-item>-->
-<!--        </mat-list>-->
-<!--      </mat-card-content>-->
-<!--    </mat-card>-->
-<!--  </mat-grid-tile>-->
-
-
-<!--  <mat-grid-tile [colspan]="2" [rowspan]="4" >-->
-<!--    <mat-card>-->
-<!--      <mat-card-title style="background-image: url('assets/header2img.png')">General Messages</mat-card-title>-->
-<!--      <mat-card-content >-->
-<!--        <mat-list>-->
-<!--          <mat-list-item *ngFor="let message of generalmessages">-->
-<!--            <mat-icon matListItemIcon> email</mat-icon>-->
-<!--            <div matListItemTitle >{{message.name}}</div>-->
-<!--            <div matListItemLine>{{message.updated | date}}</div>-->
-<!--          </mat-list-item>-->
-<!--        </mat-list>-->
-<!--      </mat-card-content>-->
-<!--    </mat-card>-->
-<!--  </mat-grid-tile>-->
-
-<!--</mat-grid-list>-->
+  </div></app-common-layout>
+<!--</div>-->
