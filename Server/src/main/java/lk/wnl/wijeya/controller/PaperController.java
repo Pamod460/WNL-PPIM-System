@@ -16,16 +16,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PaperController {
 
-
     private final PaperService paperService;
 
     @GetMapping(produces = "application/json")
-    public List<PaperDto> get(@RequestParam HashMap<String, String> params) {
+    public List<PaperDto> getAll(@RequestParam HashMap<String, String> params) {
         return paperService.getAllList(params);
     }
 
     @GetMapping(path = "/list", produces = "application/json")
-    public List<PaperDto> get() {
+    public List<PaperDto> getAllList() {
         return paperService.getAllList();
     }
 
@@ -43,7 +42,6 @@ public class PaperController {
     @DeleteMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return paperService.detele(id);
-
     }
 
 }

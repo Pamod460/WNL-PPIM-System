@@ -1,8 +1,6 @@
 package lk.wnl.wijeya.controller;
 
-import lk.wnl.wijeya.dto.AgentDto;
 import lk.wnl.wijeya.dto.DistrictDto;
-import lk.wnl.wijeya.service.AgentService;
 import lk.wnl.wijeya.service.DistrictService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;

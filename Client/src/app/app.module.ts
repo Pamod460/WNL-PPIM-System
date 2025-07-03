@@ -58,11 +58,8 @@ import { AgentComponent } from './view/modules/agent/agent.component';
 import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
 import { RouteComponent } from './view/modules/route/route.component';
 import { MaterialporderComponent } from './view/modules/materialporder/materialporder.component';
-import { PurchaseOrderComponent } from './view/modules/purchase-order/purchase-order.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import { PaperporderComponent } from './view/modules/paperporder/paperporder.component';
-import {ReportsChartComponent} from "./util/report-chart/reports-chart.component";
-import {CustomFormFieldComponent} from "./util/custom-form-field/custom-form-field.component";
 import { CountByDisctrictComponent } from './report/view/count-by-disctrict/count-by-disctrict.component';
 import { PurchaseOrderReportComponent } from './report/view/purchase-order-report/purchase-order-report.component';
 import {CapitalizePipe} from "./util/layout/pipe/capitalize.pipe";
@@ -94,7 +91,6 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
     VehicleComponent,
     RouteComponent,
     MaterialporderComponent,
-    PurchaseOrderComponent,
     PaperporderComponent,
     CountByDisctrictComponent,
     PurchaseOrderReportComponent
@@ -139,8 +135,6 @@ import {MatButtonToggleModule} from "@angular/material/button-toggle";
     MatTooltipModule,
     ChecklistDialogComponent,
     MatTabsModule,
-    ReportsChartComponent,
-    CustomFormFieldComponent,
     CapitalizePipe,
     MatRadioModule,
     MatButtonToggleModule,

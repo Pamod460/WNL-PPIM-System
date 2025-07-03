@@ -81,9 +81,10 @@ public class Employee {
     @OneToMany(mappedBy = "employee")
     private Collection<User> users;
 
-    public Employee(Integer id, String callingname) {
+    public Employee(Integer id, String callingname,Designation designation) {
         this.id = id;
         this.callingname = callingname;
+        this.designation=designation;
     }
 
 }

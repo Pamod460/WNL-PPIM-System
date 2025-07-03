@@ -16,7 +16,6 @@ import {PaperComponent} from "./view/modules/paper/paper.component";
 import {AgentComponent} from "./view/modules/agent/agent.component";
 import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
 import {RouteComponent} from "./view/modules/route/route.component";
-import {PurchaseOrderComponent} from "./view/modules/purchase-order/purchase-order.component";
 import {CountByDisctrictComponent} from "./report/view/count-by-disctrict/count-by-disctrict.component";
 import {PurchaseOrderReportComponent} from "./report/view/purchase-order-report/purchase-order-report.component";
 import {CountByDesignationComponent} from "./report/view/countbydesignation/countbydesignation.component";

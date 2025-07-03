@@ -53,7 +53,6 @@ export class PaperComponent implements OnInit {
   imageurl = '';
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-
   enaadd = false;
   enaupd = false;
   enadel = false;
@@ -64,7 +63,6 @@ export class PaperComponent implements OnInit {
 
   protected readonly document = document;
 
-
   regexes: any;
 
   uiassist: UiAssist;
@@ -73,7 +71,6 @@ export class PaperComponent implements OnInit {
   maxDate: Date;
 
   today: Date = new Date();
-
 
   paperTypes: PaperType[] = [];
   paperUnitTypes: PaperUnitType[] = [];
@@ -99,10 +96,7 @@ export class PaperComponent implements OnInit {
     private toastr: ToastrService,
     private tableUtils: TableUtilsService
   ) {
-
-
     this.uiassist = new UiAssist(this);
-
     this.ssearch = this.formBuilder.group({
       "code": new FormControl(),
       "name": new FormControl(),
@@ -112,7 +106,6 @@ export class PaperComponent implements OnInit {
     this.form = this.formBuilder.group({
       code: new FormControl('', [Validators.required]),
       name: new FormControl('', [Validators.required]),
-      // quantity: new FormControl('', [Validators.required, Validators.min(1)]),
       rop: new FormControl('', [Validators.required, Validators.min(0)]),
       unitPrice: new FormControl('', [Validators.required, Validators.min(0)]),
       description: new FormControl(''),
@@ -125,7 +118,6 @@ export class PaperComponent implements OnInit {
       qoh: new FormControl(null, [Validators.required]),
       paperUnitType: new FormControl(null, [Validators.required]),
       logger: new FormControl(null, [Validators.required]),
-
     });
     this.form.get("logger")?.setValue(this.authService.getUsername());
     const today = new Date();
@@ -200,7 +192,6 @@ export class PaperComponent implements OnInit {
   createView() {
     this.loadTable("");
   }
-
 
   createForm() {
     // this.form.controls['code'].setValidators([Validators.required]);
@@ -296,7 +287,6 @@ export class PaperComponent implements OnInit {
 
   }
 
-
   btnSearchClearMc(): void {
 
     const confirm = this.matDialog.open(ConfirmComponent, {
@@ -312,7 +302,6 @@ export class PaperComponent implements OnInit {
     });
 
   }
-
 
   add() {
     const errors = this.getErrors();
@@ -342,7 +331,7 @@ export class PaperComponent implements OnInit {
         if (result) {
           this.paperService.add(this.paper).subscribe({
             next: (responce) => {
-              this.toastr.success(responce.message, "Success").onShown.subscribe(() => {
+              this.toastr.success(responce.message).onShown.subscribe(() => {
                 this.form.reset();
                 this.loadTable("");
                 this.form.controls['doassignment'].setValue(new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()));
@@ -358,7 +347,6 @@ export class PaperComponent implements OnInit {
       });
     }
   }
-
 
   getErrors(optionalFields?: string []): string {
 
@@ -449,7 +437,7 @@ export class PaperComponent implements OnInit {
                   control.markAsTouched();
                 });
                 this.loadTable("");
-                this.toastr.success(response.message, "Success");
+                this.toastr.success(response.message);
               }, error: (error) => {
                 this.toastr.error(error.data.message)
               }
@@ -483,13 +471,14 @@ export class PaperComponent implements OnInit {
         this.paperService.delete(this.paper.id).subscribe({
           next: (response: any) => {
             if (response) {
-              this.toastr.success(response.data, "Success").onShown.subscribe(() => {
-              this.form.reset();
-              this.disableGenerateNo = false;
-              this.loadTable("");
-              Object.values(this.form.controls).forEach(control => {
-                control.markAsTouched();
-              });})
+              this.toastr.success(response.data).onShown.subscribe(() => {
+                this.form.reset();
+                this.disableGenerateNo = false;
+                this.loadTable("");
+                Object.values(this.form.controls).forEach(control => {
+                  control.markAsTouched();
+                });
+              })
 
             }
           },
@@ -534,15 +523,6 @@ export class PaperComponent implements OnInit {
       default:
         return "";
     }
-  }
-
-  getLastEmpCode() {
-    // this.paperService.getLastEmpCode().subscribe(ecode => {
-    //   console.log(ecode.code)
-    //   this.lastEmpCode = ecode.code
-    //   this.form.controls["number"].setValue(this.lastEmpCode)
-    // });
-
   }
 
   getColumnClass(columnIndex: number) {

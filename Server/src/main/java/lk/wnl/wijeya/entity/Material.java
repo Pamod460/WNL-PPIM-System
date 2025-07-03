@@ -77,6 +77,9 @@ public class Material {
 
     @Transient
     private String logger;
+    @JsonIgnore
+    @OneToMany(mappedBy = "material")
+    private Set<MaterialPorderMaterial> materialPorderMaterials = new LinkedHashSet<>();
 
     public Material(Integer id, String name) {
         this.id = id;

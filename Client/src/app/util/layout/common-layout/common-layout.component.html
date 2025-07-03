@@ -2,7 +2,7 @@
 <mat-grid-list [cols]="12" rowHeight="4rem">
   <mat-grid-tile [colspan]="4" rowspan="2" >
     <div class="c-bread-crumb">
-    <app-custom-breadcrumb></app-custom-breadcrumb>
+    <app-custom-breadcrumb [matchedNavItem]="matchedNavItem" ></app-custom-breadcrumb>
     </div>
   </mat-grid-tile>
   <mat-grid-tile [colspan]="searchCol" [rowspan]="searchRow">
@@ -44,6 +44,15 @@
         <ng-content select="[view]"></ng-content>
       </mat-card-content>
     </mat-card></div>
+  </mat-grid-tile>
+
+  <mat-grid-tile [colspan]="fullpagecol" [rowspan]='fullpageRow' >
+    <div class="d-flex w-100 h-100 overflow-auto" >
+      <mat-card style="background-color: rgba(81,87,93,0.62)">
+
+          <ng-content select="[fullpage]"></ng-content>
+
+       </mat-card></div>
   </mat-grid-tile>
 </mat-grid-list>
 

@@ -428,7 +428,7 @@ export class ProductComponent implements OnInit {
           this.productService.add(this.product).subscribe({
             next: (responce) => {
               if (responce)
-                this.toastr.success("Product Added Successfully", "Success").onShown.subscribe(() => {
+                this.toastr.success("Product Added Successfully").onShown.subscribe(() => {
                   // this.form.reset();
                   this.form.controls['doassignment'].setValue(new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()));
                   this.clearImage();
@@ -574,7 +574,7 @@ export class ProductComponent implements OnInit {
                   control.markAsTouched();
                 });
                 this.loadTable("");
-                this.toastr.success(response.message, "Success");
+                this.toastr.success(response.message);
               }, error: (error) => {
                 this.toastr.error(error.data.message)
               }
@@ -608,7 +608,7 @@ export class ProductComponent implements OnInit {
         this.productService.delete(this.product.id).subscribe({
           next: (response: any) => {
             if (response.code === 200) {
-              this.toastr.success(response.data.message, "Success").onShown.subscribe(() => {
+              this.toastr.success(response.data.message).onShown.subscribe(() => {
                 this.form.reset();
                 this.disableGenerateNo = false;
                 this.clearImage();

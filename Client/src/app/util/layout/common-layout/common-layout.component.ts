@@ -18,13 +18,16 @@ export class CommonLayoutComponent implements OnInit {
   @Input() formCol: number = 4
   @Input() searchCol: number = 8
   @Input() viewCol: number = 8
-  @Input() viewRow: number = 12
+  @Input() viewRow: number = 16
   @Input() searchRow: number = 2
-  @Input() formRow: number = 12
+  @Input() formRow: number = 16
   @Input() statusImageUrl:any="" ;
+  @Input() matchedNavItem='';
 
   title: any;
   public currentTime: Date = new Date();
+  @Input() fullpagecol=0;
+  @Input() fullpageRow=0;
 
   constructor(private route: ActivatedRoute, private router: Router) {
   }
@@ -49,7 +52,11 @@ export class CommonLayoutComponent implements OnInit {
 
   updateTitle(): void {
     this.route.url.subscribe((x) => {
-      this.title = x[0].path
+      if (this.matchedNavItem!=''){
+        this.title=this.matchedNavItem
+      }else {
+        this.title = x[0].path
+      }
     });
   }
 }

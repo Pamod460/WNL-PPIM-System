@@ -113,7 +113,7 @@ export class MaterialComponent implements OnInit {
       materialSubcategory: new FormControl(null, [Validators.required]),
       materialCategory: new FormControl(null, [Validators.required]),
     });
-    this.form.get("logger")?.setValue(this.authService.getUsername());
+    // this.form.get("logger")?.setValue(this.authService.getUsername());
     const today = new Date();
     this.minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate()); // 60 years ago
     this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()); // 18 years ago
@@ -337,7 +337,7 @@ export class MaterialComponent implements OnInit {
           this.materialService.add(this.material).subscribe({
             next: (responce) => {
               if (responce)
-                this.toastr.success("Material Added Successfully", "Success").onShown.subscribe(() => {
+                this.toastr.success("Material Added Successfully").onShown.subscribe(() => {
                   this.form.reset();
                   this.form.controls['doassignment'].setValue(new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()));
                   this.clearImage();
@@ -444,7 +444,7 @@ export class MaterialComponent implements OnInit {
             this.material.id = this.oldmaterial.id;
             this.materialService.update(this.material).subscribe({
               next: (response: any) => {
-                this.toastr.success(response.message, "Success");
+                this.toastr.success(response.message);
                 this.form.reset();
                 this.loadTable("");
                 this.disableGenerateNo = false;
@@ -486,7 +486,7 @@ export class MaterialComponent implements OnInit {
         this.materialService.delete(this.material.id).subscribe({
           next: (response: any) => {
             if (response) {
-              this.toastr.success(response.data, "Success").onShown.subscribe(() => {
+              this.toastr.success(response.data).onShown.subscribe(() => {
                 this.loadTable("");
 
                 this.form.reset();
