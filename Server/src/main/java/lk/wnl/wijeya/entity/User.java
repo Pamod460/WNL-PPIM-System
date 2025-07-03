@@ -79,6 +79,16 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<Agent> agents = new LinkedHashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<MaterialPorder> materialPorders = new LinkedHashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<Route> routes = new LinkedHashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<Vehicle> vehicles = new LinkedHashSet<>();
+
 
     @Transient
     private String logger;
