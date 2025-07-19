@@ -22,13 +22,13 @@ public class MaterialDto {
     private String name;
     private BigDecimal quantity;
     private BigDecimal rop;
-    private BigDecimal unitprice;
+    private BigDecimal unitPrice;
     private String description;
     private Date dointroduced;
     private byte[] photo;
-    private UnitType unitType;
+    private UnitTypeDto unitType;
     private MaterialStatus materialStatus;
-    private MaterialSubcategory materialSubcategory;
+    private MaterialSubcategoryDto materialSubcategory;
     private String  logger;
 
     public MaterialDto(Integer id, String name) {
@@ -37,9 +37,9 @@ public class MaterialDto {
     }
 
 
-    public MaterialDto(Integer id, String name, BigDecimal unitprice) {
+    public MaterialDto(Integer id, String name, BigDecimal unitPrice) {
         this.id = id;
         this.name = name;
-        this.unitprice = unitprice;
+        this.unitPrice = unitPrice;
     }
 }

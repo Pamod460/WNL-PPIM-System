@@ -28,8 +28,8 @@ public class MaterialPorderMaterial {
     @JoinColumn(name = "material_id", nullable = false)
     private Material material;
 
-    @Column(name = "quentity")
-    private Integer quentity;
+    @Column(name = "quantity")
+    private Integer quantity;
 
     @Column(name = "expected_line_cost", precision = 7, scale = 2)
     private BigDecimal expectedLineCost;

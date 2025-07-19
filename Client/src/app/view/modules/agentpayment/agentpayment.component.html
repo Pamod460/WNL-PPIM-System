@@ -1,0 +1,193 @@
+<app-common-layout [matchedNavItem]="matchedNavItem">
+  <div form>
+    <form [formGroup]="form">
+
+      <mat-form-field appearance="outline">
+        <mat-label>Distribution</mat-label>
+        <mat-select formControlName="distribution">
+          <mat-option [value]="null" selected>Not Selected</mat-option>
+          <mat-option *ngFor="let distribution of distributions"
+                      [value]="distribution">{{ distribution.distributionNumber }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+        <mat-label>Date of Paid</mat-label>
+        <input matInput [matDatepicker]="date" formControlName="date" [readonly]="true">
+        <mat-datepicker-toggle matIconSuffix [for]="date"></mat-datepicker-toggle>
+        <mat-datepicker #date></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Amount</mat-label>
+        <input matInput formControlName="amount" type="number" step="0.01">
+      </mat-form-field>
+
+
+      <mat-form-field appearance="outline">
+        <mat-label>Payment Status</mat-label>
+        <mat-select formControlName="paymentStatus">
+          <mat-option [value]="null" selected>Not Selected</mat-option>
+          <mat-option *ngFor="let status of paymentstatuses" [value]="status">{{ status.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Payment Type</mat-label>
+        <mat-select formControlName="agentPaymentType" (selectionChange)="checkPaymentType($event.value)">
+          <mat-option [value]="null" selected>Not Selected</mat-option>
+          <mat-option *ngFor="let paymenttype of paymenttypes" [value]="paymenttype">{{ paymenttype.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+      </mat-form-field>
+
+      <div *ngIf="isChequePayment">
+        <div [formGroup]="checkPaymentForm">
+          <mat-form-field appearance="outline">
+            <mat-label>Check No</mat-label>
+            <input matInput formControlName="cheqNumber" type="text">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Date of Realized</mat-label>
+            <input matInput [matDatepicker]="dorealized" formControlName="dorealized" [readonly]="true">
+            <mat-datepicker-toggle matIconSuffix [for]="dorealized"></mat-datepicker-toggle>
+            <mat-datepicker #dorealized></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Bank</mat-label>
+            <mat-select formControlName="bank">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+
+              <mat-option *ngFor="let bank of banks" [value]="bank">{{ bank.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Cheque Status</mat-label>
+            <mat-select formControlName="cheqStatus">
+
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+
+              <mat-option *ngFor="let bank of cheqStatus" [value]="bank">{{ bank.name }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Cheque Description</mat-label>
+            <textarea matInput formControlName="description"></textarea>
+          </mat-form-field>
+
+        </div>
+      </div>
+
+
+      <mat-form-field appearance="outline" class="opacity-75">
+        <mat-label>Created by</mat-label>
+        <input matInput formControlName="logger" required readonly>
+      </mat-form-field>
+
+      <div id="butpanel">
+        <button type="button" class="btn btn-dark btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">
+          Add
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="update()"
+                [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="delete()"
+                [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="clear()">Clear</button>
+      </div>
+    </form>
+
+
+  </div>
+
+  <div search>
+    <form [formGroup]="ssearch" class="form-container">
+      <div class="input-group mb-3">
+        <input type="text" formControlName="ssponumber" class="form-control search-bar-items" placeholder="  PO Number"
+               style="border-radius: 40px 0 0 40px ">
+        <input type="date" formControlName="ssdate" class="form-control search-bar-items" placeholder="Date">
+        <select formControlName="ssstatus" class="form-select gender-drop-down">
+          <option [value]="null" selected disabled>Status</option>
+          <option *ngFor="let status of materialPorderStatuses" [value]="status.id">{{ status.name }}</option>
+        </select>
+
+        <button class="btn btn-dark" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
+          <mat-icon style="padding-top: 7px">search</mat-icon>
+        </button>
+        <button class="btn btn-dark" (click)="btnSearchClearMc()" style=" border-radius: 0 40px 40px 0;">
+          Clear &nbsp; &nbsp;
+        </button>
+      </div>
+    </form>
+
+  </div>
+  <div view>
+
+    <mat-table [dataSource]="data">
+
+      <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+        <mat-header-cell *matHeaderCellDef class="table-header" [ngClass]="getColumnClass(i)"> {{ headers[i] }}
+        </mat-header-cell>
+
+        <mat-cell *matCellDef="let element" [ngClass]="getColumnClass(i)">
+          <ng-container *ngIf="column === 'photo'; else checkStatus ">
+            <img
+              [src]="uiassist.getProperty(element, binders[i]) ? uiassist.getProperty(element, binders[i]) : defaultProfile"
+              class="my-2 rounded-circle"
+              width="50" height="50" alt="Photo"/>
+          </ng-container>
+
+          <ng-template #checkStatus>
+            <ng-container *ngIf="column === 'empstatus'; else textCell">
+                  <span class="pt-2 mt-1">
+                    <mat-icon style="font-size: medium"
+                              [ngClass]="checkEmpStatus(uiassist.getProperty(element, binders[i]))">fiber_manual_record</mat-icon>
+                  </span>
+              {{ uiassist.getProperty(element, binders[i]) }}
+            </ng-container>
+          </ng-template>
+          <ng-template #textCell>
+            {{ uiassist.getProperty(element, binders[i]) }}
+          </ng-template>
+        </mat-cell>
+      </ng-container>
+
+      <!-- Modify Button Column -->
+      <ng-container matColumnDef="modify">
+        <mat-header-cell *matHeaderCellDef class="table-header"> Actions</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+          <button mat-icon-button (click)="fillForm(row)">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              data-slot="icon"
+              class="w-5 h-5 mr-3"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+              />
+            </svg>
+          </button>
+        </mat-cell>
+      </ng-container>
+      <mat-header-row *matHeaderRowDef="columns.concat(['modify'])"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: columns.concat(['modify']);"
+               [ngClass]="{'selected-row': row === selectedrow}">
+      </mat-row>
+    </mat-table>
+    <mat-paginator [length]="20" [pageSize]="5" [pageSizeOptions]="[5,10,15,20]"></mat-paginator>
+  </div>
+</app-common-layout>
+

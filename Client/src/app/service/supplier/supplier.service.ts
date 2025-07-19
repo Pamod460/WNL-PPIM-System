@@ -43,4 +43,6 @@ export class SupplierService {
   getLastSupCode() {
     return this.http.get<{code:string}>(`${this.baseUrl}/last`);
   }
+
+
 }

@@ -10,7 +10,8 @@ export class Product{
   name?: string;
   quentity?: number;
   dointroduced?: Date;
-  unitprice?: number;
+  unitPrice?: number;
+  agentPrice?: number;
   description?: string;
   photo?: Uint8Array | string; // could be base64 string from API
   productStatus?: ProductStatus;

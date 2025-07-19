@@ -12,7 +12,7 @@ public class MaterialPorderMaterialDto {
 
     private Integer id;
     private Material material;
-    private Integer quentity;
+    private Integer quantity;
     private BigDecimal expectedLineCost;
 
 }

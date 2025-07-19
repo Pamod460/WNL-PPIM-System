@@ -14,6 +14,7 @@ export class MaterialPorder{
   supplier?:Supplier
   smApproved!: boolean;
   accountentApproved !:boolean;
-  approvedManagername!: string;
+  approvedManagerName!: string;
+  approvedAccountantName!: string;
 
 }

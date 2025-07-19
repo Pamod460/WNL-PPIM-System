@@ -8,7 +8,7 @@ import {PaperColor} from "./PaperColor";
 export class Paper {
   id?: number;
   name?: string;
-  unitPrice?: number;
+  unitPrice!: number;
   paperstatus?: PaperStatus;
   photo?: string;
   paperUnitType?: PaperUnitType;

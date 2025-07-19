@@ -18,14 +18,15 @@ public class MaterialGrnMaterial {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "line_cost", precision = 7, scale = 2)
+    @Column(name = "line_cost", precision = 15, scale = 2)
     private BigDecimal lineCost;
 
-    @Column(name = "unit_cost", precision = 7, scale = 2)
-    private BigDecimal unitCost;
+    @Column(name = "unit_price", precision = 15, scale = 2)
+    private BigDecimal unitPrice;
 
     @Column(name = "quantity")
     private Integer quantity;
+
     @JsonIgnore
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

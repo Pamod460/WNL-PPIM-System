@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -33,8 +34,8 @@ public class Product {
     @Column(name = "dointroduced")
     private LocalDate dointroduced;
 
-    @Column(name = "unitprice", precision = 7, scale = 2)
-    private BigDecimal unitprice;
+    @Column(name = "unit_price", precision = 7, scale = 2)
+    private BigDecimal unitPrice;
 
     @Lob
     @Column(name = "description")
@@ -73,6 +74,21 @@ public class Product {
 
     @Transient
     private String logger;
+
+    @Column(name = "agent_price", precision = 7, scale = 2)
+    private BigDecimal agentPrice;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
+    private Set<AgentOrderProduct> agentOrderProducts = new LinkedHashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
+    private Set<DistributionProduct> distributionProducts = new LinkedHashSet<>();
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
+    private Set<ProductDesign> productDesigns = new LinkedHashSet<>();
+
     public String getLogger() {
         return this.createdBy.getUsername();
     }

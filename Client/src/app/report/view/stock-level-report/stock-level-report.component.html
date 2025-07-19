@@ -1,0 +1,9 @@
+<app-report *ngIf="inventoryItems.length>0"
+            [title]="'Employees By Designation'"
+            [data]="inventoryItems"
+            [columns]="columns"
+            [headers]="headers"
+            [binders]="binders"
+            [chartBinders]="chartBinders"
+            [matchedNavItem]="'Employees By Designation'">
+</app-report>

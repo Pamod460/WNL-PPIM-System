@@ -15,8 +15,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ProductPaperDto {
     private Integer id;
-    private Paper paper;
-    private Product product;
+    private PaperDto paper;
     private Integer quantity;
     private BigDecimal lineCost;
 }

@@ -13,11 +13,16 @@ public interface MaterialPorderService {
 
     List<MaterialPorderDto> getAllMaterialPorders(HashMap<String, String> params, String authHeader);
 
-    ResponseEntity<Map<String, String>> getLastMaterialPONumber();
+
+    ResponseEntity<Map<String, String>> getNextCode(String textPart);
 
     ResponseEntity<StandardResponse> saveMaterialPorder(MaterialPorderDto MaterialPorderDto);
 
     ResponseEntity<StandardResponse> UpdateMaterialPorder(MaterialPorderDto agent);
 
     ResponseEntity<StandardResponse> deleteMaterialPorder(Integer id);
+
+    void updateMaterialPorderStatus(Integer materialPorderId, Integer statusId);
+
+    void updatePorderReceivingStatus(Integer porderId);
 }

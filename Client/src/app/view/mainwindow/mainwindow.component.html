@@ -1,5 +1,6 @@
 <mat-sidenav-container class="border-5  border-dark border">
-  <mat-sidenav class="navigation border-0" [class.mini]="!opened" [(opened)]="opened" mode="side">
+  <mat-sidenav class="navigation border-0" [class.mini]="!opened" [(opened)]="opened" mode="side" (mousemove)="onMouseMove($event)"
+               (mouseleave)="onMouseLeave()">
     <ul class="nav flex-column">
       <li>
         <div class="d-flex pt-1 justify-content-center w-100 align-content-center">
@@ -25,32 +26,43 @@
           <span class="title">Dashboard</span>
         </a>
       </li>
-
-      <li class="nav-item" *ngFor="let menuItem of menuGroup; let i = index">
+      <li class="nav-item"
+          *ngFor="let menuItem of menuGroup; let i = index"
+          (mouseenter)="openPanel(i)"
+          (mouseleave)="closePanel(i)">
         <a class="nav-link p-0" *ngIf="isMenuVisible(menuItem.Menu)">
           <div class="accordion accordion-flush" [id]="'accordionFlushExample' + i">
             <div class="accordion-item">
               <h2 class="accordion-header" [id]="'flush-heading' + i">
-                <button class="accordion-button collapsed"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        [attr.data-bs-target]="'#flush-collapse' + i"
-                        aria-expanded="false"
-                        [attr.aria-controls]="'flush-collapse' + i">
-                  {{ menuItem.Menu  }}
+                <button class="accordion-button pe-4"
+                        (click)="togglePanel(i)"
+                        [ngClass]="{ 'collapsed': activePanel !== i }"
+                        [attr.aria-expanded]="activePanel === i ? 'true' : 'false'"
+                        type="button">
+                  <a></a>
+                  {{ menuItem.Menu }}
+                  <a></a>
                 </button>
               </h2>
-              <div [id]="'flush-collapse' + i" class="accordion-collapse collapse"
+              <div [id]="'flush-collapse' + i"
+                   class="accordion-collapse "
+                   [ngClass]="{
+               'collapse show': activePanel === i,
+               'collapse': activePanel !== i
+             }"
                    [attr.aria-labelledby]="'flush-heading' + i"
                    [attr.data-bs-parent]="'#accordionFlushExample' + i">
-                <div class="accordion-body sub-navigation" *ngFor="let subMenuItem of menuItem.MenuItems">
-                  <div class="sub-menu-item" [routerLink]="subMenuItem.isVisible ? subMenuItem.routerLink : null"
-                       routerLinkActive="active-link">
+                <div class="accordion-body sub-navigation"
+                     *ngFor="let subMenuItem of menuItem.MenuItems">
+                  <div class="sub-menu-item"
+                       [routerLink]="subMenuItem.isVisible ? subMenuItem.routerLink : null"
+                       routerLinkActive="active-link"
+                       [routerLinkActiveOptions]="{ exact: false }">
                     <a class="nav-link">
-                    <span class="icon">
-                      <mat-icon>{{ subMenuItem.icon }}</mat-icon>
-                    </span>
-                      <span class="title">{{ subMenuItem.name | capitalize}}</span>
+                <span class="icon">
+                  <mat-icon>{{ subMenuItem.icon }}</mat-icon>
+                </span>
+                      <span class="title">{{ subMenuItem.name | capitalize }}</span>
                     </a>
                   </div>
                 </div>

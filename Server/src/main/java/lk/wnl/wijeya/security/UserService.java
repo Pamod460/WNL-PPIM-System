@@ -1,7 +1,6 @@
 package lk.wnl.wijeya.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import lk.wnl.wijeya.dto.RoleDto;
 import lk.wnl.wijeya.entity.*;
 import lk.wnl.wijeya.entity.Module;
@@ -32,16 +31,10 @@ public class UserService implements UserDetailsService {
     private ModuleRepository moduleRepository;
     @Value("${jwt.secret}")
     private String secret;
-    public List<RoleDto> getRoles(String token) {
+ public List<RoleDto> getRoles(String token) {
         List<RoleDto> roles = new ArrayList<>();
 
-        // 🛡️ Check if token is present
         if (token == null || token.isBlank()) {
-            // Fallback: in-memory user role (e.g., hardcoded Admin)
-            RoleDto fallbackRole = new RoleDto();
-            fallbackRole.setId(1); // Assuming 1 = Admin
-            fallbackRole.setName("Admin");
-            roles.add(fallbackRole);
             return roles;
         }
 
@@ -60,12 +53,12 @@ public class UserService implements UserDetailsService {
                     roles.add(role);
                 }
             }
+        } catch (ExpiredJwtException ex) {
+            throw new RuntimeException("JWT token is expired", ex);
+        } catch (MalformedJwtException | SignatureException ex) {
+            throw new RuntimeException("JWT token is invalid", ex);
         } catch (Exception ex) {
-            // Token is invalid, expired, or malformed — fallback for in-memory user
-            RoleDto fallbackRole = new RoleDto();
-            fallbackRole.setId(1); // Assuming 1 = Admin
-            fallbackRole.setName("Admin");
-            roles.add(fallbackRole);
+            throw new RuntimeException("JWT processing error", ex);
         }
 
         return roles;

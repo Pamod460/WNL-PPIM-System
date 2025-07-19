@@ -1,8 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {PaperPorder} from "../../../entity/PaperPorder";
-import {MatTableDataSource} from "@angular/material/table";
-import {MatPaginator} from "@angular/material/paginator";
+
 import {UiAssist} from "../../../util/ui/ui.assist";
 import {PaperPorderStatus} from "../../../entity/PaperPorderStatus";
 import {Supplier} from "../../../entity/Supplier";
@@ -10,7 +9,7 @@ import {Paper} from "../../../entity/Paper";
 import {PaperPorderStatusService} from "../../../service/paperporder/paper-porder-status.service";
 import {SupplierService} from "../../../service/supplier/supplier.service";
 import {RegexService} from "../../../service/Shared/regex.service";
-import {MatDialog} from "@angular/material/dialog";
+
 import {DatePipe} from "@angular/common";
 import {AuthorizationManager} from "../../../service/auth/authorizationmanager";
 import {ToastrService} from "ngx-toastr";
@@ -20,6 +19,11 @@ import {MessageComponent} from "../../../util/dialog/message/message.component";
 import {PaperPorderService} from "../../../service/paperporder/paper-porder.service";
 import {PaperService} from "../../../service/Paper/paper.service";
 import {PaperPorderPaper} from "../../../entity/PaperPorderPaper";
+import {District} from "../../../entity/District";
+import {MatDialog} from "@angular/material/dialog";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
+
 
 @Component({
   selector: 'app-paperporder',
@@ -27,66 +31,55 @@ import {PaperPorderPaper} from "../../../entity/PaperPorderPaper";
   styleUrls: ['./paperporder.component.css']
 })
 export class PaperporderComponent implements OnInit {
-  protected readonly document = document;
-
-  columns: string[] = ['number', 'fullName', 'nic', 'PaperPorderStatus'];
-  headers: string[] = ['Registration Number', 'Full Name', 'NIC', 'Status'];
-  binders: string[] = ['number', 'fullName', 'nic', 'PaperPorderStatus.name'];
-
+  columns: string[] = ['number', 'date', 'supplier'];
+  headers: string[] = ['PO Number', 'Date', 'Status'];
+  binders: string[] = ['poNumber', 'date', 'supplier.name'];
   defaultProfile = 'assets/default.png';
-
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
   public form!: FormGroup;
-
   disableModify = false;
   disableGenerateNo = false;
-
   paperPorder!: PaperPorder;
   oldPaperPorder!: PaperPorder;
-
+  paperOrderData: any[] = [];
+  filteredPaperList: Paper[] = [];
   selectedrow: any;
-
   PaperPorders: PaperPorder[] = [];
   data!: MatTableDataSource<PaperPorder>;
   imageurl = '';
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   imageempurl = 'assets/default.png';
-
   enaadd = false;
   enaupd = false;
   enadel = false;
-
   hasInsertAuthority = false;
   hasUpdateAuthority = false;
   hasDeleteAuthority = false;
-
-
   regexes: any;
-
   uiassist: UiAssist;
-
   minDate: Date;
   maxDate: Date;
-
-
+  doaMaxDate: Date = new Date();
+  lastEmpCode: any = "";
   today: Date = new Date();
-
-
+  districts: District[] = [];
   paperPorderStatuses: PaperPorderStatus[] = [];
   suppliers: Supplier[] = [];
-
   paperList!: Paper[];
+  matchedNavItem = 'Paper Purchase Order';
   paperForm: FormGroup
   isInnerDataUpdated = false;
   inndata!: PaperPorderPaper;
   innerdata: PaperPorderPaper[] = [];
-  matchedNavItem = "Paper Purchase Order";
+  id: number = 0;
+  protected readonly document = document;
   grandTotal = 0
   smRole? = false;
   accRole? = false;
-  id!: number;
-   filteredPaperList: any;
+  approvalStatus = 'Not approved';
+  isDisabledSmApproval = false;
+  isDisabledAcApproval = false;
 
   constructor(
     private paperPorderService: PaperPorderService,
@@ -103,84 +96,66 @@ export class PaperporderComponent implements OnInit {
   ) {
     this.uiassist = new UiAssist(this);
     this.ssearch = this.formBuilder.group({
-      "ssnumber": new FormControl(),
-      "ssfullname": new FormControl('', Validators.pattern("^([A-Z][a-z]*[.]?[s]?)*([A-Z][a-z]*)$")),
-      "ssgender": new FormControl(),
-      "ssdesignation": new FormControl(),
-      "ssnic": new FormControl()
+      "ssponumber": new FormControl(),
+      "ssstatus": new FormControl(),
+      "ssdate": new FormControl(),
     });
     this.form = this.formBuilder.group({
-      poNumber: new FormControl('', [Validators.maxLength(6)]),
+      poNumber: new FormControl('', [Validators.maxLength(20)]),
       date: new FormControl('', [Validators.required]),
       expectedCost: new FormControl(null, [Validators.required]),
       description: new FormControl(''),
       logger: new FormControl(null, [Validators.required]),
       supplier: new FormControl(null, [Validators.required]),
+      smApproved: new FormControl(),
+      accountentApproved: new FormControl(),
+      approvedManagerName: new FormControl(),
+      approvedAccountantName: new FormControl(),
       paperPorderStatus: new FormControl(null, [Validators.required]),
-      productPapers: this.formBuilder.array([]),
+      paperPorderPapers: this.formBuilder.array([]),
     }, {updateOn: 'change'});
     this.paperForm = this.formBuilder.group({
       paper: [null, Validators.required],
       quentity: [0, [Validators.required, Validators.min(1)]],
       expectedLineCost: [0]
     });
-    this.form.get("logger")?.setValue(this.authService.getUsername());
+
     const today = new Date();
     this.minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate()); // 60 years ago
     this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()); // 18 years ago
-  }
 
-
-  ngOnInit() {
-    this.initialize();
-  }
-
-  initialize() {
-
-    this.createView();
-
-    this.regexService.get('paperporder').subscribe((regs: []) => {
-      console.log(regs)
-      this.regexes = regs;
-      this.createForm();
-    });
-    this.paperService.getAllList().subscribe({
-      next: (papers: Paper[]) => {
-        this.paperList = papers;
-      }, error: (err: any) => {
-        console.log(err);
+    this.paperForm.get("quentity")?.valueChanges.subscribe(value => {
+      const paper = this.paperForm.get("paper")?.value;
+      if (paper && value > 0) {
+        this.updatePrices(value);
+      } else {
+        this.paperForm.get("expectedLineCost")?.setValue(null);
       }
     })
-    this.paperPorderStatusService.getAllList().subscribe(
-      {
-        next:
-          (statuses: PaperPorderStatus[]) => {
-            this.paperPorderStatuses = statuses;
-            this.form.get("materialPorderStatus")?.setValue( this.paperPorderStatuses.find(m=>m.id==1))
-          }, error: (error: any) => {
-          console.error('Error fetching PaperPorder statuses:', error);
-        }
-      }
-    )
-    this.supplierService.getAllList().subscribe({
-      next:
-        (suppiers: Supplier[]) => {
-          this.suppliers = suppiers;
-        }, error: (error: any) => {
-        console.error('Error fetching PaperPorder statuses:', error);
-      }
-    })
+    this.form.get("logger")?.setValue(this.authService.getUsername());
 
-    const authoritiesArray = this.authService.getAuthorities();
-    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
-      const authorities = this.authService.extractAuthorities(authoritiesArray);
-      this.buttonStates(authorities);
+    // this.form.get("paperPorderStatus")?.disable()
+
+
+  }
+
+  updatePrices(quantity: number) {
+
+    const paper = this.paperForm.get("paper")?.value;
+    if (!paper || quantity <= 0) {
+      this.paperForm.get("expectedLineCost")?.setValue(null);
+      return;
     }
+
+    const unitPrice = paper.unitPrice || 0;
+    const lineTotal = unitPrice * quantity;
+    this.paperForm.get("expectedLineCost")?.setValue(lineTotal);
+
   }
 
   addToTable() {
     this.inndata = this.paperForm.getRawValue();
-    console.log(this.inndata.quentity)
+
     // Validate paper input
     if (!this.inndata.paper || this.inndata.quentity == 0) {
       this.showMessageDialog("Errors - Paper POrder Add", "Please Add Required Details");
@@ -210,7 +185,7 @@ export class PaperporderComponent implements OnInit {
       // Add new entry and remove from filtered list
       updatedData.push(newEntry);
       const addedPaperId = newEntry.paper?.id;
-      const removeIndex = this.filteredPaperList.findIndex((e: { id: number | undefined; }) => e.id === addedPaperId);
+      const removeIndex = this.filteredPaperList.findIndex(e => e.id === addedPaperId);
       if (removeIndex > -1) {
         this.filteredPaperList.splice(removeIndex, 1);
       }
@@ -256,26 +231,79 @@ export class PaperporderComponent implements OnInit {
       if (indexToDelete > -1) {
         const paper = this.innerdata[indexToDelete]?.paper;
 
-        // Re-add the paper to the filtered list if not already present
         if (paper?.id) {
-          const existingPaper = this.paperList.find(e => e.id === paper.id);
-          const isAlreadyInFiltered = this.filteredPaperList.some((e: { id: number | undefined; }) => e.id === paper.id);
-
-          if (existingPaper && !isAlreadyInFiltered) {
-            this.filteredPaperList.push(existingPaper);
+          if (!this.filteredPaperList.some(e => e.id === paper.id)) {
+            this.filteredPaperList= [ paper,...this.filteredPaperList];
           }
         }
-
-        // Remove the entry from innerdata
         this.innerdata.splice(indexToDelete, 1);
+        this.calculateGrandTotal();
         this.isInnerDataUpdated = true;
       }
     });
   }
-
+  calculateGrandTotal(): void {
+    this.grandTotal = this.innerdata.reduce((total, item) => {
+      return total + (item.expectedLineCost || 0);
+    }, 0);
+    this.form.get("expectedCost")?.setValue(this.grandTotal);
+  }
 
   trackByInnerData(index: number, item: any): any {
     return item?.id || index;
+  }
+
+  ngOnInit() {
+    this.initialize();
+  }
+
+  initialize() {
+
+    this.createView();
+
+    this.regexService.get('paperporder').subscribe((regs: []) => {
+      this.regexes = regs;
+      this.createForm();
+    });
+    this.paperService.getAllList().subscribe({
+      next: (papers: Paper[]) => {
+        this.paperList = papers;
+        this.filteredPaperList = this.paperList;
+      }, error: (err: any) => {
+        console.log(err);
+      }
+    })
+    this.paperPorderStatusService.getAllList().subscribe(
+      {
+        next:
+          (statuses: PaperPorderStatus[]) => {
+            this.paperPorderStatuses = statuses;
+            this.form.get("paperPorderStatus")?.setValue(this.paperPorderStatuses.find(m => m.id == 1))
+          }, error: (error: any) => {
+          console.error('Error fetching Paper POrder  statuses:', error);
+        }
+      }
+    )
+    this.supplierService.getAllList().subscribe({
+      next:
+        (suppiers: Supplier[]) => {
+          this.suppliers = suppiers;
+        }, error: (error: any) => {
+        console.error('Error fetching Paper POrder  statuses:', error);
+      }
+    })
+    this.form.get("date")?.setValue(this.today)
+
+    const authoritiesArray = this.authService.getAuthorities();
+    if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
+      const authorities = this.authService.extractAuthorities(authoritiesArray);
+      this.buttonStates(authorities);
+    }
+    this.getNextCode();
+  }
+
+  get papers(): FormArray {
+    return this.form.get('paperPorderPapers') as FormArray;
   }
 
   createView() {
@@ -284,6 +312,8 @@ export class PaperporderComponent implements OnInit {
 
 
   createForm() {
+
+
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
     });
@@ -291,14 +321,9 @@ export class PaperporderComponent implements OnInit {
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
       control.valueChanges.subscribe(value => {
-
-
-          if (controlName == "doRegisterd")
-            value = this.datePipe.transform(new Date(value), 'yyyy-MM-dd');
-
           if (this.oldPaperPorder != undefined && control.valid) {
             // @ts-ignore
-            if (value === this.PaperPorder[controlName]) {
+            if (value === this.paperPorder[controlName]) {
               control.markAsPristine();
             } else {
               control.markAsDirty();
@@ -322,11 +347,11 @@ export class PaperporderComponent implements OnInit {
   }
 
   buttonStates(authorities: { module: string; operation: string }[]): void {
-    console.log(authorities)
+
     this.hasInsertAuthority = authorities.some(authority => authority.module === 'paper porder' && authority.operation === 'insert');
     this.hasUpdateAuthority = authorities.some(authority => authority.module === 'paper porder' && authority.operation === 'update');
     this.hasDeleteAuthority = authorities.some(authority => authority.module === 'paper porder' && authority.operation === 'delete');
-    console.log(this.hasDeleteAuthority)
+
   }
 
   loadTable(query: string) {
@@ -345,18 +370,17 @@ export class PaperporderComponent implements OnInit {
 
 
   btnSearchMc(): void {
-
     const sserchdata = this.ssearch.getRawValue();
 
     const number = sserchdata.ssponumber;
     const date = sserchdata.ssdate;
-    const mpstatusid = sserchdata.ssgender;
+    const mpstatusid = sserchdata.ssstatus;
 
     let query = "";
 
     if (number != null && number.trim() != "") query = query + "&ponumber=" + number;
     if (date != null && date.trim() != "") query = query + "&date=" + date;
-    if (mpstatusid != null) query = query + "&mpstatusid=" + mpstatusid;
+    if (mpstatusid != null) query = query + "&ppstatusid=" + mpstatusid;
 
     if (query != "") query = query.replace(/^./, "?")
 
@@ -402,7 +426,9 @@ export class PaperporderComponent implements OnInit {
     } else {
 
       this.paperPorder = this.form.getRawValue();
-
+      // @ts-ignore
+      this.innerdata.forEach((i) => delete i.id);
+      this.paperPorder.paperPorderPapers = this.innerdata
       let mpdata = "";
 
       mpdata = mpdata + "<br>Number is : " + this.paperPorder.poNumber;
@@ -457,44 +483,59 @@ export class PaperporderComponent implements OnInit {
   }
 
 
-  fillForm(PaperPorder: PaperPorder) {
-
-    if (this.authService.getRoles() != null) {
-      this.smRole = this.authService.getRoles()?.some(role => role.name === "Store Manager");
-      if (this.smRole) {
-        this.form.get("smApproved")?.valueChanges.subscribe(() => {
-          this.form.get("approvedManagername")?.setValue(this.authService.getUsername())
-
-        })
-      }
-
-      this.accRole = this.authService.getRoles()?.some(role => role.name === "Accountant");
-      if (this.accRole) {
-        this.form.get("accountentApproved")?.valueChanges.subscribe(() => {
-          this.form.get("approvedManagername")?.setValue(this.authService.getUsername())
-
-        })
-      }
-    }
+  fillForm(paperPorder: PaperPorder) {
 
     this.enableButtons(false, true, true);
     this.disableGenerateNo = true;
 
-    this.selectedrow = PaperPorder;
+    this.selectedrow = paperPorder;
 
-    if (localStorage.getItem('PaperPorder')) {
-      const loginPaperPorder = JSON.parse(localStorage.getItem('PaperPorder') || '');
-      this.disableModify = loginPaperPorder.id === PaperPorder.id;
-    }
-
-    this.paperPorder = JSON.parse(JSON.stringify(PaperPorder));
-    this.oldPaperPorder = JSON.parse(JSON.stringify(PaperPorder));
-
+    this.paperPorder = JSON.parse(JSON.stringify(paperPorder));
+    this.oldPaperPorder = JSON.parse(JSON.stringify(paperPorder));
+    this.innerdata = this.paperPorder.paperPorderPapers ? this.paperPorder.paperPorderPapers : []
 
     this.paperPorder.paperPorderStatus = this.paperPorderStatuses.find(s => s.id === this.paperPorder.paperPorderStatus?.id);
+    this.paperPorder.supplier = this.suppliers.find(s => s.id === this.paperPorder.supplier?.id);
 
 
     this.form.patchValue(this.paperPorder);
+
+    if (this.authService.getRoles() != null) {
+      const roles = this.authService.getRoles();
+      const username = this.authService.getUsername().toLowerCase();
+      // @ts-ignore
+      this.smRole = roles.some(role => role.name === "Store Manager" || role.name === "Admin");
+      this.isDisabledSmApproval = !!this.oldPaperPorder &&
+        this.oldPaperPorder.approvedManagerName? this.oldPaperPorder.approvedManagerName.toLowerCase()!== username:false;
+
+
+      if (this.smRole) {
+        this.form.get("smApproved")?.valueChanges.subscribe(checked => {
+          this.form.get("approvedManagerName")?.setValue(checked ? this.authService.getUsername() : null);
+        });
+
+        // Set initial value based on existing approval
+        const isApproved = !!paperPorder.approvedManagerName;
+        this.form.get("smApproved")?.setValue(isApproved, {emitEvent: false});
+        this.form.get("approvedManagerName")?.setValue(paperPorder.approvedManagerName);
+      }
+      // @ts-ignore
+      this.accRole = roles.some(role => role.name === "Accountant" || role.name === "Admin");
+      this.isDisabledAcApproval = !!this.oldPaperPorder.approvedAccountantName &&
+        this.oldPaperPorder.approvedAccountantName? this.oldPaperPorder.approvedAccountantName.toLowerCase()!== username : false;
+
+
+      if (this.accRole) {
+        this.form.get("accountentApproved")?.valueChanges.subscribe(checked => {
+          this.form.get("approvedAccountantName")?.setValue(checked ? this.authService.getUsername() : null);
+        });
+
+        const isApproved = !!paperPorder.approvedAccountantName;
+        this.form.get("accountentApproved")?.setValue(isApproved, {emitEvent: false});
+        this.form.get("approvedAccountantName")?.setValue(paperPorder.approvedAccountantName);
+      }
+    }
+
     this.form.markAsPristine();
   }
 
@@ -507,6 +548,9 @@ export class PaperporderComponent implements OnInit {
         updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1) + " Changed";
       }
     }
+    if (this.isInnerDataUpdated) {
+      updates += "<br> Paper Quantity Changed"
+    }
     return updates;
   }
 
@@ -517,7 +561,7 @@ export class PaperporderComponent implements OnInit {
     if (errors != "") {
       const errmsg = this.matDialog.open(MessageComponent, {
         width: '500px',
-        data: {heading: "Errors - PaperPorder Update ", message: "You have the following Errors <br> " + errors}
+        data: {heading: "Errors - Paper POrder Update ", message: "You have the following Errors <br> " + errors}
       });
       errmsg.afterClosed().subscribe(async result => {
         if (!result) {
@@ -533,7 +577,7 @@ export class PaperporderComponent implements OnInit {
         const confirm = this.matDialog.open(ConfirmComponent, {
           width: '450px',
           data: {
-            heading: "Updates - PaperPorder Update",
+            heading: "Updates - Paper POrder Update",
             message: "Are you sure to Save following Updates? <br> <br>" + updates
           }
         });
@@ -541,7 +585,9 @@ export class PaperporderComponent implements OnInit {
           if (result) {
             //console.log("PaperPorderService.update()");
             this.paperPorder = this.form.getRawValue();
-
+            // @ts-ignore
+            this.innerdata.forEach((i) => delete i.id);
+            this.paperPorder.paperPorderPapers = this.innerdata
 
             this.paperPorder.id = this.oldPaperPorder.id;
             this.paperPorderService.update(this.paperPorder).subscribe({
@@ -560,7 +606,7 @@ export class PaperporderComponent implements OnInit {
       } else {
         const updmsg = this.matDialog.open(MessageComponent, {
           width: '500px',
-          data: {heading: "Confirmation - PaperPorder Update", message: "Nothing Changed"}
+          data: {heading: "Confirmation - Paper POrder Update", message: "Nothing Changed"}
         });
         updmsg.afterClosed().subscribe(async result => {
           if (!result) {
@@ -596,17 +642,27 @@ export class PaperporderComponent implements OnInit {
     });
   }
 
+  clearInnerTable() {
+    this.innerdata = [];
+    this.isInnerDataUpdated = false;
+
+    this.enableButtons(true, false, false);
+
+  }
+
   clear(): void {
     const confirm = this.matDialog.open(ConfirmComponent, {
       width: '400px',
       data: {
-        heading: "Confirmation - Paper Porder Clear",
+        heading: "Confirmation - PaperPorder Clear",
         message: "Are you sure to Clear following Details ? <br> <br>"
       }
     })
     confirm.afterClosed().subscribe(async result => {
       if (result) {
         this.resetForm()
+        this.clearInnerTable()
+
       }
     });
   }
@@ -615,11 +671,15 @@ export class PaperporderComponent implements OnInit {
     this.form.reset();
     this.selectedrow = null;
     this.createForm();
+    this.clearInnerTable()
     this.form.controls['description'].markAsPristine();
-    this.form.controls['doassignment'].markAsPristine();
+    this.smRole = false
+    this.accRole=false
+    this.form.get("logger")?.setValue(this.authService.getUsername());
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
     });
+
     this.enableButtons(true, false, false);
   }
 
@@ -635,11 +695,21 @@ export class PaperporderComponent implements OnInit {
         return "";
     }
   }
+  onApprovalChange(isApproved: boolean) {
+    this.approvalStatus = isApproved ? 'Approved' : 'Not approved';
+  }
 
+  getNextCode() {
+
+    this.paperPorderService.getNextCode("MPO-").subscribe(code => {
+      this.form.controls["poNumber"].setValue(code.code);
+    });
+  }
 
   getColumnClass(columnIndex: number) {
     return this.tableUtils.getColumnSizeClass(this.data, this.binders, columnIndex, this.uiassist);
   }
+
 }
 
 

@@ -1,9 +1,7 @@
 package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -17,7 +15,8 @@ import java.util.Set;
 @Setter
 @Getter
 @Entity
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -56,45 +55,132 @@ public class User {
     @Basic
     @Column(name = "isactive")
     private boolean isactive;
+
     @JsonIgnore
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
     private User createdBy;
+
+    
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<Material> materials = new LinkedHashSet<>();
+
+    
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<Paper> papers = new LinkedHashSet<>();
+
+
+    
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<Product> products = new LinkedHashSet<>();
+
+
+    
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<Supplier> suppliers = new LinkedHashSet<>();
+
+    
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<User> users = new LinkedHashSet<>();
+
+
+    
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<Agent> agents = new LinkedHashSet<>();
+
+
+    
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<MaterialPorder> materialPorders = new LinkedHashSet<>();
+
+
+    
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<Route> routes = new LinkedHashSet<>();
+
+
+    
     @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private Set<Vehicle> vehicles = new LinkedHashSet<>();
 
 
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<MaterialIssue> materialIssues = new LinkedHashSet<>();
+
+
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<ProductDesign> productDesigns = new LinkedHashSet<>();
+
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<ProductionOrder> productionOrders = new LinkedHashSet<>();
+
+
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<AgentOrder> agentOrders = new LinkedHashSet<>();
+
+
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<AgentPayment> agentPayments = new LinkedHashSet<>();
+
+
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<Distribution> distributions = new LinkedHashSet<>();
+
+
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<MaterialGrn> materialGrns = new LinkedHashSet<>();
+
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<SupplierPayment> supplierPayments = new LinkedHashSet<>();
+
+
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "approvedAccountent")
+    private Set<PaperPorder> paperPorders = new LinkedHashSet<>();
+
+
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<PaperIssue> paperIssues = new LinkedHashSet<>();
+
+
+    
+    @JsonIgnore
+    @OneToMany(mappedBy = "createdBy")
+    private Set<PaperGrn> paperGrns = new LinkedHashSet<>();
+
     @Transient
     private String logger;
-
     public String getLogger() {
-        return this.createdBy.getUsername();
+        return this.createdBy != null ? this.createdBy.getUsername() : null;
     }
 
 }

@@ -37,25 +37,55 @@ export class AuthorizationManager {
   Distribution = [
     {name: 'Vehicle', isVisible: false, routerLink: 'vehicle', icon: 'directions_car'},
     {name: 'Route', isVisible: false, routerLink: 'route', icon: 'map'},
+    {name: 'Distribution', isVisible: false, routerLink: 'distribution', icon: 'map'},
   ]
   PurchaseOrder = [
     {name: 'Material POrder', isVisible: false, routerLink: 'materialpurchaseorder', icon: 'inventory'},
     {name: 'Paper POrder', isVisible: false, routerLink: 'paperpurchaseorder', icon: 'description'}
   ]
+  GRN = [
+    {name: 'Material GRN', isVisible: false, routerLink: 'materialgrn', icon: 'inventory'},
+    {name: 'Paper GRN', isVisible: false, routerLink: 'papergrn', icon: 'description'}
+  ]
+  Payment=[
+    {name: 'Supplier Payment', isVisible: false, routerLink: 'supplierpayment', icon: 'payment'},
+    {name: 'Agent Payment', isVisible: false, routerLink: 'agentpayment', icon: 'payment'},
+
+  ]
+
+  Production=[
+    {name: 'Agent Order', isVisible: false, routerLink: 'agentorder', icon: 'inventory'},
+    {name: 'Product Design', isVisible: false, routerLink: 'productdesign', icon: 'inventory'},
+    {name: 'Production Order', isVisible: false, routerLink: 'productionorder', icon: 'inventory'},
+  ]
+  Issues = [
+    {name: 'Paper Issue', isVisible: false, routerLink: 'paperissue', icon: 'inventory'},
+    {name: 'Material Issue', isVisible: false, routerLink: 'materialissue', icon: 'inventory'}
+  ];
   Report = [
     {name: 'Agents Report', isVisible: false, routerLink: 'agentsreport', icon: 'assignment'},
+    {name: 'Agents Order Report', isVisible: false, routerLink: 'agentcoutbyorders', icon: 'assignment'},
     {name: 'Employees Report', isVisible: false, routerLink: 'employeesreport', icon: 'assignment'},
-    {name: 'Purchase Order Report', isVisible: false, routerLink: 'purchaseorderreport', icon: 'assignment'}
+    {name: 'Paper POrder Report', isVisible: false, routerLink: 'purchaseorderreport', icon: 'assignment'},
+    {name: 'POrder Summary Report', isVisible: false, routerLink: 'paperpordersummry', icon: 'assignment'},
+    {name: 'Inventory Level Report', isVisible: false, routerLink: 'materialinventory', icon: 'assignment'},
   ];
+
 
   getNavListItem() {
     return [
       {Menu: 'ADMIN', MenuItems: this.Admin},
-      {Menu: 'INVENTORY', MenuItems: this.Inventory},
       {Menu: 'REGISTRATION', MenuItems: this.Registration},
-      {Menu: 'DISTRIBUTION', MenuItems: this.Distribution},
+      {Menu: 'INVENTORY', MenuItems: this.Inventory},
       {Menu: 'PURCHASE ORDER', MenuItems: this.PurchaseOrder},
-      {Menu: 'REPORTS', MenuItems: this.Report}
+      {Menu: 'GRN', MenuItems: this.GRN},
+      {Menu: 'PRODUCTION', MenuItems: this.Production},
+      {Menu: 'ISSUES', MenuItems: this.Issues},
+      {Menu: 'DISTRIBUTION', MenuItems: this.Distribution},
+      {Menu: 'PAYMENTS', MenuItems: this.Payment},
+
+
+      {Menu: 'REPORTS', MenuItems: this.Report},
     ]
   }
 

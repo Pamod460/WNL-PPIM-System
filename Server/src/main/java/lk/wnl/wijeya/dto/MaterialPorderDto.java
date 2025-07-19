@@ -24,7 +24,7 @@ public class MaterialPorderDto {
     private String description;
     private MaterialPorderStatusDto materialPorderStatus;
     private Set<MaterialPorderMaterialDto> materialPorderMaterials;
-    private Supplier supplier;
+    private SupplierDto supplier;
     private String logger;
     private String approvedManagerName;
     private String approvedAccountantName;

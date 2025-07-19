@@ -22,8 +22,8 @@ public class MaterialPorder {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Size(max = 6)
-    @Column(name = "po_number", length = 6)
+    @Size(max = 20)
+    @Column(name = "po_number", length = 20)
     private String poNumber;
 
     @Column(name = "date")
@@ -45,7 +45,7 @@ public class MaterialPorder {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "material_porder_status_id", nullable = false)
     private MaterialPorderStatus materialPorderStatus;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "materialPorder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MaterialPorderMaterial> materialPorderMaterials = new LinkedHashSet<>();
 
@@ -75,6 +75,7 @@ public class MaterialPorder {
 
     @Column(name = "accountent_approved")
     private Boolean accountentApproved;
+
     @Transient
     private String approvedManagerName;
     @Transient

@@ -78,7 +78,7 @@ export class PaperComponent implements OnInit {
   paperColors: PaperColor[] = [];
   paperGsms: PaperGsm[] = [];
   paperSizes: PaperSize[] = [];
-
+isModify = false;
 
   constructor(
     private paperService: PaperService,
@@ -91,7 +91,7 @@ export class PaperComponent implements OnInit {
     private regexService: RegexService,
     private formBuilder: FormBuilder,
     private matDialog: MatDialog,
-    private dp: DatePipe,
+    private datePipe: DatePipe,
     public authService: AuthorizationManager,
     private toastr: ToastrService,
     private tableUtils: TableUtilsService
@@ -123,6 +123,10 @@ export class PaperComponent implements OnInit {
     const today = new Date();
     this.minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate()); // 60 years ago
     this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()); // 18 years ago
+
+    this.form.get("paperType")?.valueChanges.subscribe(value=>{
+      if (!this.isModify) {this.getNextCode(value)}
+    })
   }
 
   ngOnInit() {
@@ -308,7 +312,7 @@ export class PaperComponent implements OnInit {
     if (errors != "") {
       const errmsg = this.matDialog.open(MessageComponent, {
         width: '500px',
-        data: {heading: "Errors - Paper Add ", message: "You have following Errors <br> " + errors}
+        data: {heading: "Errors - Paper Add ", message: "You have the following Errors <br> " + errors}
       });
       errmsg.afterClosed().subscribe(async result => {
         if (!result) {
@@ -317,6 +321,8 @@ export class PaperComponent implements OnInit {
       });
     } else {
       this.paper = this.form.getRawValue();
+      // @ts-ignore
+      this.paper.doIntroduced = this.datePipe.transform(new Date(this.paper.doIntroduced),'yyyy-MM-dd');
       let matdata = "";
       matdata = matdata + "<br>Number is : " + this.paper.code;
       matdata = matdata + "<br>Fullname is : " + this.paper.name;
@@ -332,12 +338,10 @@ export class PaperComponent implements OnInit {
           this.paperService.add(this.paper).subscribe({
             next: (responce) => {
               this.toastr.success(responce.message).onShown.subscribe(() => {
-                this.form.reset();
                 this.loadTable("");
-                this.form.controls['doassignment'].setValue(new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()));
-                Object.values(this.form.controls).forEach(control => {
-                  control.markAsTouched();
-                });
+                // this.form.controls['doassignment'].setValue(new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()));
+                this.resetForm();
+
               })
             }, error: (error) => {
               this.toastr.error("Failed to add paper :" + error.error.data.message, "Error")
@@ -370,6 +374,7 @@ export class PaperComponent implements OnInit {
   }
 
   fillForm(paper: Paper) {
+    this.isModify=true;
     this.form.reset()
     this.enableButtons(false, true, true);
     this.disableGenerateNo = true;
@@ -383,7 +388,7 @@ export class PaperComponent implements OnInit {
     this.paper.paperType = this.paperTypes.find(g => g.id === paper.paperType?.id);
     this.paper.paperSize = this.paperSizes.find(g => g.id === paper.paperSize?.id);
     this.paper.photo = "";
-    console.log(this.paper.paperStatus)
+
     this.form.patchValue(this.paper);
     this.form.markAsPristine();
   }
@@ -425,18 +430,13 @@ export class PaperComponent implements OnInit {
           if (result) {
 
             this.paper = this.form.getRawValue();
-
-
             this.paper.id = this.oldpaper.id;
+            // @ts-ignore
+            this.paper.doIntroduced = this.datePipe.transform(new Date(this.paper.doIntroduced),'yyyy-MM-dd');
             this.paperService.update(this.paper).subscribe({
               next: (response: any) => {
-                this.form.reset();
-                this.disableGenerateNo = false;
-
-                Object.values(this.form.controls).forEach(control => {
-                  control.markAsTouched();
-                });
                 this.loadTable("");
+                this.resetForm();
                 this.toastr.success(response.message);
               }, error: (error) => {
                 this.toastr.error(error.data.message)
@@ -472,12 +472,9 @@ export class PaperComponent implements OnInit {
           next: (response: any) => {
             if (response) {
               this.toastr.success(response.data).onShown.subscribe(() => {
-                this.form.reset();
-                this.disableGenerateNo = false;
                 this.loadTable("");
-                Object.values(this.form.controls).forEach(control => {
-                  control.markAsTouched();
-                });
+                this.resetForm();
+
               })
 
             }
@@ -500,13 +497,25 @@ export class PaperComponent implements OnInit {
     });
     confirm.afterClosed().subscribe(async result => {
       if (result) {
-        this.form.reset();
-        this.selectedrow = null;
-        this.createForm();
+     this.resetForm();
 
-        this.form.controls['description'].markAsPristine();
-        this.form.controls['doassignment'].markAsPristine();
+
       }
+    });
+  }
+
+  resetForm() {
+    this.form.reset();
+    this.selectedrow = null;
+    this.isModify=false;
+    this.createForm();
+    this.disableGenerateNo = false;
+    this.form.get("logger")?.setValue(this.authService.getUsername());
+    this.form.controls['description'].markAsPristine();
+    this.form.controls['doassignment'].markAsPristine();
+    // this.form.controls['doassignment'].markAsPristine();
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
     });
   }
 
@@ -527,5 +536,19 @@ export class PaperComponent implements OnInit {
 
   getColumnClass(columnIndex: number) {
     return this.tableUtils.getColumnSizeClass(this.data, this.binders, columnIndex, this.uiassist);
+  }
+
+  private getNextCode(value:PaperType) {
+    const nameParts = value.name.trim().split(" ");
+    let textPart = "";
+
+    if (nameParts.length > 1) {
+      textPart = nameParts.map(part => part[0].toUpperCase()).join(""); // First letter of each word
+    } else {
+      textPart = nameParts[0].substring(0, 2).toUpperCase(); // First two letters of the single word
+    }
+    this.paperService.getNextCode(textPart).subscribe(code => {
+      this.form.controls["code"].setValue(code.code);
+    });
   }
 }

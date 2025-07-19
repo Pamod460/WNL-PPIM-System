@@ -1,7 +1,7 @@
 import {Supply} from "./Supply";
 import {SupplierStatus} from "./SupplierStatus";
 import {SupplierType} from "./SupplierType";
-import {Country} from "./Country";
+import {Country} from "./country";
 import {PaperSupply} from "./PaperSupply";
 
 export class Supplier {

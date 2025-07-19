@@ -9,14 +9,12 @@
       </mat-form-field>
 
       <!-- Number (readonly) -->
-      <mat-form-field appearance="outline" class="me-3" style="width: 65%">
+      <mat-form-field appearance="outline" class="me-3" >
         <mat-label>Number</mat-label>
         <input matInput readonly formControlName="number">
       </mat-form-field>
 
-      <button type="button" class="btn btn-dark pt-2 pb-2" (click)="getLastEmpCode()"
-              [disabled]="disableGenerateNo">Generate Number
-      </button>
+
 
       <!-- NIC -->
       <mat-form-field appearance="outline">
@@ -62,17 +60,17 @@
         <input matInput formControlName="description">
       </mat-form-field>
 
-      <!-- Longitude -->
-      <mat-form-field appearance="outline">
-        <mat-label>Longitude</mat-label>
-        <input matInput formControlName="longitude" type="number">
-      </mat-form-field>
+<!--      &lt;!&ndash; Longitude &ndash;&gt;-->
+<!--      <mat-form-field appearance="outline">-->
+<!--        <mat-label>Longitude</mat-label>-->
+<!--        <input matInput formControlName="longitude" type="number">-->
+<!--      </mat-form-field>-->
 
-      <!-- Latitude -->
-      <mat-form-field appearance="outline">
-        <mat-label>Latitude</mat-label>
-        <input matInput formControlName="latitude" type="number">
-      </mat-form-field>
+<!--      &lt;!&ndash; Latitude &ndash;&gt;-->
+<!--      <mat-form-field appearance="outline">-->
+<!--        <mat-label>Latitude</mat-label>-->
+<!--        <input matInput formControlName="latitude" type="number">-->
+<!--      </mat-form-field>-->
 
       <!-- District -->
       <mat-form-field appearance="outline">

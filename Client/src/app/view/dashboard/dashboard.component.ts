@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {DashboardService} from "../../service/dashboaed/dashboard.service";
+import {InventoryItem} from "../../entity/InventoryItem";
 
 interface ContactDetail {
   department: string;
@@ -19,10 +21,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   @ViewChild('pieChart', { static: false }) pieChartRef!: ElementRef<HTMLCanvasElement>;
 
   // Dashboard stats - matching the image
-  totalVehicles: number = 13;
-  totalSuppliers: number = 25;
-  totalAgents: number = 58;
-  totalProducts: number = 124;
+  totalVehicles: number ;
+  totalSuppliers: number ;
+  totalAgents: number ;
+  totalProducts: number ;
 
   // Current date and time
   currentDateTime: string = '';
@@ -66,8 +68,30 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       color: '#607D8B'
     }
   ];
+   inventoryData: InventoryItem[]=[];
+  paperInventoryData: InventoryItem[]=[];
 
-  constructor() { }
+  constructor(private dashboardService:DashboardService) {
+    this.totalVehicles = 0;
+    this.totalSuppliers = 0;
+    this.totalAgents = 0;
+    this.totalProducts = 0;
+
+    // Fetch dashboard data
+    this.dashboardService.getAllList().subscribe(data => {
+      this.totalVehicles = data.vehicleCount;
+      this.totalSuppliers = data.supplierCount;
+      this.totalAgents = data.agentCount;
+      this.totalProducts = data.productCount;
+    });
+
+    this.dashboardService.getInventoryRopChartData().subscribe(data => {
+      this.inventoryData = data;
+    });
+    this.dashboardService.getPaperInventoryRopChartData().subscribe(data => {
+      this.paperInventoryData = data;
+    });
+  }
 
   ngOnInit(): void {
     this.updateDateTime();

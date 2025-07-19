@@ -7,5 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PaperPorderRepository extends JpaRepository<PaperPorder,Integer> {
     boolean existsByPoNumber(String code);
 
-    PaperPorderStatus findByName(String name);
+    PaperPorder findTopByPoNumberStartsWithOrderByPoNumberDesc(String textPart);
+
+//    PaperPorderStatus findByName(String name);
 }

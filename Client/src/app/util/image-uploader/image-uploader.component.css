@@ -2,6 +2,7 @@
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
+  padding-bottom: 40px;
 }
 
 .upload-title {
@@ -119,4 +120,11 @@
 
 .delete-button:active {
   transform: scale(0.95);
+}
+
+.preview-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  cursor: pointer; /* 👈 Add this */
 }

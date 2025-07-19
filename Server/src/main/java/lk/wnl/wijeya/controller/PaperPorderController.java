@@ -31,9 +31,9 @@ public class PaperPorderController {
     }
 
 
-    @GetMapping(value = "/last", produces = "application/json")
-    public ResponseEntity<Map<String, String>> getLastPaperPorder() {
-        return paperPorderService.getLastPaperPONumber();
+    @GetMapping(value = "/next", produces = "application/json")
+    public ResponseEntity<Map<String, String>> getNextNumber(@RequestParam("textPart") String textPart) {
+        return paperPorderService.getNextCode(textPart);
     }
 
     @PostMapping

@@ -54,8 +54,9 @@ public class MaterialGrn {
     @Size(max = 45)
     @Column(name = "code", length = 45)
     private String code;
-    @JsonIgnore
-    @OneToMany(mappedBy = "materialGrn")
+
+
+    @OneToMany(mappedBy = "materialGrn" , fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MaterialGrnMaterial> materialGrnMaterials = new LinkedHashSet<>();
 
     @Transient

@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "product_material")
 public class ProductMaterial {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
 

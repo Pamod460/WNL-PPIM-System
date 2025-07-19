@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MaterialSubcategory} from "../../../entity/MaterialSubcategory";
@@ -26,6 +26,8 @@ import {ProductStatus} from "../../../entity/ProductStatus";
 import {Material} from "../../../entity/Material";
 import {PaperService} from "../../../service/Paper/paper.service";
 import {Paper} from "../../../entity/Paper";
+import {ProductPaper} from "../../../entity/ProductPaper";
+
 
 @Component({
   selector: 'app-product',
@@ -35,9 +37,9 @@ import {Paper} from "../../../entity/Paper";
 export class ProductComponent implements OnInit {
 
 
-  columns: string[] = ['name', 'code', 'quantity', 'unitprice', 'productStatus', 'productfrequency', 'productCategory'];
+  columns: string[] = ['name', 'code', 'quantity', 'unitPrice', 'productStatus', 'productfrequency', 'productCategory'];
   headers: string[] = ['Name', 'Code', 'Quantity', 'Unit Price', 'Status', 'Frequency', 'Category'];
-  binders: string[] = ['name', 'code', 'quantity', 'unitprice', 'productStatus.name', 'productfrequency.frequency', 'productCategory.name'];
+  binders: string[] = ['name', 'code', 'quantity', 'unitPrice', 'productStatus.name', 'productfrequency.frequency', 'productCategory.name'];
 
   defaultProfile = 'assets/defaultimg.png';
   public ssearch!: FormGroup;
@@ -78,13 +80,24 @@ export class ProductComponent implements OnInit {
 
   today: Date = new Date();
   productFrequencies: ProductFrequency[] = [];
-  productmaterials: ProductMaterial[] = [];
   productCategories: ProductCategory[] = [];
   paperList: Paper[] = [];
   lastProductCode = '';
   materialList!: Material[];
-  compareMaterials = (a: any, b: any) => a && b && a.id === b.id;
-  comparePapers= (a: any, b: any) => a && b && a.id === b.id;
+
+  materialForm: FormGroup
+  paperForm: FormGroup
+  isMaterialInnerDataUpdated = false;
+  productMaterial!: ProductMaterial;
+  productMaterials: ProductMaterial[] = [];
+  filteredMaterialList: Material[] = [];
+  productPaper!: ProductPaper;
+  id = 0;
+  grandTotal = 0
+  filteredPaperList: Paper[] = [];
+  productPapers: ProductPaper[] = [];
+  navitem = 'Product Analysis';
+  isPaperInnerDataUpdated = false;
 
 
   constructor(
@@ -117,101 +130,95 @@ export class ProductComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       quantity: new FormControl('', [Validators.required, Validators.min(1)]),
       dointroduced: new FormControl('', [Validators.required]),
-      unitprice: new FormControl('', [Validators.required, Validators.min(0)]),
+      unitPrice: new FormControl('', [Validators.required, Validators.min(0)]),
+      agentPrice: new FormControl('', [Validators.required, Validators.min(0)]),
       description: new FormControl(''),
       photo: new FormControl(''),
       logger: new FormControl(''),
       productStatus: new FormControl(null, [Validators.required]),
       productCategory: new FormControl(null, [Validators.required]),
       productfrequency: new FormControl(null, [Validators.required]),
-      productMaterials: this.formBuilder.array([]),
-      productPapers: this.formBuilder.array([]),
-    });
 
+    });
+    this.materialForm = this.formBuilder.group({
+      material: [null, Validators.required],
+      quantity: [0, [Validators.required, Validators.min(1)]],
+      lineCost: [0]
+    });
+    this.paperForm = this.formBuilder.group({
+      paper: [null, Validators.required],
+      quantity: [0, [Validators.required, Validators.min(1)]],
+      lineCost: [0]
+    });
 
     const today = new Date();
     this.minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate()); // 60 years ago
     this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()); // 18 years ago
     this.form.get("logger")?.setValue(this.authService.getUsername());
-  }
 
-  createMaterialForm(): FormGroup {
-    const materialForm = this.formBuilder.group({
-      material: [null],     // Assumes full Material object
-      quantity: [1],
-      lineCost: [0]
-    });
-
-    // Helper function to calculate and update lineCost
-    const updateLineCost = () => {
-      const selectedMaterial: any = materialForm.get('material')?.value;
-      const quantity: number = materialForm.get('quantity')?.value ?? 0;
-
-      if (selectedMaterial?.unitprice != null) {
-        const cost = selectedMaterial.unitprice * quantity;
-        materialForm.get('lineCost')?.setValue(cost, {emitEvent: false});
+    this.materialForm.get("quantity")?.valueChanges.subscribe(value => {
+      const material = this.materialForm.get("material")?.value;
+      console.log(material)
+      if (material && value > 0) {
+        this.updatePrices(value);
       } else {
-        materialForm.get('lineCost')?.setValue(0, {emitEvent: false});
+        this.materialForm.get("lineCost")?.setValue(null);
       }
-    };
-
-    // Subscribe to both value changes
-    materialForm.get('quantity')?.valueChanges.subscribe(updateLineCost);
-    materialForm.get('material')?.valueChanges.subscribe(updateLineCost);
-
-    return materialForm;
-  }
-
-
-  createPaperForm(): FormGroup {
-    const paperForm = this.formBuilder.group({
-      paper: [null],
-      quantity: [1],
-      lineCost: [0],
-    });
-
-    // Helper function to calculate and update lineCost
-    const updateLineCost = () => {
-      const selectedPaper: any = paperForm.get('paper')?.value;
-      const quantity: number = paperForm.get('quantity')?.value ?? 0;
-
-      if (selectedPaper?.unitPrice != null) {
-        const cost = selectedPaper.unitPrice * quantity;
-        paperForm.get('lineCost')?.setValue(cost, {emitEvent: false});
+    })
+    this.paperForm.get("quantity")?.valueChanges.subscribe(value => {
+      const paper = this.paperForm.get("paper")?.value;
+      console.log(paper)
+      if (paper && value > 0) {
+        this.updatePaperPrices(value);
       } else {
-        paperForm.get('lineCost')?.setValue(0, {emitEvent: false});
+        this.paperForm.get("lineCost")?.setValue(null);
       }
-    };
-
-    // Subscribe to both value changes
-    paperForm.get('quantity')?.valueChanges.subscribe(updateLineCost);
-    paperForm.get('paper')?.valueChanges.subscribe(updateLineCost);
-
-    return paperForm;
+    })
+  }
+  getUnitcost(): number {
+    // @ts-ignore
+    const totalMaterialCost = this.productMaterials.reduce((sum, m) => sum + m.lineCost, 0);
+    // @ts-ignore
+    const totalPaperCost = this.productPapers.reduce((sum, p) => sum + p.lineCost, 0);
+    // console.log("Total Material Cost: ", this.productMaterials);
+    const totalCost = totalMaterialCost + totalPaperCost;
+    return totalCost / 100;
   }
 
-  get materials(): FormArray {
-    return this.form.get('productMaterials') as FormArray;
+  updateUnitPrice(): void {
+    const unitCost = parseFloat((this.getUnitcost()).toFixed(2));
+    const agentPrice = parseFloat((unitCost * 1.2).toFixed(2)); // Assuming agent price is 20% more than unit price
+    const unitPrice= parseFloat((agentPrice * 1.1).toFixed(2)); // Assuming unit price is 10% more than unit cost
+    this.form.get('unitPrice')?.setValue(unitPrice);
+    this.form.get('agentPrice')?.setValue(agentPrice);
   }
 
-  get papers(): FormArray {
-    return this.form.get('productPapers') as FormArray;
+
+  updatePrices(quantity: number) {
+
+    const material = this.materialForm.get("material")?.value;
+    // if (!material || quantity <= 0) {
+    //   this.materialForm.get("lineCost")?.setValue(null);
+    //   return;
+    // }
+
+    const unitPrice = material.unitPrice || 0;
+    const lineTotal = unitPrice * quantity;
+    this.materialForm.get("lineCost")?.setValue(lineTotal);
+    console.log(this.getUnitcost())
   }
 
-  addMaterial() {
-    this.materials.push(this.createMaterialForm());
-  }
+  updatePaperPrices(quantity: number) {
 
-  removeMaterial(index: number) {
-    this.materials.removeAt(index);
-  }
+    const paper = this.paperForm.get("paper")?.value;
+    if (!paper || quantity <= 0) {
+      this.paperForm.get("lineCost")?.setValue(null);
+      return;
+    }
+    const unitPrice = paper.unitPrice || 0;
+    const lineTotal = unitPrice * quantity;
+    this.paperForm.get("lineCost")?.setValue(lineTotal);
 
-  addPapers() {
-    this.papers.push(this.createPaperForm());
-  }
-
-  removePaper(i: number) {
-    this.papers.removeAt(i);
   }
 
   ngOnInit() {
@@ -245,21 +252,23 @@ export class ProductComponent implements OnInit {
     this.materialService.getAllList().subscribe({
       next: (materials: Material[]) => {
         this.materialList = materials;
+        this.filteredMaterialList = [...materials];
       }, error: (err: any) => {
         console.log(err);
       }
     })
     this.paperService.getAllList().subscribe({
-      next: (papers:Paper[]) => {
+      next: (papers: Paper[]) => {
         this.paperList = papers;
+        this.filteredPaperList = [...papers];
       }, error: (err: any) => {
         console.log(err);
       }
     })
-    this.regexService.get('product').subscribe((regs: []) => {
-      this.regexes = regs;
-      this.createForm();
-    });
+    // this.regexService.get('product').subscribe((regs: []) => {
+    //   this.regexes = regs;
+    // });
+    this.createForm();
 
     const authoritiesArray = this.authService.getAuthorities();
     if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
@@ -281,13 +290,12 @@ export class ProductComponent implements OnInit {
     this.form.controls['name'].setValidators([Validators.required]);
     this.form.controls['quantity'].setValidators([Validators.required]);
     this.form.controls['dointroduced'].setValidators([Validators.required]);
-    this.form.controls['unitprice'].setValidators([Validators.required]);
+    this.form.controls['unitPrice'].setValidators([Validators.required]);
     this.form.controls['photo'].setValidators([Validators.required]);
     this.form.controls['productStatus'].setValidators([Validators.required]);
     this.form.controls['productCategory'].setValidators([Validators.required]);
     this.form.controls['productfrequency'].setValidators([Validators.required]);
-    this.form.controls['productMaterials'].setValidators([Validators.required]);
-    this.form.controls['productPapers'].setValidators([Validators.required]);
+
 
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
@@ -316,7 +324,6 @@ export class ProductComponent implements OnInit {
   }
 
   enableButtons(add: boolean, upd: boolean, del: boolean): void {
-    console.log('btn ', add, upd, del)
     this.enaadd = add;
     this.enaupd = upd;
     this.enadel = del;
@@ -326,7 +333,7 @@ export class ProductComponent implements OnInit {
     this.hasInsertAuthority = authorities.some(authority => authority.module === 'product' && authority.operation === 'insert');
     this.hasUpdateAuthority = authorities.some(authority => authority.module === 'product' && authority.operation === 'update');
     this.hasDeleteAuthority = authorities.some(authority => authority.module === 'product' && authority.operation === 'delete');
-    console.log(this.hasInsertAuthority, this.hasUpdateAuthority, this.hasDeleteAuthority)
+
   }
 
   loadTable(query: string) {
@@ -336,9 +343,206 @@ export class ProductComponent implements OnInit {
         this.data = new MatTableDataSource(materials);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
+
       }
     })
+  }
+
+  addMaterialToTable() {
+    this.productMaterial = this.materialForm.getRawValue();
+
+    // Validate material input
+    if (!this.productMaterial.material || this.productMaterial.quantity == 0) {
+      this.showMessageDialog("Errors - Material  Add", "Please Add Required Details");
+      return;
+    }
+
+    const quantity = this.productMaterial.quantity || 0;
+    const unitPrice = this.productMaterial.material?.unitPrice || 0;
+    const expectedLineCost = quantity * unitPrice;
+    this.grandTotal += expectedLineCost
+    this.form.get("expectedCost")?.setValue(this.grandTotal);
+    const newEntry = new ProductMaterial(
+      this.id,
+      this.productMaterial.material,
+      expectedLineCost,
+      quantity
+    );
+    const updatedData: ProductMaterial[] = this.productMaterials ? [...this.productMaterials] : [];
+
+    const isDuplicate = updatedData.some(item => item.material?.id === newEntry.material?.id);
+
+    if (isDuplicate) {
+      this.showMessageDialog("Errors - Material Add", "Duplicate record.<br>This record already exists in the table.");
+    } else {
+      // Add new entry and remove from filtered list
+      updatedData.push(newEntry);
+      const addedMaterialId = newEntry.material?.id;
+      const removeIndex = this.filteredMaterialList.findIndex(e => e.id === addedMaterialId);
+      if (removeIndex > -1) {
+        this.filteredMaterialList.splice(removeIndex, 1);
+      }
+      this.productMaterials = updatedData;
+      this.updateUnitPrice();
+      this.id++;
+      this.isMaterialInnerDataUpdated = true;
+      this.resetMaterialForm();
+    }
+  }
+
+  private showMessageDialog(heading: string, message: string): void {
+    const dialogRef = this.matDialog.open(MessageComponent, {
+      width: '400px',
+      data: {heading, message}
+    });
+
+    dialogRef.afterClosed().subscribe(); // Just to keep the observable chain alive
+  }
+
+  private resetMaterialForm(): void {
+    this.materialForm.reset();
+    for (const controlName in this.materialForm.controls) {
+      const control = this.materialForm.controls[controlName];
+      control.clearValidators();
+      control.updateValueAndValidity();
+    }
+  }
+
+  private resetPaperForm(): void {
+    this.paperForm.reset();
+    for (const controlName in this.paperForm.controls) {
+      const control = this.paperForm.controls[controlName];
+      control.clearValidators();
+      control.updateValueAndValidity();
+    }
+  }
+
+  deleteMaterialRow(x: ProductMaterial): void {
+    const dialogRef = this.matDialog.open(ConfirmComponent, {
+      width: '450px',
+      data: {
+        heading: "Delete Material POrder",
+        message: "Are You Sure You Want To Perform this Operation?"
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+
+      const indexToDelete = this.productMaterials.findIndex(item => item.id === x.id);
+
+      if (indexToDelete > -1) {
+        const material = this.productMaterials[indexToDelete]?.material;
+
+        if (material?.id) {
+          if (!this.filteredMaterialList.some(e => e.id === material.id)) {
+            this.filteredMaterialList = [material, ...this.filteredMaterialList];
+          }
+        }
+        this.productMaterials.splice(indexToDelete, 1);
+        this.isMaterialInnerDataUpdated = true;
+      }
+    });
+  }
+
+
+  trackByInnerData(index: number, item: any): any {
+    return item?.id || index;
+  }
+
+
+  addPaperToTable() {
+    this.productPaper = this.paperForm.getRawValue();
+
+    // Validate material input
+    if (!this.productPaper.paper || this.productPaper.quantity == 0) {
+      this.showMessageDialog("Errors - Material POrder Add", "Please Add Required Details");
+      return;
+    }
+
+    const quantity = this.productPaper.quantity || 0;
+    const unitPrice = this.productPaper.paper?.unitPrice || 0;
+    const expectedLineCost = quantity * unitPrice;
+    this.grandTotal += expectedLineCost
+    this.form.get("expectedCost")?.setValue(this.grandTotal);
+    const newEntry = new ProductPaper(
+      this.id,
+      this.productPaper.paper,
+      quantity,
+      expectedLineCost
+    );
+    const updatedData: ProductPaper[] = this.productPapers ? [...this.productPapers] : [];
+
+    const isDuplicate = updatedData.some(item => item.paper?.id === newEntry.paper?.id);
+
+    if (isDuplicate) {
+      this.showMessageDialog("Errors - Material POrder Add", "Duplicate record.<br>This record already exists in the table.");
+    } else {
+      // Add new entry and remove from filtered list
+      updatedData.push(newEntry);
+      const addedMaterialId = newEntry.paper?.id;
+      const removeIndex = this.filteredPaperList.findIndex(e => e.id === addedMaterialId);
+      if (removeIndex > -1) {
+        this.filteredPaperList.splice(removeIndex, 1);
+      }
+      this.productPapers = updatedData;
+      this.updateUnitPrice();
+      this.id++;
+      this.isPaperInnerDataUpdated = true;
+      this.resetPaperForm();
+    }
+  }
+
+  deletePaperRow(x: ProductPaper) {
+    const dialogRef = this.matDialog.open(ConfirmComponent, {
+      width: '450px',
+      data: {
+        heading: "Delete Product Paper",
+        message: "Are You Sure You Want To Perform this Operation?"
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+
+      const indexToDelete = this.productPapers.findIndex(item => item.id === x.id);
+
+      if (indexToDelete > -1) {
+        const material = this.productPapers[indexToDelete]?.paper;
+        if (material?.id) {
+          if (!this.filteredPaperList.some(e => e.id === material.id)) {
+            this.filteredPaperList = [material, ...this.filteredPaperList];
+          }
+        }
+        this.productPapers.splice(indexToDelete, 1);
+        this.isPaperInnerDataUpdated = true;
+      }
+    });
+  }
+
+  onPhotoChanged(files: File[]) {
+    if (!files || files.length === 0) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      const base64String = dataUrl.split(',')[1];
+
+      if (this.form.get("photo")?.value !== base64String) {
+        this.form.get("photo")?.setValue(base64String);
+        this.form.get("photo")?.markAsDirty();
+      }
+    };
+    reader.readAsDataURL(files[0]);
+  }
+
+  onPhotoRemoved(fileId: string) {
+    this.form.get("photo")?.setValue(null);
+    if (this.form.get("photo")?.value != this.product.photo) {
+      this.form.get("photo")?.markAsDirty();
+    } else {
+      this.form.get("photo")?.markAsPristine();
+    }
   }
 
   btnSearchMc(): void {
@@ -380,23 +584,6 @@ export class ProductComponent implements OnInit {
 
   }
 
-  selectImage(e: any): void {
-    console.log(e.target.files[0]);
-    if (e.target.files) {
-      const reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = (event: any) => {
-        this.imageempurl = event.target.result;
-        this.form.controls['photo'].clearValidators();
-      }
-    }
-  }
-
-  clearImage(): void {
-    this.imageempurl = 'assets/default.png';
-    this.form.controls['photo'].markAsDirty();
-  }
-
 
   add() {
     const errors = this.getErrors();
@@ -412,7 +599,10 @@ export class ProductComponent implements OnInit {
       });
     } else {
       this.product = this.form.getRawValue();
-      this.product.photo = btoa(this.imageempurl);
+      this.productMaterials.forEach((i) => delete i.id);
+      this.productPapers.forEach((i) => delete i.id);
+      this.product.productMaterials = this.productMaterials;
+      this.product.productPapers = this.productPapers;
       let matdata = "";
       matdata = matdata + "<br>Number is : " + this.product.code;
       matdata = matdata + "<br>Fullname is : " + this.product.name;
@@ -429,12 +619,7 @@ export class ProductComponent implements OnInit {
             next: (responce) => {
               if (responce)
                 this.toastr.success("Product Added Successfully").onShown.subscribe(() => {
-                  // this.form.reset();
-                  this.form.controls['doassignment'].setValue(new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()));
-                  this.clearImage();
-                  Object.values(this.form.controls).forEach(control => {
-                    control.markAsTouched();
-                  });
+                  this.resetForm();
                   this.loadTable("");
                 })
             }, error: (error) => {
@@ -469,56 +654,18 @@ export class ProductComponent implements OnInit {
   }
 
   fillForm(product: Product) {
-    console.log(product)
+
     this.form.reset()
     this.enableButtons(false, true, true);
     this.disableGenerateNo = true;
     this.selectedrow = product;
     this.product = JSON.parse(JSON.stringify(product));
     this.oldProduct = JSON.parse(JSON.stringify(product));
-    if (this.product.photo != null) {
-      if (typeof this.product.photo === "string") {
-        this.imageempurl = atob(this.product.photo);
-      }
-      this.form.controls['photo'].clearValidators();
-    } else {
-      this.clearImage();
-    }
-
-
     this.product.productStatus = this.productStatuses.find(g => g.id === product.productStatus?.id);
     this.product.productCategory = this.productCategories.find(g => g.id === product.productCategory?.id);
     this.product.productfrequency = this.productFrequencies.find(f => f.id === product.productfrequency?.id);
-
-    this.materials.clear(); // clear existing if needed
-
-    // @ts-ignore
-    this.product.productMaterials.forEach(pm => {
-      // @ts-ignore
-      const mat = this.materialList.find(m => m.id == pm.material.id)
-      const fg = this.createMaterialForm();
-      fg.patchValue({
-        // @ts-ignore
-        material: mat,       // full object
-        quantity: pm.quantity,
-        lineCost: pm.lineCost
-      });
-      this.materials.push(fg);
-    });
-
-    this.papers.clear();
-    this.product.productPapers?.forEach( pp => {
-      const paper = this.paperList.find(p => p.id == pp.paper.id)
-      const fg = this.createPaperForm();
-      fg.patchValue({
-
-        paper: paper,       // full object
-        quantity: pp.quantity,
-        lineCost: pp.lineCost
-      });
-      this.papers.push(fg);
-    })
-    this.product.photo = "";
+    this.productMaterials = product.productMaterials || [];
+    this.productPapers = product.productPapers || [];
     this.form.patchValue(this.product);
     this.form.markAsPristine();
   }
@@ -531,7 +678,15 @@ export class ProductComponent implements OnInit {
         updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1) + " Changed";
       }
     }
+    if (this.isMaterialInnerDataUpdated) {
+      updates += "<br> Material Quantity Changed"
+    }
+
+    if (this.isPaperInnerDataUpdated) {
+      updates += "<br> Paper Quantity Changed"
+    }
     return updates;
+
   }
 
   update() {
@@ -560,19 +715,16 @@ export class ProductComponent implements OnInit {
           if (result) {
 
             this.product = this.form.getRawValue();
-
-            if (this.form.controls['photo'].dirty)
-              this.product.photo = btoa(this.imageempurl);
-            else this.product.photo = this.oldProduct.photo
             this.product.id = this.oldProduct.id;
+
+            this.productMaterials.forEach((i) => delete i.id);
+            this.productPapers.forEach((i) => delete i.id);
+
+            this.product.productMaterials = this.productMaterials;
+            this.product.productPapers = this.productPapers;
             this.productService.update(this.product).subscribe({
               next: (response: any) => {
-                this.form.reset();
-                this.disableGenerateNo = false;
-                this.clearImage();
-                Object.values(this.form.controls).forEach(control => {
-                  control.markAsTouched();
-                });
+                this.resetForm();
                 this.loadTable("");
                 this.toastr.success(response.message);
               }, error: (error) => {
@@ -609,13 +761,8 @@ export class ProductComponent implements OnInit {
           next: (response: any) => {
             if (response.code === 200) {
               this.toastr.success(response.data.message).onShown.subscribe(() => {
-                this.form.reset();
-                this.disableGenerateNo = false;
-                this.clearImage();
-                Object.values(this.form.controls).forEach(control => {
-                  control.markAsTouched();
-                });
                 this.loadTable("");
+                this.resetForm();
               })
             }
           },
@@ -637,12 +784,7 @@ export class ProductComponent implements OnInit {
     });
     confirm.afterClosed().subscribe(async result => {
       if (result) {
-        this.form.reset();
-        this.selectedrow = null;
-        this.createForm();
-        this.clearImage();
-        this.form.controls['description'].markAsPristine();
-        this.form.controls['doassignment'].markAsPristine();
+        this.resetForm()
       }
     });
   }
@@ -650,10 +792,10 @@ export class ProductComponent implements OnInit {
   resetForm() {
     this.form.reset();
     this.selectedrow = null;
+    this.disableGenerateNo = false;
     this.createForm();
-    this.clearImage();
-    this.form.controls['description'].markAsPristine();
-    this.form.controls['doassignment'].markAsPristine();
+    this.productPapers=[]
+    this.productMaterials=[]
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
     });

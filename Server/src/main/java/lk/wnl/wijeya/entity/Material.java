@@ -36,9 +36,7 @@ public class Material {
     @Basic
     @Column(name = "rop")
     private BigDecimal rop;
-    @Basic
-    @Column(name = "unitprice")
-    private BigDecimal unitprice;
+
     @Basic
     @Column(name = "description")
     private String description;
@@ -54,6 +52,7 @@ public class Material {
     @OneToMany(mappedBy = "material")
     private Set<ProductMaterial> productMaterials = new LinkedHashSet<>();
 
+//    @JsonIgnore
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
@@ -75,11 +74,24 @@ public class Material {
     @JoinColumn(name = "material_subcategory_id", nullable = false)
     private MaterialSubcategory materialSubcategory;
 
-    @Transient
-    private String logger;
+
     @JsonIgnore
     @OneToMany(mappedBy = "material")
     private Set<MaterialPorderMaterial> materialPorderMaterials = new LinkedHashSet<>();
+
+    @Column(name = "unit_price", precision = 7, scale = 2)
+    private BigDecimal unitPrice;
+
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "material")
+    private Set<IssuedMaterial> issuedMaterials = new LinkedHashSet<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "material")
+    private Set<MaterialGrnMaterial> materialGrnMaterials = new LinkedHashSet<>();
+    @Transient
+    private String logger;
 
     public Material(Integer id, String name) {
         this.id = id;

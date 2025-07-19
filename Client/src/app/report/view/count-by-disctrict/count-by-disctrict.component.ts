@@ -1,9 +1,10 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CountByDistrict} from "../../entity/countbydistrict";
 import {MatTableDataSource} from "@angular/material/table";
 import {ReportService} from "../../reportservice";
-declare let google: { charts: { load: (arg0: string, arg1: { packages: string[]; }) => void; setOnLoadCallback: (arg0: () => void) => void; }; visualization: { DataTable: new () => any; BarChart: new (arg0: any) => any; PieChart: new (arg0: any) => any; LineChart: new (arg0: any) => any; }; };
-
+import {ChartData, ChartOptions} from "chart.js";
+// @ts-ignore
+import * as html2pdf from 'html2pdf.js';
 @Component({
   selector: 'app-count-by-disctrict',
   templateUrl: './count-by-disctrict.component.html',
@@ -17,24 +18,69 @@ export class CountByDisctrictComponent implements OnInit{
   columns: string[] = ['district', 'count', 'percentage'];
   headers: string[] = ['District', 'Count', 'Percentage'];
   binders: string[] = ['district', 'count', 'percentage'];
-
-  @ViewChild('barchart', { static: false }) barchart: any;
-  @ViewChild('piechart', { static: false }) piechart: any;
-  @ViewChild('linechart', { static: false }) linechart: any;
-
   constructor(private rs: ReportService) {
     //Define Interactive Panel with Needed Form Elements
   }
 
+  chartType: 'pie' = 'pie';
+  chartData?: ChartData<'pie'>;
+  rawData: CountByDistrict[] = [];
+  chartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Agents By District',
+      }
+    },
+    scales: {
+      x: {stacked: true},
+      y: {stacked: true}
+    }
+  };
+
+  barChartData: any;
+  barChartType: 'bar' = 'bar';
+  barchartOptions: ChartOptions<'bar'> = {
+    // indexAxis: 'y',
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Agents By District',
+      }
+    },
+    scales: {
+      x: {stacked: true},
+      y: {stacked: true}
+    }
+  };
+  lineChartData: any;
+  lineChartType: 'line'='line';
+  linechartOptions: ChartOptions<'line'> = {
+    responsive: true,
+    plugins: {
+      title: {
+        display: true,
+        text: 'Agents By District',
+      }
+    },
+    scales: {
+      x: {stacked: true},
+      y: {stacked: true}
+    }
+  };
+  matchedNavItem = "Agent Count By District";
+
   ngOnInit(): void {
 
     this.rs.countByDistrict()
-      .then((des: CountByDistrict[]) => {
+      .subscribe((des: CountByDistrict[]) => {
         this.countbydistricts = des;
-      }).finally(() => {
-      this.loadTable();
-      this.loadCharts();
-    });
+        this.rawData = des;
+        this.loadTable();
+        this.loadCharts();
+      });
 
   }
 
@@ -43,58 +89,65 @@ export class CountByDisctrictComponent implements OnInit{
   }
 
   loadCharts() : void{
-    google.charts.load('current', { packages: ['corechart'] });
-    google.charts.setOnLoadCallback(this.drawCharts.bind(this));
+    this.chartData = {
+      labels: this.rawData.map(item => item.district),
+
+      datasets: [
+        {
+          label: 'Agent Count',
+          data: this.rawData.map(item => item.count),
+          backgroundColor: this.getColors(this.rawData.length),
+        }
+      ]
+
+    }
+    this.barChartData = {
+      labels: this.rawData.map(item => item.district),
+
+      datasets: [
+        {
+          label: 'Agent Count',
+          data: this.rawData.map(item => item.count),
+          backgroundColor: this.getColors(this.rawData.length),
+        }
+      ]
+
+    }
+
+    this.lineChartData = {
+      labels: this.rawData.map(item => item.district),
+
+      datasets: [
+        {
+          label: 'Agent Count',
+          data: this.rawData.map(item => item.count),
+          backgroundColor: this.getColors(this.rawData.length),
+        }
+      ]
+
+    }
   }
 
 
-  drawCharts() {
 
-    const barData = new google.visualization.DataTable();
-    barData.addColumn('string', 'District');
-    barData.addColumn('number', 'Count');
 
-    const pieData = new google.visualization.DataTable();
-    pieData.addColumn('string', 'District');
-    pieData.addColumn('number', 'Count');
+  getColors(count: number): string[] {
+    const colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', '#00a950', '#58595b'];
+    return Array.from({length: count}, (_, i) => colors[i % colors.length]);
+  }
+  downloadPDF() {
+    const element = document.getElementById('pdfContent');
+    if (element) {
+      const opt = {
+        margin: 0.5,
+        filename: 'document.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'in', format: 'a3', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
 
-    const lineData = new google.visualization.DataTable();
-    lineData.addColumn('string', 'District');
-    lineData.addColumn('number', 'Count');
-
-    this.countbydistricts.forEach((des: CountByDistrict) => {
-      barData.addRow([des.district, des.count]);
-      pieData.addRow([des.district, des.count]);
-      lineData.addRow([des.district, des.count]);
-    });
-
-    const barOptions = {
-      title: 'District Count (Bar Chart)',
-      subtitle: 'Count of Employees by District',
-      bars: 'horizontal',
-      height: 400,
-      width: 600
-    };
-
-    const pieOptions = {
-      title: 'District Count (Pie Chart)',
-      height: 400,
-      width: 550
-    };
-
-    const lineOptions = {
-      title: 'District Count (Line Chart)',
-      height: 400,
-      width: 600
-    };
-
-    const barChart = new google.visualization.BarChart(this.barchart.nativeElement);
-    barChart.draw(barData, barOptions);
-
-    const pieChart = new google.visualization.PieChart(this.piechart.nativeElement);
-    pieChart.draw(pieData, pieOptions);
-
-    const lineChart = new google.visualization.LineChart(this.linechart.nativeElement);
-    lineChart.draw(lineData, lineOptions);
+      html2pdf().set(opt).from(element).save();
+    }
   }
 }

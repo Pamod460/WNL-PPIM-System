@@ -22,8 +22,8 @@ public class PaperPorder {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Size(max = 6)
-    @Column(name = "po_number", length = 6)
+    @Size(max = 20)
+    @Column(name = "po_number", length = 20)
     private String poNumber;
 
     @Column(name = "date")
@@ -46,7 +46,7 @@ public class PaperPorder {
     @JoinColumn(name = "supplier_id", nullable = false)
     private Supplier supplier;
 
-    @OneToMany(mappedBy = "paperPorder")
+    @OneToMany(mappedBy = "paperPorder", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PaperPorderPaper> paperPorderPapers = new LinkedHashSet<>();
 
     @NotNull
@@ -67,5 +67,25 @@ public class PaperPorder {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "approved_store_manager_id")
     private User approvedStoreManager;
+    @Transient
+    private String logger;
+    @JsonIgnore
+    @OneToMany(mappedBy = "paperPorder")
+    private Set<PaperGrn> paperGrns = new LinkedHashSet<>();
 
+    @Transient
+    private String approvedManagerName;
+    @Transient
+    private String approvedAccountantName;
+    public String getLogger() {
+        return this.createdBy.getUsername();
+    }
+
+    public String getApprovedManagerName() {
+        return this.approvedStoreManager != null ? this.approvedStoreManager.getUsername() : null;
+    }
+
+    public String getApprovedAccountantName() {
+        return this.approvedAccountent != null ? this.approvedAccountent.getUsername() : null;
+    }
 }

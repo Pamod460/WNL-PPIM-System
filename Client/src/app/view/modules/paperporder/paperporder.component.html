@@ -1,25 +1,20 @@
-<app-common-layout  [matchedNavItem]="matchedNavItem">
+<app-common-layout [matchedNavItem]="matchedNavItem">
   <div form>
     <form [formGroup]="form">
       <!-- PO Number -->
       <mat-form-field appearance="outline">
         <mat-label>PO Number</mat-label>
-        <input matInput formControlName="poNumber">
+        <input matInput formControlName="poNumber" readonly>
       </mat-form-field>
 
       <!-- Date -->
       <mat-form-field appearance="outline">
         <mat-label>Date</mat-label>
-        <input matInput [matDatepicker]="poDate" formControlName="date">
-        <mat-datepicker-toggle matIconSuffix [for]="poDate"></mat-datepicker-toggle>
+        <input matInput [matDatepicker]="poDate" formControlName="date" [readonly]="true">
+        <mat-datepicker-toggle matIconSuffix [for]="poDate"  [disabled]="true"></mat-datepicker-toggle>
         <mat-datepicker #poDate></mat-datepicker>
       </mat-form-field>
 
-      <!-- Expected Cost -->
-      <mat-form-field appearance="outline">
-        <mat-label>Expected Cost</mat-label>
-        <input matInput formControlName="expectedCost" type="number" step="0.01">
-      </mat-form-field>
 
       <!-- Description -->
       <mat-form-field appearance="outline">
@@ -29,10 +24,10 @@
 
 
       <!-- Status -->
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" >
         <mat-label>Status</mat-label>
-        <mat-select formControlName="paperPorderStatus">
-          <mat-option *ngFor="let status of paperPorderStatuses" [value]="status">{{ status.name }}</mat-option>
+        <mat-select formControlName="paperPorderStatus" >
+          <mat-option *ngFor="let status of paperPorderStatuses" [value]="status" >{{ status.name }}</mat-option>
         </mat-select>
       </mat-form-field>
       <!-- Status -->
@@ -113,18 +108,52 @@
 
         </form>
       </div>
+      <div class="w-100 d-inline-block">
+      <mat-form-field appearance="outline" class="w-50 float-end">
+        <mat-label>Expected Cost</mat-label>
+        <input matInput formControlName="expectedCost" type="number" step="0.01" readonly>
+      </mat-form-field>
+      </div>
+      <div *ngIf="smRole">
+        <mat-label>Manager Approval</mat-label>
+        <app-approve-button
+          formControlName="smApproved"
+          (approvalChange)="onApprovalChange($event)" class="ms-5" [disabled]="isDisabledSmApproval">
+        </app-approve-button>
+        <mat-form-field appearance="outline" class="mt-3">
+          <mat-label>Approved Manager</mat-label>
+          <input matInput formControlName="approvedManagerName" readonly>
+        </mat-form-field>
+      </div>
+      <div *ngIf="accRole">
+        <mat-label class="me-2">Accountant Approval</mat-label>
+        <app-approve-button
+          formControlName="accountentApproved"
+          (approvalChange)="onApprovalChange($event)" class="ms-4" [disabled]="isDisabledAcApproval">
+        </app-approve-button>
+        <mat-form-field appearance="outline" class="mt-3">
+          <mat-label>Approved Accounts Manager</mat-label>
+          <input matInput formControlName="approvedAccountantName" readonly>
+        </mat-form-field>
+      </div>
       <mat-form-field appearance="outline" class="opacity-75">
         <mat-label>Created by</mat-label>
         <input matInput formControlName="logger" required readonly>
       </mat-form-field>
-      <!-- Action Buttons -->   <div id="butpanel">
-      <button type="button" class="btn btn-dark btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
-      <button type="button" class="btn btn-dark btn-lg" (click)="update()" [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update</button>
-      <button type="button" class="btn btn-dark btn-lg" (click)="delete()" [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete</button>
-      <button type="button" class="btn btn-dark btn-lg" (click)="clear()">Clear</button>
-    </div>
+      <!-- Action Buttons -->
+      <div id="butpanel">
+        <button type="button" class="btn btn-dark btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">
+          Add
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="update()"
+                [disabled]="!(enaupd && hasUpdateAuthority && !disableModify)">Update
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="delete()"
+                [disabled]="!(enadel && hasDeleteAuthority && !disableModify)">Delete
+        </button>
+        <button type="button" class="btn btn-dark btn-lg" (click)="clear()">Clear</button>
+      </div>
     </form>
-
 
 
   </div>
@@ -132,10 +161,10 @@
   <div search>
     <form [formGroup]="ssearch" class="form-container">
       <div class="input-group mb-3">
-        <input type="text" formControlName="ssfullname" class="form-control search-bar-items" placeholder="  PO Number"
+        <input type="text" formControlName="ssponumber" class="form-control search-bar-items" placeholder="  PO Number"
                style="border-radius: 40px 0 0 40px ">
-        <input type="date" formControlName="ssnic" class="form-control search-bar-items" placeholder="Date">
-        <select formControlName="ssgender" class="form-select gender-drop-down">
+        <input type="date" formControlName="ssdate" class="form-control search-bar-items" placeholder="Date">
+        <select formControlName="ssstatus" class="form-select gender-drop-down">
           <option [value]="null" selected disabled>Status</option>
           <option *ngFor="let status of paperPorderStatuses" [value]="status.id">{{ status.name }}</option>
         </select>

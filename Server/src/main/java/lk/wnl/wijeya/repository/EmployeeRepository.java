@@ -19,7 +19,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     boolean existsByMobile(String mobile);
 
-    @Query("SELECT NEW Employee(e.id, e.callingname,e.designation) FROM Employee e")
+    @Query("SELECT NEW Employee(e.id,e.fullname ,e.callingname,e.designation) FROM Employee e")
     List<Employee> findAllNameIdDesignation();
 
 

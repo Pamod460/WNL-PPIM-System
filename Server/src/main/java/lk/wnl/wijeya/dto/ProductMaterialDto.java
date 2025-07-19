@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class ProductMaterialDto {
     private Integer id;
-    private Product product;
     private Integer quantity;
     private BigDecimal lineCost;
+    private MaterialDto material;
 }

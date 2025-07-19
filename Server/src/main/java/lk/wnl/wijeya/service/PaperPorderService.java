@@ -15,11 +15,17 @@ public interface PaperPorderService {
 
     List<PaperPorderDto> getAllPaperPorders(HashMap<String, String> params, String authHeader);
 
-    ResponseEntity<Map<String, String>> getLastPaperPONumber();
+
+
+    ResponseEntity<Map<String, String>> getNextCode(String textPart);
 
     ResponseEntity<StandardResponse> savePaperPorder(PaperPorderDto PaperPorderDto);
 
     ResponseEntity<StandardResponse> UpdatePaperPorder(PaperPorderDto agent);
 
     ResponseEntity<StandardResponse> deletePaperPorder(Integer id);
+
+    void updatePaperPorderStatus(Integer paperPOrderId, Integer statusId);
+
+    void updatePorderReceivingStatus(Integer porderId);
 }

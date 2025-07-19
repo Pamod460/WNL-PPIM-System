@@ -1,6 +1,7 @@
 package lk.wnl.wijeya.dto;
 
 import lk.wnl.wijeya.entity.Material;
+import lk.wnl.wijeya.entity.Paper;
 import lk.wnl.wijeya.entity.PaperPorderPaper;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.util.Set;
 public class PaperPorderPaperDto {
 
     private Integer id;
-    private Material material;
+    private PaperDto paper;
     private Integer quentity;
     private BigDecimal expectedLineCost;
 }

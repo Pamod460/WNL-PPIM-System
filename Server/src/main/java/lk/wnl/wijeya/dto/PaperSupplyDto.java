@@ -1,6 +1,7 @@
 package lk.wnl.wijeya.dto;
 
 import lk.wnl.wijeya.entity.Paper;
+import lk.wnl.wijeya.entity.PaperType;
 import lk.wnl.wijeya.entity.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,5 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class PaperSupplyDto {
     private Integer id;
-    private Paper paper;
-    private Supplier supplier;
-
+    private PaperTypeDto paperType;
 }

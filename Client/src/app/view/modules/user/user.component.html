@@ -4,16 +4,13 @@
 
     <form [formGroup]="form">
       <!--      Logger-->
-      <mat-form-field appearance="outline" class="opacity-75">
-        <mat-label>Created by</mat-label>
-        <input matInput formControlName="logger" required readonly>
-      </mat-form-field>
+
 
       <mat-form-field appearance="outline">
         <mat-label>Employee</mat-label>
         <mat-select formControlName="employee">
           <mat-option [value]="null" selected>Not Selected</mat-option>
-          <mat-option *ngFor="let employee of employees" [value]="employee">{{ employee.callingname +" - "+employee.designation.name }}</mat-option>
+          <mat-option *ngFor="let employee of employees" [value]="employee">{{ employee.fullname +" - "+employee.designation.name }}</mat-option>
         </mat-select>
       </mat-form-field>
 
@@ -96,7 +93,10 @@
           <mat-option *ngFor="let usertype of usertypes" [value]="usertype">{{ usertype.name }}</mat-option>
         </mat-select>
       </mat-form-field>
-
+      <mat-form-field appearance="outline" class="opacity-75">
+        <mat-label>Created by</mat-label>
+        <input matInput formControlName="logger" required readonly>
+      </mat-form-field>
       <div id="butpanel">
 
         <button type="button" class="btn btn-dark btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">

@@ -475,7 +475,7 @@ body {
   }
 
   .chart-details-btn {
-    position: static;
-    margin-top: 15px;
+    /*position: static;*/
+    /*margin-top: 15px;*/
   }
 }

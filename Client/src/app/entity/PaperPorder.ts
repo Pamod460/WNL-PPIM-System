@@ -1,5 +1,6 @@
 import {PaperPorderStatus} from "./PaperPorderStatus";
 import {PaperPorderPaper} from "./PaperPorderPaper";
+import {Supplier} from "./Supplier";
 
 
 export class PaperPorder{
@@ -10,5 +11,11 @@ export class PaperPorder{
   description?: string;
   logger?: string;
   paperPorderStatus?: PaperPorderStatus;
-  paperPorderMaterials?: PaperPorderPaper[];
+  paperPorderPapers?: PaperPorderPaper[];
+  supplier?:Supplier
+  smApproved!: boolean;
+  accountentApproved !:boolean;
+  approvedManagerName!: string;
+  approvedAccountantName!: string;
+
 }

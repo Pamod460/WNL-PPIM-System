@@ -169,15 +169,21 @@ export class UserComponent implements OnInit {
 
     this.form.controls["password"].valueChanges.subscribe({
       next: next => {
-        // console.log(next, next.split("WaterBoard@25"))
-        this.isPwViewable = !(next == "WaterBoard@25" || next.split("WaterBoard@25").length > 1);
+        if (next === null || next === undefined) {
+          this.isPwViewable = true;
+          return;
+        }
+        this.isPwViewable = !(next === "WaterBoard@25" || next.split("WaterBoard@25").length > 1);
       }
-    })
+    });
+
     this.form.controls["confirmpassword"].valueChanges.subscribe({
       next: next => {
-        this.isConfPwViewable = !(next == "WaterBoard@25" || next.split("WaterBoard@25").length > 1);
+        const value = next ?? '';
+        this.isConfPwViewable = !(value === "WaterBoard@25" || value.split("WaterBoard@25").length > 1);
       }
-    })
+    });
+
 
   }
 
@@ -600,6 +606,8 @@ export class UserComponent implements OnInit {
     this.selectedrow = null;
     this.createForm();
     this.leftAll();
+    this.form.get("logger")?.setValue(this.authService.getUsername());
+    this.form.get("tocreated")?.setValue(this.datePipe.transform(Date.now(), "hh:mm:ss"));
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
     });

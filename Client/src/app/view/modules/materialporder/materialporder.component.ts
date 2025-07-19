@@ -31,9 +31,9 @@ import {MaterialPorderMaterial} from "../../../entity/MaterialPorderMaterial";
   styleUrls: ['./materialporder.component.css']
 })
 export class MaterialporderComponent implements OnInit {
-  columns: string[] = ['number', 'date', 'supplier'];
-  headers: string[] = ['PO Number', 'Date', 'Status'];
-  binders: string[] = ['poNumber', 'date', 'supplier.name'];
+  columns: string[] = ['number', 'date', 'supplier', 'status', 'expectedCost'];
+  headers: string[] = ['PO Number', 'Date', 'Supplier' , 'Status', 'Expected Cost'];
+  binders: string[] = ['poNumber', 'date', 'supplier.name', 'materialPorderStatus.name', 'expectedCost'];
   defaultProfile = 'assets/default.png';
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
@@ -77,6 +77,9 @@ export class MaterialporderComponent implements OnInit {
   grandTotal = 0
   smRole? = false;
   accRole? = false;
+  approvalStatus = 'Not approved';
+  isDisabledSmApproval = false;
+  isDisabledAcApproval = false;
 
   constructor(
     private materialPorderService: MaterialPorderService,
@@ -98,7 +101,7 @@ export class MaterialporderComponent implements OnInit {
       "ssdate": new FormControl(),
     });
     this.form = this.formBuilder.group({
-      poNumber: new FormControl('', [Validators.maxLength(6)]),
+      poNumber: new FormControl('', [Validators.maxLength(20)]),
       date: new FormControl('', [Validators.required]),
       expectedCost: new FormControl(null, [Validators.required]),
       description: new FormControl(''),
@@ -113,7 +116,7 @@ export class MaterialporderComponent implements OnInit {
     }, {updateOn: 'change'});
     this.materialForm = this.formBuilder.group({
       material: [null, Validators.required],
-      quentity: [0, [Validators.required, Validators.min(1)]],
+      quantity: [0, [Validators.required, Validators.min(1)]],
       expectedLineCost: [0]
     });
 
@@ -121,37 +124,50 @@ export class MaterialporderComponent implements OnInit {
     this.minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate()); // 60 years ago
     this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()); // 18 years ago
 
-    this.materialForm.get("quentity")?.valueChanges.subscribe(values => {
-
-      this.updatePrices(values)
+    this.materialForm.get("quantity")?.valueChanges.subscribe(value => {
+      const material = this.materialForm.get("material")?.value;
+      if (material && value > 0) {
+        this.updatePrices(value);
+      } else {
+        this.materialForm.get("expectedLineCost")?.setValue(null);
+      }
     })
-this.form.get("materialPorderStatus")?.disable()
+    this.form.get("logger")?.setValue(this.authService.getUsername());
+
+    // this.form.get("materialPorderStatus")?.disable()
 
 
   }
 
-  updatePrices(values: number) {
+  updatePrices(quantity: number) {
 
-    const unitPrice = this.materialForm.get("material")?.value.unitprice
-    const lineTotal = unitPrice * values
-    this.materialForm.get("expectedLineCost")?.setValue(lineTotal)
+    const material = this.materialForm.get("material")?.value;
+    if (!material || quantity <= 0) {
+      this.materialForm.get("expectedLineCost")?.setValue(null);
+      return;
+    }
+
+    const unitPrice = material.unitPrice || 0;
+    const lineTotal = unitPrice * quantity;
+    this.materialForm.get("expectedLineCost")?.setValue(lineTotal);
 
   }
 
   addToTable() {
     this.inndata = this.materialForm.getRawValue();
-    console.log(this.inndata.quentity)
+
     // Validate material input
-    if (!this.inndata.material || this.inndata.quentity == 0) {
+    if (!this.inndata.material || this.inndata.quantity == 0) {
       this.showMessageDialog("Errors - Material POrder Add", "Please Add Required Details");
       return;
     }
 
-    const quantity = this.inndata.quentity || 0;
-    const unitPrice = this.inndata.material?.unitprice || 0;
+    const quantity = this.inndata.quantity || 0;
+    const unitPrice = this.inndata.material?.unitPrice || 0;
     const expectedLineCost = quantity * unitPrice;
     this.grandTotal += expectedLineCost
     this.form.get("expectedCost")?.setValue(this.grandTotal);
+    console.log(this.inndata);
     const newEntry = new MaterialPorderMaterial(
       this.id,
       this.inndata.material,
@@ -216,24 +232,24 @@ this.form.get("materialPorderStatus")?.disable()
       if (indexToDelete > -1) {
         const material = this.innerdata[indexToDelete]?.material;
 
-        // Re-add the material to the filtered list if not already present
         if (material?.id) {
-          const existingMaterial = this.materialList.find(e => e.id === material.id);
-          const isAlreadyInFiltered = this.filteredMaterialList.some(e => e.id === material.id);
-
-          if (existingMaterial && !isAlreadyInFiltered) {
-            this.filteredMaterialList.push(existingMaterial);
+          if (!this.filteredMaterialList.some(e => e.id === material.id)) {
+            this.filteredMaterialList = [material, ...this.filteredMaterialList];
           }
         }
-
-        // Remove the entry from innerdata
         this.innerdata.splice(indexToDelete, 1);
+        this.calculateGrandTotal();
         this.isInnerDataUpdated = true;
       }
     });
   }
 
-
+  calculateGrandTotal(): void {
+    this.grandTotal = this.innerdata.reduce((total, item) => {
+      return total + (item.expectedLineCost || 0);
+    }, 0);
+    this.form.get("expectedCost")?.setValue(this.grandTotal);
+  }
   trackByInnerData(index: number, item: any): any {
     return item?.id || index;
   }
@@ -247,7 +263,6 @@ this.form.get("materialPorderStatus")?.disable()
     this.createView();
 
     this.regexService.get('materialporder').subscribe((regs: []) => {
-      console.log(regs)
       this.regexes = regs;
       this.createForm();
     });
@@ -264,7 +279,7 @@ this.form.get("materialPorderStatus")?.disable()
         next:
           (statuses: MaterialPorderStatus[]) => {
             this.materialPorderStatuses = statuses;
-            this.form.get("materialPorderStatus")?.setValue( this.materialPorderStatuses.find(m=>m.id==1))
+            // this.form.get("materialPorderStatus")?.setValue(this.materialPorderStatuses.find(m => m.id == 1))
           }, error: (error: any) => {
           console.error('Error fetching Material POrder  statuses:', error);
         }
@@ -278,15 +293,14 @@ this.form.get("materialPorderStatus")?.disable()
         console.error('Error fetching Material POrder  statuses:', error);
       }
     })
-    this.form.get("date")?.setValue( this.today)
+    this.form.get("date")?.setValue(this.today)
 
     const authoritiesArray = this.authService.getAuthorities();
     if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
       const authorities = this.authService.extractAuthorities(authoritiesArray);
       this.buttonStates(authorities);
     }
-    this.form.get("logger")?.setValue(this.authService.getUsername());
-
+    this.getNextCode();
   }
 
   get materials(): FormArray {
@@ -310,12 +324,9 @@ this.form.get("materialPorderStatus")?.disable()
       control.valueChanges.subscribe(value => {
 
 
-          if (controlName == "doRegisterd")
-            value = this.datePipe.transform(new Date(value), 'yyyy-MM-dd');
-
           if (this.oldMaterialPorder != undefined && control.valid) {
             // @ts-ignore
-            if (value === this.MaterialPorder[controlName]) {
+            if (value === this.materialPorder[controlName]) {
               control.markAsPristine();
             } else {
               control.markAsDirty();
@@ -366,7 +377,7 @@ this.form.get("materialPorderStatus")?.disable()
 
     const number = sserchdata.ssponumber;
     const date = sserchdata.ssdate;
-    const mpstatusid = sserchdata.ssgender;
+    const mpstatusid = sserchdata.ssstatus;
 
     let query = "";
 
@@ -474,40 +485,67 @@ this.form.get("materialPorderStatus")?.disable()
     return errors;
   }
 
+  onApprovalChange(isApproved: boolean) {
+    this.approvalStatus = isApproved ? 'Approved' : 'Not approved';
+  }
 
-  fillForm(MaterialPorder: MaterialPorder) {
+  fillForm(materialPorder: MaterialPorder) {
 
-    if (this.authService.getRoles() != null) {
-      this.smRole = this.authService.getRoles()?.some(role => role.name === "Store Manager");
-      if (this.smRole) {
-        this.form.get("smApproved")?.valueChanges.subscribe(() => {
-          this.form.get("approvedManagername")?.setValue(this.authService.getUsername())
 
-        })
-      }
-
-      this.accRole = this.authService.getRoles()?.some(role => role.name === "Accountant");
-      if (this.accRole) {
-        this.form.get("accountentApproved")?.valueChanges.subscribe(() => {
-          this.form.get("approvedManagername")?.setValue(this.authService.getUsername())
-
-        })
-      }
-    }
     this.enableButtons(false, true, true);
     this.disableGenerateNo = true;
 
-    this.selectedrow = MaterialPorder;
+    this.selectedrow = materialPorder;
 
-    this.materialPorder = JSON.parse(JSON.stringify(MaterialPorder));
-    this.oldMaterialPorder = JSON.parse(JSON.stringify(MaterialPorder));
+    this.materialPorder = JSON.parse(JSON.stringify(materialPorder));
+    this.oldMaterialPorder = JSON.parse(JSON.stringify(materialPorder));
     this.innerdata = this.materialPorder.materialPorderMaterials ? this.materialPorder.materialPorderMaterials : []
+
+    this.isDisabledAcApproval = this.oldMaterialPorder.approvedAccountantName != this.authService.getUsername()
 
     this.materialPorder.materialPorderStatus = this.materialPorderStatuses.find(s => s.id === this.materialPorder.materialPorderStatus?.id);
     this.materialPorder.supplier = this.suppliers.find(s => s.id === this.materialPorder.supplier?.id);
 
-
     this.form.patchValue(this.materialPorder);
+
+
+    if (this.authService.getRoles() != null) {
+      const roles = this.authService.getRoles();
+      const username = this.authService.getUsername().toLowerCase();
+      // @ts-ignore
+      this.smRole = roles.some(role => role.name === "Store Manager" || role.name === "Admin");
+      this.isDisabledSmApproval = !!this.oldMaterialPorder.approvedManagerName &&
+        this.oldMaterialPorder.approvedManagerName.toLowerCase() !== username;
+
+
+      if (this.smRole) {
+        this.form.get("smApproved")?.valueChanges.subscribe(checked => {
+          this.form.get("approvedManagerName")?.setValue(checked ? this.authService.getUsername() : null);
+        });
+
+        // Set initial value based on existing approval
+        const isApproved = !!materialPorder.approvedManagerName;
+        this.form.get("smApproved")?.setValue(isApproved, {emitEvent: false});
+        this.form.get("approvedManagerName")?.setValue(materialPorder.approvedManagerName);
+      }
+      // @ts-ignore
+      this.accRole = roles.some(role => role.name === "Accountant" || role.name === "Admin");
+      this.isDisabledAcApproval = !!this.oldMaterialPorder.approvedAccountantName &&
+        this.oldMaterialPorder.approvedAccountantName.toLowerCase() !== username;
+
+
+      if (this.accRole) {
+        this.form.get("accountentApproved")?.valueChanges.subscribe(checked => {
+          this.form.get("approvedAccountantName")?.setValue(checked ? this.authService.getUsername() : null);
+        });
+
+        const isApproved = !!materialPorder.approvedAccountantName;
+        this.form.get("accountentApproved")?.setValue(isApproved, {emitEvent: false});
+        this.form.get("approvedAccountantName")?.setValue(materialPorder.approvedAccountantName);
+      }
+    }
+
+
     this.form.markAsPristine();
   }
 
@@ -634,7 +672,6 @@ this.form.get("materialPorderStatus")?.disable()
       if (result) {
         this.resetForm()
         this.clearInnerTable()
-        this.initialize()
 
       }
     });
@@ -647,6 +684,8 @@ this.form.get("materialPorderStatus")?.disable()
     this.clearInnerTable()
     this.form.controls['description'].markAsPristine();
     this.smRole = false
+    this.accRole = false
+    this.form.get("logger")?.setValue(this.authService.getUsername());
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
     });
@@ -667,9 +706,66 @@ this.form.get("materialPorderStatus")?.disable()
     }
   }
 
+  getNextCode() {
+
+    this.materialPorderService.getNextCode("MPO-").subscribe(code => {
+      this.form.controls["poNumber"].setValue(code.code);
+    });
+  }
+
   getColumnClass(columnIndex: number) {
     return this.tableUtils.getColumnSizeClass(this.data, this.binders, columnIndex, this.uiassist);
   }
 
 }
 
+// if (this.authService.getRoles() != null) {
+//   this.smRole = this.authService.getRoles()?.some(role => role.name === "Store Manager" || role.name === "Admin");
+//
+//   this.isDisabledSmApproval = this.oldMaterialPorder.approvedManagerName ? this.oldMaterialPorder.approvedManagerName.toLowerCase() != this.authService.getUsername().toLowerCase() : false
+//
+//   if (this.smRole && !materialPorder.approvedManagerName) {
+//     this.form.get("smApproved")?.valueChanges.subscribe(checked => {
+//       if (checked) {
+//         this.form.get("approvedManagerName")?.setValue(this.authService.getUsername())
+//       } else {
+//         this.form.get("approvedManagerName")?.setValue(null)
+//       }
+//
+//     })
+//   }
+//
+//   this.accRole = this.authService.getRoles()?.some(role => role.name === "Accountant" || role.name === "Admin");
+//   this.isDisabledAcApproval = this.oldMaterialPorder.approvedAccountantName ? this.oldMaterialPorder.approvedAccountantName.toLowerCase() != this.authService.getUsername().toLowerCase() : false
+//   if (this.accRole && !materialPorder.approvedAccountantName) {
+//     this.form.get("accountentApproved")?.valueChanges.subscribe(checked => {
+//       if (checked) {
+//         this.form.get("approvedAccountantName")?.setValue(this.authService.getUsername())
+//       } else {
+//         this.form.get("approvedAccountantName")?.setValue(null)
+//       }
+//     })
+//   }
+// }
+
+// if (this.smRole) {
+//   if (!materialPorder.approvedManagerName){
+//     this.form.get("smApproved")?.valueChanges.subscribe(checked => {
+//       this.form.get("approvedManagerName")?.setValue(checked ? this.authService.getUsername() : null);
+//     });
+//   }
+//  else {
+//     this.form.get("approvedManagerName")?.setValue(this.oldMaterialPorder.approvedManagerName);
+//   }
+// }
+
+// if (this.accRole) {
+//   if (!materialPorder.approvedAccountantName){
+//     this.form.get("accountentApproved")?.valueChanges.subscribe(checked => {
+//       this.form.get("approvedAccountantName")?.setValue(checked ? this.authService.getUsername() : null);
+//     });
+//   }
+//   else {
+//     this.form.get("approvedAccountantName")?.setValue(this.oldMaterialPorder.approvedAccountantName);
+//   }
+// }

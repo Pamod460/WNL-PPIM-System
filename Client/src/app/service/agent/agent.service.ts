@@ -33,7 +33,7 @@ export class AgentService {
     return this.http.post<StandardResponse>(`${this.API_URL}`, agent);
   }
 
-  getLastEmpCode() {
+  getLastAgentCode() {
     return this.http.get<{code:string}>(`${this.API_URL}/last`);
   }
 }

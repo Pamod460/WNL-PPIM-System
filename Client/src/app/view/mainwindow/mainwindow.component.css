@@ -154,7 +154,7 @@ mat-sidenav {
   /*background: #2a2185;*/
   border-left: 10px solid #2a2185;
   /*transition: 0.5s;*/
-  overflow: hidden;
+  overflow: auto;
 }
 
 .navigation.active {
@@ -282,6 +282,7 @@ mat-sidenav.mini .icon {
   border-radius: 50%;
   box-shadow: 35px 35px 0 10px #f3f5fa;
   pointer-events: none;
+
 }
 
 .main-menu-item:hover a::after,
@@ -370,7 +371,7 @@ mat-sidenav.mini .icon {
 }
 
 .accordion-item-header, .sub-menu-item {
-  width: 250px;
+  width: 240px !important;
   color: #f3f5fa;
   position: relative;
   list-style: none;
@@ -485,4 +486,154 @@ lbl-user {
   flex-direction: column;
   align-items: flex-end;
   justify-content:center;
+}
+/* Hide scrollbar but keep scroll functionality */
+mat-sidenav {
+  /* Your existing styles */
+  background-color: #000;
+  overflow: hidden;
+  transition: width 0.3s ease-in-out;
+
+  /* Hide scrollbar for webkit browsers (Chrome, Safari, Edge) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for Firefox */
+  scrollbar-width: none;
+
+  /* Enable scrolling */
+  overflow-y: auto;
+  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+}
+
+/* Alternative approach - apply to the ul container */
+mat-sidenav ul {
+  /* Hide scrollbar but keep scroll functionality */
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+}
+
+
+.accordion-button {
+  background: #51575d !important;
+  border: none;
+  box-shadow: none;
+  width: 250px;
+  color: #f3f5fa !important;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  position: relative;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: #f3f5fa !important;
+  color: #51575d !important;
+}
+
+.accordion-button:not(.collapsed) a::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -50px;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  border-radius: 50%;
+  box-shadow: 35px 35px 0 10px #f3f5fa;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.accordion-button:not(.collapsed) a::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: -50px;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  border-radius: 50%;
+  box-shadow: 35px -35px 0 10px #f3f5fa;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.accordion-button:hover {
+  background-color: #f3f5fa !important;
+  color: #51575d !important;
+}
+
+.accordion-button .icon {
+  margin-right: 10px;
+}
+
+.accordion-button .title {
+  flex-grow: 1;
+}
+
+.sub-menu-item {
+  position: relative;
+  width: 230px;
+  padding: 10px;
+  list-style: none;
+  background: #51575d;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+  margin-bottom: 5px;
+}
+
+.sub-menu-item a {
+  color: #f3f5fa;
+  display: flex;
+  align-items: center;
+}
+
+.sub-menu-item:hover {
+  background-color: #f3f5fa;
+}
+
+.sub-menu-item:hover .title,
+.sub-menu-item:hover .mat-icon {
+  color: #51575d !important;
+}
+
+.active-link {
+  background-color: #f3f5fa;
+  border-radius: 40px 0 0 40px;
+}
+
+.active-link .mat-icon,
+.active-link .title {
+  color: #51575d !important;
+}
+
+.accordion-item {
+  background: none !important;
+  border: none;
+}
+
+.accordion-body {
+  padding:  10px;
+}
+
+mat-sidenav.mini .accordion-button::before,
+mat-sidenav.mini .accordion-button::after {
+  display: none;
+}
+
+mat-sidenav.mini .accordion-body {
+  display: none;
+}
+
+mat-sidenav:not(.mini) .accordion-body {
+  display: block;
 }

@@ -1,0 +1,18 @@
+<!-- landing-page.component.html -->
+<div class="landing-container">
+  <!-- Header -->
+  <header class="header">
+    <nav class="navbar">
+      <div class="nav-brand" routerLink="/public/welcome">
+        <h2>Wijeya Newspapers Agent Portal</h2>
+      </div>
+      <div class="nav-menu">
+        <button class="btn btn-outline" (click)="navigateToLogin()">Login</button>
+        <button class="btn btn-primary" (click)="navigateToRegister()">Register</button>
+      </div>
+    </nav>
+  </header>
+<div class="mt-5 w-100 cus-container">
+  <router-outlet></router-outlet>
+</div>
+

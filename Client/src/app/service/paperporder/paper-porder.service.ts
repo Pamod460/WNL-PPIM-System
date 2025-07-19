@@ -33,4 +33,9 @@ export class PaperPorderService {
 
     return this.http.post<StandardResponse>(`${this.API_URL}`, paper);
   }
+
+  getNextCode(textPart: string) {
+    return this.http.get<{code:string}>(`${this.API_URL}/next?textPart=`+textPart);
+
+  }
 }

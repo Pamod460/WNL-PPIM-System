@@ -87,4 +87,10 @@ public class Employee {
         this.designation=designation;
     }
 
+    public Employee(Integer id, String fullname, String callingname, Designation designation) {
+        this.id = id;
+        this.fullname = fullname;
+        this.callingname = callingname;
+        this.designation = designation;
+    }
 }

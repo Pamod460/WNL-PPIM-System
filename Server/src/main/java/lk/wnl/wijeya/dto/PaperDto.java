@@ -19,14 +19,14 @@ public class PaperDto {
     private String code;
     private LocalDate doIntroduced;
     private String description;
-    private PaperGsm paperGsm;
-    private PaperSize paperSize;
-    private PaperType paperType;
-    private PaperColor paperColor;
-    private PaperStatus paperStatus;
-    private Integer rop;
-    private Integer qoh;
-    private PaperUnitType paperUnitType;
+    private PaperGsmDto paperGsm;
+    private PaperSizeDto paperSize;
+    private PaperTypeDto paperType;
+    private PaperColorDto paperColor;
+    private PaperStatusDto paperStatus;
+    private BigDecimal rop;
+    private BigDecimal qoh;
+    private PaperUnitTypeDto paperUnitType;
     private String logger;
 
     public PaperDto(Integer id, String name) {

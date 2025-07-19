@@ -2,6 +2,13 @@
   <div form>
     <form [formGroup]="form">
       <mat-form-field appearance="outline">
+        <mat-label>Paper Type</mat-label>
+        <mat-select formControlName="paperType">
+          <mat-option [value]="null">Not Selected</mat-option>
+          <mat-option *ngFor="let type of paperTypes" [value]="type">{{ type.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
         <mat-label>Code</mat-label>
         <input matInput formControlName="code">
       </mat-form-field>
@@ -26,13 +33,6 @@
         <input matInput type="number" formControlName="rop" min="0">
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Paper Type</mat-label>
-        <mat-select formControlName="paperType">
-          <mat-option [value]="null">Not Selected</mat-option>
-          <mat-option *ngFor="let type of paperTypes" [value]="type">{{ type.name }}</mat-option>
-        </mat-select>
-      </mat-form-field>
 
       <mat-form-field appearance="outline">
         <mat-label>Paper GSM</mat-label>

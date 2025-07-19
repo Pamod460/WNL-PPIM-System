@@ -25,7 +25,7 @@ public class PaperPorderDto {
     private String approvedAccountantName;
     private Boolean smApproved;
     private Boolean accountentApproved;
-
+    private PaperPorderStatusDto paperPorderStatus;
 
 
     public PaperPorderDto(Integer id, String poNumber) {

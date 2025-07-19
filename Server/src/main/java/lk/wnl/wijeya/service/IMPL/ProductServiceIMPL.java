@@ -4,9 +4,11 @@ import lk.wnl.wijeya.dto.ProductDto;
 import lk.wnl.wijeya.entity.Product;
 import lk.wnl.wijeya.entity.ProductMaterial;
 import lk.wnl.wijeya.entity.ProductPaper;
+import lk.wnl.wijeya.entity.User;
 import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
 import lk.wnl.wijeya.exception.ResourceNotFoundException;
 import lk.wnl.wijeya.repository.ProductRepository;
+import lk.wnl.wijeya.repository.UserRepository;
 import lk.wnl.wijeya.service.ProductService;
 import lk.wnl.wijeya.util.StandardResponse;
 import lk.wnl.wijeya.util.mapper.ObjectMapper;
@@ -23,7 +25,7 @@ import java.util.Map;
 public class ProductServiceIMPL implements ProductService {
     private final ObjectMapper objectMapper;
     private final ProductRepository productRepository;
-
+private final UserRepository userRepository;
     @Override
     public List<ProductDto> getAllList() {
 
@@ -32,10 +34,13 @@ public class ProductServiceIMPL implements ProductService {
 
     @Override
     public ResponseEntity<StandardResponse> save(ProductDto productDto) {
+        User loggeruser = userRepository.findByUsername(productDto.getLogger());
         if (productRepository.existsByCode(productDto.getCode())) {
             throw new ResourceAlreadyExistException("Product already exists");
         }
         Product product = objectMapper.toProduct(productDto);
+        product.setCreatedBy(loggeruser);
+
         for (ProductMaterial p : product.getProductMaterials()) p.setProduct(product);
         for (ProductPaper p : product.getProductPapers()) p.setProduct(product);
 
@@ -47,8 +52,6 @@ public class ProductServiceIMPL implements ProductService {
     public ResponseEntity<StandardResponse> update(ProductDto productDto) {
         Product existingProduct = productRepository.findById(productDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-
-        // Check if the code exists for a different product
         if (productRepository.existsByCodeAndIdNot(productDto.getCode(), productDto.getId())) {
             throw new ResourceAlreadyExistException("Product already exists");
         }
@@ -57,6 +60,8 @@ public class ProductServiceIMPL implements ProductService {
         existingProduct.getProductMaterials().clear();
 
         Product product = objectMapper.toProduct(productDto);
+        product.setCreatedBy(existingProduct.getCreatedBy());
+
         for (ProductMaterial p : product.getProductMaterials()) p.setProduct(product);
         for (ProductPaper p : product.getProductPapers()) p.setProduct(product);
 
@@ -69,7 +74,7 @@ public class ProductServiceIMPL implements ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-//        productRepository.delete(product);
+        productRepository.delete(product);
         return ResponseEntity.ok(new StandardResponse(200, "Successfully Deleted", id));
     }
 

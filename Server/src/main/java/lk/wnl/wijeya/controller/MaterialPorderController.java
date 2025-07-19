@@ -26,14 +26,16 @@ public class MaterialPorderController {
     }
 
     @GetMapping(produces = "application/json")
-    public List<MaterialPorderDto> get(@RequestParam HashMap<String, String> params,@RequestHeader(value = "Authorization", required = false) String authHeader) {
+    public List<MaterialPorderDto> get(@RequestParam HashMap<String, String> params,
+                                       @RequestHeader(value = "Authorization", required = false) String authHeader
+    ) {
         return materialPorderService.getAllMaterialPorders(params,authHeader);
     }
 
 
-    @GetMapping(value = "/last", produces = "application/json")
-    public ResponseEntity<Map<String, String>> getLastMaterialPorder() {
-        return materialPorderService.getLastMaterialPONumber();
+    @GetMapping(value = "/next", produces = "application/json")
+    public ResponseEntity<Map<String, String>> getNextCode(@RequestParam("textPart") String textPart) {
+        return materialPorderService.getNextCode(textPart);
     }
 
     @PostMapping

@@ -8,18 +8,7 @@
       <!-- Stats Cards Row -->
       <div class="stats-container">
         <!-- Available Vehicles -->
-        <div class="stat-card green-card">
-          <div class="card-header">
-            <span class="card-title">AVAILABLE VEHICLES</span>
-            <div class="card-icon green-icon">
-              <i class="fas fa-truck"></i>
-            </div>
-          </div>
-          <div class="card-number">{{ totalVehicles }}</div>
-          <button class="details-btn" (click)="onSeeMoreDetails('vehicles')">
-            See More Details
-          </button>
-        </div>
+
 
         <!-- Total Suppliers -->
         <div class="stat-card blue-card">
@@ -30,7 +19,7 @@
             </div>
           </div>
           <div class="card-number">{{ totalSuppliers }}</div>
-          <button class="details-btn" (click)="onSeeMoreDetails('suppliers')">
+          <button class="details-btn" routerLink="../supplier">
             See More Details
           </button>
         </div>
@@ -43,8 +32,8 @@
               <i class="fas fa-newspaper"></i>
             </div>
           </div>
-          <div class="card-number">{{ totalAgents }}</div>
-          <button class="details-btn" (click)="onSeeMoreDetails('employees')">
+          <div class="card-number">{{ totalProducts }}</div>
+          <button class="details-btn" routerLink="../product">
             See More Details
           </button>
         </div>
@@ -57,8 +46,20 @@
               <i class="fas fa-user-friends"></i>
             </div>
           </div>
-          <div class="card-number">{{ totalProducts }}</div>
-          <button class="details-btn" (click)="onSeeMoreDetails('customers')">
+          <div class="card-number">{{ totalAgents }}</div>
+          <button class="details-btn" routerLink="../agent">
+            See More Details
+          </button>
+        </div>
+        <div class="stat-card green-card">
+          <div class="card-header">
+            <span class="card-title">AVAILABLE VEHICLES</span>
+            <div class="card-icon green-icon">
+              <i class="fas fa-truck"></i>
+            </div>
+          </div>
+          <div class="card-number">{{ totalVehicles }}</div>
+          <button class="details-btn" routerLink="../vehicle">
             See More Details
           </button>
         </div>
@@ -67,42 +68,54 @@
       <!-- Bottom Section -->
       <div class="bottom-container">
         <!-- Contact Details -->
-        <div class="contact-panel">
-          <h3 class="panel-title">Contact Details</h3>
-          <div class="contact-list">
-            <div class="contact-row" *ngFor="let contact of contactDetails">
-              <div class="contact-icon-wrapper">
-                <i [class]="getIconClass(contact.icon)" [style.color]="contact.color"></i>
-              </div>
-              <div class="contact-details">
-                <div class="contact-name">{{ contact.department }}</div>
-                <div class="contact-email">{{ contact.email }}</div>
-                <div class="contact-desc">{{ contact.description }}</div>
-                <div class="contact-phone" *ngIf="contact.phone">Tel: {{ contact.phone }}</div>
-              </div>
-            </div>
+        <div class="chart-panel">
+          <div>
+            <app-inventory-rop-chart [inventoryData]="paperInventoryData" [chartTitle]="'Paper Inventory Status'"></app-inventory-rop-chart>
+
+            <button class="details-btn chart-details-btn" routerLink="../paper">
+              See More Details
+            </button>
           </div>
+
+<!--          <h3 class="panel-title">Contact Details</h3>-->
+<!--          <div class="contact-list">-->
+<!--            <div class="contact-row" *ngFor="let contact of contactDetails">-->
+<!--              <div class="contact-icon-wrapper">-->
+<!--                <i [class]="getIconClass(contact.icon)" [style.color]="contact.color"></i>-->
+<!--              </div>-->
+<!--              <div class="contact-details">-->
+<!--                <div class="contact-name">{{ contact.department }}</div>-->
+<!--                <div class="contact-email">{{ contact.email }}</div>-->
+<!--                <div class="contact-desc">{{ contact.description }}</div>-->
+<!--                <div class="contact-phone" *ngIf="contact.phone">Tel: {{ contact.phone }}</div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
         </div>
 
         <!-- Chart Panel -->
         <div class="chart-panel">
-          <h3 class="panel-title">Percentage of Items Below and Above Reorder Point (ROP)</h3>
-          <div class="chart-content">
-            <div class="pie-chart-container">
-              <canvas #pieChart width="300" height="300"></canvas>
-              <div class="chart-legend">
-                <div class="legend-item">
-                  <div class="legend-dot green-dot"></div>
-                  <span>Above</span>
-                </div>
-                <div class="legend-item">
-                  <div class="legend-dot yellow-dot"></div>
-                  <span>Below</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button class="details-btn chart-details-btn" (click)="onSeeMoreDetails('chart')">
+
+          <app-inventory-rop-chart [inventoryData]="inventoryData" [chartTitle]="'Material Inventory Status'"></app-inventory-rop-chart>
+
+<!--          <h3 class="panel-title">Percentage of Items Below and Above Reorder Point (ROP)</h3>-->
+<!--          <div class="chart-content">-->
+<!--            <div class="pie-chart-container">-->
+<!--              <canvas #pieChart width="300" height="300"></canvas>-->
+<!--              <div class="chart-legend">-->
+<!--                <div class="legend-item">-->
+<!--                  <div class="legend-dot green-dot"></div>-->
+<!--                  <span>Above</span>-->
+<!--                </div>-->
+<!--                <div class="legend-item">-->
+<!--                  <div class="legend-dot yellow-dot"></div>-->
+<!--                  <span>Below</span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+          <button class="details-btn chart-details-btn" routerLink="../material" >
             See More Details
           </button>
         </div>

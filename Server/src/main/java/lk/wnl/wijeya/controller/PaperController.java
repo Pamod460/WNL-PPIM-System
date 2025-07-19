@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -27,14 +28,20 @@ public class PaperController {
     public List<PaperDto> getAllList() {
         return paperService.getAllList();
     }
+    @GetMapping(value = "/next", produces = "application/json")
+    public ResponseEntity<Map<String, String>> getNextCode(@RequestParam("textPart") String textPart) {
+        return paperService.getNextCode(textPart);
+    }
 
     @PostMapping(produces = "application/json")
     public ResponseEntity<StandardResponse> save(@RequestBody PaperDto paperDto) {
+        System.out.println(paperDto.getDoIntroduced());
         return paperService.save(paperDto);
     }
 
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody PaperDto paperDto) {
+        System.out.println(paperDto.getDoIntroduced());
         return paperService.update(paperDto);
 
     }

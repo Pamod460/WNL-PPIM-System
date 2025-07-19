@@ -2,12 +2,7 @@
   <div form>
 
     <form [formGroup]="form">
-<!--      Logger-->
-      <mat-form-field appearance="outline" class="opacity-75">
-        <mat-label>Created by</mat-label>
-        <input matInput formControlName="logger" required readonly>
-      </mat-form-field>
-      <!-- Material Category -->
+
       <mat-form-field appearance="outline">
         <mat-label>Material Category</mat-label>
         <mat-select formControlName="materialCategory">
@@ -26,7 +21,7 @@
       <!-- Code -->
       <mat-form-field appearance="outline">
         <mat-label>Code</mat-label>
-        <input matInput formControlName="code" required>
+        <input matInput formControlName="code" required readonly>
       </mat-form-field>
 
       <!-- Name -->
@@ -50,7 +45,7 @@
       <!-- Unit Price -->
       <mat-form-field appearance="outline">
         <mat-label>Unit Price</mat-label>
-        <input matInput type="number" formControlName="unitprice" required min="0">
+        <input matInput type="number" formControlName="unitPrice" required min="0">
       </mat-form-field>
       <!-- Unit Type -->
       <mat-form-field appearance="outline">
@@ -73,7 +68,7 @@
       <!-- Description -->
       <mat-form-field appearance="outline">
         <mat-label>Description</mat-label>
-        <input matInput formControlName="description">
+        <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
 
       <!-- Date Introduced -->
@@ -83,18 +78,15 @@
         <mat-datepicker-toggle matSuffix [for]="dateIntroduced"></mat-datepicker-toggle>
         <mat-datepicker #dateIntroduced></mat-datepicker>
       </mat-form-field>
+      <app-image-uploader title="Photo"
+                          [allowMultiple]="false"
+                          (filesChanged)="onPhotoChanged($event)" [preview]="form.get('photo')?.value" (fileRemoved)="onPhotoRemoved($event)">
+      </app-image-uploader>
 
-      <!-- Photo -->
-      <div id="imgpanel">
-        <img [src]="imageempurl" class="rounded-circle" alt="Photo" />
-        <input id="userImage" hidden (change)="selectImage($event)" type="file" formControlName="photo">
-
-        <button type="button" class="btn btn-dark" id="selectbutton" (click)="document.getElementById('userImage')?.click()">
-          Select
-        </button>
-        <button type="button" class="btn btn-dark" id="clearbutton" (click)="clearImage()">Clear</button>
-      </div>
-
+      <mat-form-field appearance="outline" class="opacity-75">
+        <mat-label>Created by</mat-label>
+        <input matInput formControlName="logger" required readonly>
+      </mat-form-field>
       <!-- Buttons -->
       <div id="butpanel">
         <button type="button" class="btn btn-dark btn-lg" (click)="add()" [disabled]="!(enaadd && hasInsertAuthority)">Add</button>
