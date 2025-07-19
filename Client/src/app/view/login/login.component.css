@@ -18,8 +18,9 @@
   height: 100%;
   overflow: hidden;
   z-index: 0;
+  background-color: #5b6169;
   /*background: linear-gradient(135deg, #4b6cb7, #182848) !important;*/
-  background: linear-gradient(135deg, #75787e, #43474d) !important;
+  /*background: linear-gradient(135deg, #75787e, #43474d) !important;*/
 
 }
 
@@ -125,7 +126,7 @@
 }
 
 .login-box {
-  /*backdrop-filter: blur(5px);*/
+  backdrop-filter: blur(5px);
   border-radius: 10px;
   height: 520px;
   display: flex;
@@ -171,43 +172,47 @@ a {
   text-decoration: underline;
 }
 
-.mat-form-field.appearance-outline {
+::ng-deep.mat-form-field.appearance-outline {
   background-color: transparent !important; /* Remove background */
   border: none !important; /* Optional: Change border color */
 }
 
-.mat-form-field .mat-input-element, .mat-form-field .mat-select-value, .mat-form-field .mat-select-arrow, .mat-form-field .mat-datepicker-toggle .mat-icon {
+::ng-deep.mat-form-field .mat-input-element, .mat-form-field .mat-select-value, .mat-form-field .mat-select-arrow, .mat-form-field .mat-datepicker-toggle .mat-icon {
   background-color: transparent !important; /* Transparent background */
-  color: white; /* Text color (optional) */
+  color: white !important; /* Text color (optional) */
 }
 
-.mat-form-field-focused .mat-form-field-outline {
-  border-color: black; /* Change border color on focus */
+::ng-deep.mat-form-field-focused .mat-form-field-outline {
+  border-color: white !important; /* Change border color on focus */
 }
 
-.mat-form-field .mat-input-element:focus, .mat-form-field .mat-select:focus, .mat-form-field .mat-datepicker-toggle:focus {
+::ng-deep.mat-form-field .mat-input-element:focus, .mat-form-field .mat-select:focus, .mat-form-field .mat-datepicker-toggle:focus {
   background-color: transparent !important;
-  color: white; /* Optional: Text color for focus state */
+  color: white !important; /* Optional: Text color for focus state */
 }
 
-.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
   background-color: transparent !important;
+  color: white !important;
 }
 
-.mdc-select--filled:not(.mdc-select--disabled) .mdc-select__anchor {
+::ng-deep.mdc-select--filled:not(.mdc-select--disabled) .mdc-select__anchor {
   background-color: transparent !important;
+  color: white !important;
 }
 
-.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input,
+::ng-deep.mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input,
 .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__icon {
   background-color: transparent !important;
+  color: white !important;
 }
 
-input:-webkit-autofill,
+::ng-deep  input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+  color: white !important;
 }
 
 mat-card-actions {

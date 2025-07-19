@@ -209,7 +209,7 @@ export class VehicleComponent implements OnInit {
     btnSearchMc(): void {
 
         const serchdata = this.search.getRawValue();
-        console.log(serchdata)
+
 
         const number = serchdata.number;
         const vehiclestatusid = serchdata.vehiclestatus;

@@ -33,7 +33,7 @@ export class SupplierService {
   }
 
   getAllList() {
-    return this.http.get<User[]>('http://localhost:8080/users/list');
+    return this.http.get<Supplier[]>(`${this.baseUrl}/list` );
   }
 
   add(supplier: Supplier) {
@@ -43,4 +43,6 @@ export class SupplierService {
   getLastSupCode() {
     return this.http.get<{code:string}>(`${this.baseUrl}/last`);
   }
+
+
 }

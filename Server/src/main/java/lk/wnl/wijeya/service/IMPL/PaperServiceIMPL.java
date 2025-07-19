@@ -15,8 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -93,5 +96,63 @@ public class PaperServiceIMPL implements PaperService {
         paperRepository.delete(paper);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new StandardResponse(HttpStatus.OK.value(),"Paper Deleted Successfully", null));
+    }
+
+    @Override
+    public ResponseEntity<Map<String, String>> getNextCode(String textPart) {
+        Paper lastPaper = paperRepository.findTopByCodeStartingWithOrderByCodeDesc(textPart);
+
+        int nextNumber = 1;
+        if (lastPaper != null && lastPaper.getCode().length() > textPart.length()) {
+            try {
+                String numberPart = lastPaper.getCode().substring(textPart.length());
+                nextNumber = Integer.parseInt(numberPart) + 1;
+            } catch (NumberFormatException e) {
+                nextNumber = 1;
+            }
+        }
+
+        String nextCode = textPart.toUpperCase() + String.format("%03d", nextNumber); // e.g., WP0001
+
+        Map<String, String> result = new HashMap<>();
+        result.put("code", nextCode);
+        return ResponseEntity.ok(result);
+    }
+
+    @Override
+    @Transactional
+    public void increaseQuantity(Integer id, BigDecimal quantity) {
+        if (quantity == null || quantity.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Quantity must be a non-negative value");
+        }
+
+        Paper paper = paperRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper not found with ID: " + id));
+
+        BigDecimal newQuantity = paper.getQoh().add(quantity);
+        if (newQuantity.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalStateException("Quantity cannot be negative");
+        }
+
+        paper.setQoh(newQuantity);
+        paperRepository.save(paper);
+    }
+    @Override
+    @Transactional
+    public void decreaseQuantity(Integer id, BigDecimal quantity) {
+        if (quantity == null || quantity.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Quantity must be a non-negative value");
+        }
+
+        Paper paper = paperRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper not found with ID: " + id));
+
+        BigDecimal newQuantity = paper.getQoh().subtract(quantity);
+        if (newQuantity.compareTo(paper.getRop()) < 0) {
+            throw new IllegalStateException("Quantity cannot be reduced below the reorder point: " + paper.getRop());
+        }
+
+        paper.setQoh(newQuantity);
+        paperRepository.save(paper);
     }
 }

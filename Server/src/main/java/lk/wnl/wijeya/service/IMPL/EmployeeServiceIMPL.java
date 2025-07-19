@@ -58,7 +58,7 @@ public class EmployeeServiceIMPL implements EmployeeService {
 
     @Override
     public List<EmployeeDto> getAllEmployees() {
-        List<Employee> employees = this.employeeRepository.findAllNameId();
+        List<Employee> employees = this.employeeRepository.findAllNameIdDesignation();
         if (!employees.isEmpty()) {
             return objectMapper.toEmployeeDtoList(employees);
 

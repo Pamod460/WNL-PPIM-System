@@ -34,4 +34,7 @@ export class MaterialService {
     }
 
 
+  getNextCode(textPart: string) {
+    return this.http.get<{code:string}>(`${this.API_URL}/materials/next?textPart=`+textPart);
+  }
 }

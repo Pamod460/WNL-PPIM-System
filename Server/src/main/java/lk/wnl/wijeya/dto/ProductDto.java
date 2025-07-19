@@ -21,13 +21,14 @@ public class ProductDto {
     private String name;
     private BigDecimal quantity;
     private LocalDate dointroduced;
-    private BigDecimal unitprice;
+    private BigDecimal unitPrice;
+    private BigDecimal agentPrice;
     private String description;
     private byte[] photo;
     private ProductStatusDto productStatus;
     private ProductCategoryDto productCategory;
     private ProductFrequencyDto productfrequency;
-    private Set<ProductMaterial> productMaterials;
-    private Set<ProductPaper> productPapers;
+    private Set<ProductMaterialDto> productMaterials;
+    private Set<ProductPaperDto> productPapers;
     private String logger;
 }

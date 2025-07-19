@@ -1,0 +1,205 @@
+.approve-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  user-select: none;
+
+  &:hover:not(.disabled) {
+    background: #e9ecef;
+    border-color: #28a745;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.2);
+  }
+
+  &.approved {
+    background: #28a745;
+    border-color: #28a745;
+    color: white;
+
+    &:hover:not(.disabled) {
+      background: #218838;
+      border-color: #1e7e34;
+    }
+  }
+
+  &.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+
+    &, &:hover {
+      transform: none;
+      box-shadow: none;
+      background: #f8f9fa;
+      border-color: #e9ecef;
+    }
+
+    &.approved {
+      background: #6c757d;
+      border-color: #6c757d;
+      color: white;
+
+      &:hover {
+        background: #6c757d;
+        border-color: #6c757d;
+      }
+    }
+
+    .checkbox {
+      cursor: not-allowed;
+
+      input {
+        cursor: not-allowed;
+      }
+    }
+
+    .checkmark {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+  }
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  position: relative;
+  cursor: pointer;
+
+  input {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    margin: 0;
+  }
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border: 2px solid #dee2e6;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:after {
+    content: "";
+    width: 5px;
+    height: 8px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+}
+
+.approve-button input:checked + .checkmark {
+  background: #28a745;
+  border-color: #28a745;
+
+  &:after {
+    opacity: 1;
+  }
+}
+
+.approve-button.approved input:checked + .checkmark {
+  background: white;
+  border-color: white;
+
+  &:after {
+    border-color: #28a745;
+  }
+}
+
+.button-text {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+   .approve-button {
+     &.size-small {
+       padding: 8px 16px;
+       font-size: 12px;
+       gap: 8px;
+
+       .checkbox {
+         width: 16px;
+         height: 16px;
+       }
+
+       .checkmark {
+         width: 16px;
+         height: 16px;
+
+         &:after {
+           width: 4px;
+           height: 7px;
+         }
+       }
+     }
+
+     &.size-large {
+       padding: 16px 24px;
+       font-size: 16px;
+       gap: 16px;
+
+       .checkbox {
+         width: 20px;
+         height: 20px;
+       }
+
+       .checkmark {
+         width: 20px;
+         height: 20px;
+
+         &:after {
+           width: 6px;
+           height: 10px;
+         }
+       }
+     }
+   }
+   .approve-button {
+     &.variant-success {
+       border-color: #28a745;
+       color: #28a745;
+
+       &:hover:not(.disabled) {
+         background: #d4edda;
+         border-color: #1e7e34;
+       }
+     }
+
+     &.variant-secondary {
+       background: #6c757d;
+       border-color: #6c757d;
+       color: white;
+
+       &:hover:not(.disabled) {
+         background: #5a6268;
+         border-color: #545b62;
+       }
+
+       &.approved {
+         background: #28a745;
+         border-color: #28a745;
+       }
+     }
+   }

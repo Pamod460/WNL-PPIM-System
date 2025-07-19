@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, DomSanitizer} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -19,7 +19,7 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatListModule} from "@angular/material/list";
 import {MatExpansionModule} from "@angular/material/expansion";
-import {MatIconModule} from "@angular/material/icon";
+import {MatIconModule, MatIconRegistry} from "@angular/material/icon";
 import {MessageComponent} from "./util/dialog/message/message.component";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatTableModule} from "@angular/material/table";
@@ -31,7 +31,6 @@ import {ConfirmComponent} from "./util/dialog/confirm/confirm.component";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule, MatPseudoCheckboxModule} from "@angular/material/core";
 import {DatePipe} from "@angular/common";
-import { ArrearsByProgramComponent } from './report/view/arrearsbyprogram/arrearsbyprogram.component';
 import {CountByDesignationComponent} from "./report/view/countbydesignation/countbydesignation.component";
 import {MatChipsModule} from "@angular/material/chips";
 import { PrivilageComponent } from './view/modules/privilage/privilage.component';
@@ -57,6 +56,45 @@ import {
 } from "./util/dialog/material-checklist-dialog/checklist-dialog.component";
 import { AgentComponent } from './view/modules/agent/agent.component';
 import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
+import { RouteComponent } from './view/modules/route/route.component';
+import { MaterialporderComponent } from './view/modules/materialporder/materialporder.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import { PaperporderComponent } from './view/modules/paperporder/paperporder.component';
+import { CountByDisctrictComponent } from './report/view/count-by-disctrict/count-by-disctrict.component';
+import { PaperPurchaseOrderReportComponent } from './report/view/paper-purchase-order-report/paper-purchase-order-report.component';
+import {CapitalizePipe} from "./util/layout/pipe/capitalize.pipe";
+import {MatRadioModule} from "@angular/material/radio";
+import {MatButtonToggleModule} from "@angular/material/button-toggle";
+import { WelcomeComponent } from './public/welcome/welcome.component';
+import { MaterialgrnComponent } from './view/modules/materialgrn/materialgrn.component';
+import { PapergrnComponent } from './view/modules/papergrn/papergrn.component';
+import { SupplierpaymentComponent } from './view/modules/supplierpayment/supplierpayment.component';
+import { ProductdesignComponent } from './view/modules/productdesign/productdesign.component';
+import { ProductionorderComponent } from './view/modules/productionorder/productionorder.component';
+import {ImageUploaderComponent} from "./util/image-uploader/image-uploader.component";
+import {FileUploadModule} from "@iplab/ngx-file-upload";
+import { PaperissueComponent } from './view/modules/paperissue/paperissue.component';
+import { MaterialissueComponent } from './view/modules/materialissue/materialissue.component';
+import { AgentorderComponent } from './view/modules/agentorder/agentorder.component';
+import { DistributionComponent } from './view/modules/distribution/distribution.component';
+import { AgentpaymentComponent } from './view/modules/agentpayment/agentpayment.component';
+import {ApproveButtonComponent} from "./util/approve-button/approve-button.component";
+import { SortPipe } from './util/layout/pipe/sort.pipe';
+import {NgChartsModule} from "ng2-charts";
+import {CustomBreadcrumbComponent} from "./util/layout/custom-breadcrumb/custom-breadcrumb.component";
+import {ReportComponent} from "./util/report/report.component";
+import { LandingPageComponent } from './public/landing-page/landing-page.component';
+import { AgentRegisterComponent } from './public/agent-register/agent-register.component';
+import { AgentOrderPublicComponent } from './public/agent-order-public/agent-order-public.component';
+import { InventoryRopChartComponent } from './view/dashboard/inventory-rop-chart/inventory-rop-chart.component';
+import { AgentOrderReportComponent } from './report/view/agent-order-report/agent-order-report.component';
+import { PorderApprovalReportComponent } from './report/view/porder-approval-report/porder-approval-report.component';
+import { PorderSummryReportComponent } from './report/view/porder-summry-report/porder-summry-report.component';
+import { StockLevelReportComponent } from './report/view/stock-level-report/stock-level-report.component';
+import { SupplierPaymentReportComponent } from './report/view/supplier-payment-report/supplier-payment-report.component';
+
+
+
 
 
 @NgModule({
@@ -68,7 +106,6 @@ import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
     EmployeeComponent,
     UserComponent,
     ConfirmComponent,
-    ArrearsByProgramComponent,
     CountByDesignationComponent,
     MessageComponent,
     PrivilageComponent,
@@ -80,7 +117,33 @@ import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
     ProductComponent,
     PaperComponent,
     AgentComponent,
-    VehicleComponent
+    VehicleComponent,
+    RouteComponent,
+    MaterialporderComponent,
+    PaperporderComponent,
+    CountByDisctrictComponent,
+    PaperPurchaseOrderReportComponent,
+    WelcomeComponent,
+    MaterialgrnComponent,
+    PapergrnComponent,
+    SupplierpaymentComponent,
+    ProductdesignComponent,
+    ProductionorderComponent,
+    PaperissueComponent,
+    MaterialissueComponent,
+    AgentorderComponent,
+    DistributionComponent,
+    AgentpaymentComponent,
+    SortPipe,
+    LandingPageComponent,
+    AgentRegisterComponent,
+    AgentOrderPublicComponent,
+    InventoryRopChartComponent,
+    AgentOrderReportComponent,
+    PorderApprovalReportComponent,
+    PorderSummryReportComponent,
+    StockLevelReportComponent,
+    SupplierPaymentReportComponent
 
   ],
   imports: [
@@ -114,13 +177,23 @@ import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
     MatMenuModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-right',
-      timeOut: 5000,
+      timeOut: 3000,
       preventDuplicates: true
     }),
     FormsModule,
     MatAutocompleteModule,
     MatTooltipModule,
-    ChecklistDialogComponent
+    ChecklistDialogComponent,
+    MatTabsModule,
+    CapitalizePipe,
+    MatRadioModule,
+    MatButtonToggleModule,
+    ImageUploaderComponent,
+    FileUploadModule,
+    ApproveButtonComponent,
+    NgChartsModule,
+    CustomBreadcrumbComponent,
+    ReportComponent,
 
   ],
   providers: [
@@ -135,4 +208,7 @@ import {VehicleComponent} from "./view/modules/vehicle/vehicle.component";
   bootstrap: [AppComponent]
 })
 export class AppModule {
+  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    iconRegistry.registerFontClassAlias('material-icons');
+  }
 }

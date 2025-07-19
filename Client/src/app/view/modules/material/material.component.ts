@@ -30,9 +30,9 @@ import {TableUtilsService} from "../../../service/Shared/table-utils.service";
 export class MaterialComponent implements OnInit {
 
 
-  columns: string[] = ['name', 'code', 'quantity', 'rop', 'unitprice', 'unitType', 'materialStatus', 'materialSubcategory'];
+  columns: string[] = ['name', 'code', 'quantity', 'rop', 'unitPrice', 'unitType', 'materialStatus', 'materialSubcategory'];
   headers: string[] = ['Name', 'Code', 'Quantity', 'ROP', 'Unit Price', 'Unit Type', 'Status', 'Subcategory'];
-  binders: string[] = ['name', 'code', 'quantity', 'rop', 'unitprice', 'unitType.name', 'materialStatus.name', 'materialSubcategory.name'];
+  binders: string[] = ['name', 'code', 'quantity', 'rop', 'unitPrice', 'unitType.name', 'materialStatus.name', 'materialSubcategory.name'];
 
   defaultProfile = 'assets/defaultimg.png';
   public ssearch!: FormGroup;
@@ -74,6 +74,8 @@ export class MaterialComponent implements OnInit {
   today: Date = new Date();
   allMaterialSubcategories: MaterialSubcategory[] = [];
 
+  isModify=false;
+
   constructor(
     private materialService: MaterialService,
     private materialstatusService: MaterialstatusService,
@@ -103,7 +105,7 @@ export class MaterialComponent implements OnInit {
       name: new FormControl('', [Validators.required]),
       quantity: new FormControl('', [Validators.required, Validators.min(1)]),
       rop: new FormControl('', [Validators.required, Validators.min(0)]),
-      unitprice: new FormControl('', [Validators.required, Validators.min(0)]),
+      unitPrice: new FormControl('', [Validators.required, Validators.min(0)]),
       description: new FormControl(''),
       dointroduced: new FormControl(''),
       photo: new FormControl(''),
@@ -117,6 +119,11 @@ export class MaterialComponent implements OnInit {
     const today = new Date();
     this.minDate = new Date(today.getFullYear() - 60, today.getMonth(), today.getDate()); // 60 years ago
     this.maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate()); // 18 years ago
+    this.form.get("materialSubcategory")?.valueChanges.subscribe(value => {
+      if (!this.isModify){
+        this.getNextCode(value)
+      }
+    })
   }
 
   ngOnInit() {
@@ -182,8 +189,7 @@ export class MaterialComponent implements OnInit {
     this.form.controls['name'].setValidators([Validators.required]);
     this.form.controls['quantity'].setValidators([Validators.required]);
     this.form.controls['rop'].setValidators([Validators.required]);
-    this.form.controls['unitprice'].setValidators([Validators.required]);
-    this.form.controls['description'].setValidators(Validators.required);
+    this.form.controls['unitPrice'].setValidators([Validators.required]);
     this.form.controls['dointroduced'].setValidators([Validators.required]);
     this.form.controls['unitType'].setValidators([Validators.required]);
     this.form.controls['materialStatus'].setValidators([Validators.required]);
@@ -191,7 +197,7 @@ export class MaterialComponent implements OnInit {
     this.form.controls['materialCategory'].setValidators([Validators.required]);
 
     Object.values(this.form.controls).forEach(control => {
-      // control.markAsTouched();
+      control.markAsTouched();
     });
 
     for (const controlName in this.form.controls) {
@@ -289,17 +295,7 @@ export class MaterialComponent implements OnInit {
 
   }
 
-  selectImage(e: any): void {
-    console.log(e.target.files[0]);
-    if (e.target.files) {
-      const reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = (event: any) => {
-        this.imageempurl = event.target.result;
-        this.form.controls['photo'].clearValidators();
-      }
-    }
-  }
+
 
   clearImage(): void {
     this.imageempurl = 'assets/default.png';
@@ -321,7 +317,7 @@ export class MaterialComponent implements OnInit {
       });
     } else {
       this.material = this.form.getRawValue();
-      this.material.photo = btoa(this.imageempurl);
+      // this.material.photo = btoa(this.imageempurl);
       let matdata = "";
       matdata = matdata + "<br>Number is : " + this.material.code;
       matdata = matdata + "<br>Fullname is : " + this.material.name;
@@ -337,13 +333,10 @@ export class MaterialComponent implements OnInit {
           this.materialService.add(this.material).subscribe({
             next: (responce) => {
               if (responce)
-                this.toastr.success("Material Added Successfully", "Success").onShown.subscribe(() => {
-                  this.form.reset();
-                  this.form.controls['doassignment'].setValue(new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()));
-                  this.clearImage();
-                  Object.values(this.form.controls).forEach(control => {
-                    control.markAsTouched();
-                  });
+                this.toastr.success("Material Added Successfully").onShown.subscribe(() => {
+
+                  this.resetForm()
+
                   this.loadTable("");
                 })
             }, error: (error) => {
@@ -378,24 +371,19 @@ export class MaterialComponent implements OnInit {
   }
 
   fillForm(material: Material) {
+    this.isModify=true;
     this.form.reset()
     this.enableButtons(false, true, true);
     this.disableGenerateNo = true;
     this.selectedrow = material;
     this.material = JSON.parse(JSON.stringify(material));
     this.oldmaterial = JSON.parse(JSON.stringify(material));
-    if (this.material.photo != null) {
-      this.imageempurl = atob(this.material.photo);
-      this.form.controls['photo'].clearValidators();
-    } else {
-      this.clearImage();
-    }
 
     this.material.unitType = this.unitTypes.find(g => g.id === material.unitType?.id);
     this.material.materialStatus = this.materialStatuses.find(g => g.id === material.materialStatus?.id);
     this.material.materialCategory = this.materialCategories.find(g => g.id === material.materialSubcategory?.materialCategory?.id);
     this.material.materialSubcategory = this.allMaterialSubcategories.find(g => g.id === material.materialSubcategory?.id);
-    this.material.photo = "";
+
     this.form.patchValue(this.material);
     this.form.markAsPristine();
   }
@@ -438,20 +426,17 @@ export class MaterialComponent implements OnInit {
 
             this.material = this.form.getRawValue();
 
-            if (this.form.controls['photo'].dirty)
-              this.material.photo = btoa(this.imageempurl);
-            else this.material.photo = this.oldmaterial.photo
+            // if (this.form.controls['photo'].dirty)
+            //   this.material.photo = btoa(this.imageempurl);
+            // else this.material.photo = this.oldmaterial.photo
             this.material.id = this.oldmaterial.id;
             this.materialService.update(this.material).subscribe({
               next: (response: any) => {
-                this.toastr.success(response.message, "Success");
-                this.form.reset();
+                this.toastr.success(response.message);
                 this.loadTable("");
-                this.disableGenerateNo = false;
-                this.clearImage();
-                Object.values(this.form.controls).forEach(control => {
-                  control.markAsTouched();
-                });
+
+                this.resetForm()
+
 
               }, error: (error) => {
                 this.toastr.error(error.data.message)
@@ -486,15 +471,12 @@ export class MaterialComponent implements OnInit {
         this.materialService.delete(this.material.id).subscribe({
           next: (response: any) => {
             if (response) {
-              this.toastr.success(response.data, "Success").onShown.subscribe(() => {
+              this.toastr.success(response.message).onShown.subscribe(() => {
                 this.loadTable("");
 
                 this.form.reset();
-                this.disableGenerateNo = false;
-                this.clearImage();
-                Object.values(this.form.controls).forEach(control => {
-                  control.markAsTouched();
-                });
+
+
               })
             }
           },
@@ -504,6 +486,31 @@ export class MaterialComponent implements OnInit {
         });
       }
     });
+  }
+
+  onPhotoChanged(files: File[]) {
+    if (!files || files.length === 0) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      const base64String = dataUrl.split(',')[1];
+
+      if (this.form.get("photo")?.value !== base64String) {
+        this.form.get("photo")?.setValue(base64String);
+        this.form.get("photo")?.markAsDirty();
+      }
+    };
+    reader.readAsDataURL(files[0]);
+  }
+
+  onPhotoRemoved(fileId: string) {
+    this.form.get("photo")?.setValue(null);
+    if (this.form.get("photo")?.value != this.oldmaterial.photo) {
+      this.form.get("photo")?.markAsDirty();
+    } else {
+      this.form.get("photo")?.markAsPristine();
+    }
   }
 
   clear(): void {
@@ -516,13 +523,22 @@ export class MaterialComponent implements OnInit {
     });
     confirm.afterClosed().subscribe(async result => {
       if (result) {
-        this.form.reset();
-        this.selectedrow = null;
-        this.createForm();
-        this.clearImage();
-        this.form.controls['description'].markAsPristine();
-        this.form.controls['doassignment'].markAsPristine();
+        this.resetForm()
       }
+    });
+  }
+
+  resetForm() {
+    this.form.reset();
+    this.selectedrow = null;
+    this.isModify=false;
+    this.createForm();
+    this.clearImage();
+    this.form.get("logger")?.setValue(this.authService.getUsername());
+    this.form.controls['description'].markAsPristine();
+    // this.form.controls['doassignment'].markAsPristine();
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
     });
   }
 
@@ -541,14 +557,20 @@ export class MaterialComponent implements OnInit {
     }
   }
 
-  getLastEmpCode() {
-    // this.materialService.getLastEmpCode().subscribe(ecode => {
-    //   console.log(ecode.code)
-    //   this.lastEmpCode = ecode.code
-    //   this.form.controls["number"].setValue(this.lastEmpCode)
-    // });
+  getNextCode(value: MaterialSubcategory) {
+    const nameParts = value.name.trim().split(" ");
+    let textPart = "";
 
+    if (nameParts.length > 1) {
+      textPart = nameParts.map(part => part[0].toUpperCase()).join(""); // First letter of each word
+    } else {
+      textPart = nameParts[0].substring(0, 2).toUpperCase(); // First two letters of the single word
+    }
+    this.materialService.getNextCode(textPart).subscribe(code => {
+      this.form.controls["code"].setValue(code.code);
+    });
   }
+
 
   getColumnClass(columnIndex: number) {
     return this.tableUtils.getColumnSizeClass(this.data, this.binders, columnIndex, this.uiassist);

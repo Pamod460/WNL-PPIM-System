@@ -1,0 +1,19 @@
+<label class="approve-button"
+       [class.approved]="isApproved"
+       [class.disabled]="isDisabled"
+       [attr.aria-disabled]="isDisabled">
+  <div class="checkbox">
+    <input
+      type="checkbox"
+      [checked]="isApproved"
+      [disabled]="isDisabled"
+      [attr.tabindex]="isDisabled ? -1 : 0"
+      (change)="onCheckboxChange($event)"
+    >
+    <span class="checkmark"></span>
+  </div>
+    <!-- Dynamic Form -->
+    <div class="example-section">
+      <span class="button-text">{{ isApproved ? approvedText : defaultText }}</span>
+  </div>
+</label>

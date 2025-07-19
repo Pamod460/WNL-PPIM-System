@@ -1,12 +1,13 @@
 package lk.wnl.wijeya.security;
 
+import io.jsonwebtoken.*;
+import lk.wnl.wijeya.dto.RoleDto;
+import lk.wnl.wijeya.entity.*;
+import lk.wnl.wijeya.entity.Module;
 import lk.wnl.wijeya.repository.ModuleRepository;
 import lk.wnl.wijeya.repository.UserRepository;
-import lk.wnl.wijeya.entity.Privilege;
-import lk.wnl.wijeya.entity.User;
-import lk.wnl.wijeya.entity.Module;
-import lk.wnl.wijeya.entity.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,9 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -30,6 +29,42 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private ModuleRepository moduleRepository;
+    @Value("${jwt.secret}")
+    private String secret;
+ public List<RoleDto> getRoles(String token) {
+        List<RoleDto> roles = new ArrayList<>();
+
+        if (token == null || token.isBlank()) {
+            return roles;
+        }
+
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            List<Map<String, Object>> rawRoles = claims.get("roles", List.class);
+            if (rawRoles != null) {
+                for (Map<String, Object> map : rawRoles) {
+                    RoleDto role = new RoleDto();
+                    role.setId((Integer) map.get("id"));
+                    role.setName((String) map.get("name"));
+                    roles.add(role);
+                }
+            }
+        } catch (ExpiredJwtException ex) {
+            throw new RuntimeException("JWT token is expired", ex);
+        } catch (MalformedJwtException | SignatureException ex) {
+            throw new RuntimeException("JWT token is invalid", ex);
+        } catch (Exception ex) {
+            throw new RuntimeException("JWT processing error", ex);
+        }
+
+        return roles;
+    }
+
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -38,10 +73,10 @@ public class UserService implements UserDetailsService {
             Set<SimpleGrantedAuthority> authorities = new HashSet<>();
 
             List<Module> modules = moduleRepository.findAll();
-            String[] operations = {"select","insert","update","delete"};
+            String[] operations = {"select", "insert", "update", "delete"};
 
-            for (Module module : modules){
-                for (String op : operations){
+            for (Module module : modules) {
+                for (String op : operations) {
                     String authority = module.getName().toLowerCase() + "-" + op;
                     authorities.add(new SimpleGrantedAuthority(authority));
                 }
@@ -56,18 +91,17 @@ public class UserService implements UserDetailsService {
                     .credentialsExpired(false)
                     .disabled(false)
                     .build();
-        }
-        else {
+        } else {
 
             User user = userdao.findByUsername(username);
             if (user == null) {
                 throw new UsernameNotFoundException("User not found with username " + username);
             }
             String userStatus = user.getUserStatus().getName();
-            if (userStatus.equalsIgnoreCase("inactive")){
+            if (userStatus.equalsIgnoreCase("inactive")) {
                 throw new RuntimeException("Access Denied/This user account is inactive. Please contact the System Administrator for support.");
             }
-            if (userStatus.equalsIgnoreCase("blocked")){
+            if (userStatus.equalsIgnoreCase("blocked")) {
                 throw new RuntimeException("Access Denied/This user account is blocked. Please contact the System Administrator for support.");
             }
 
@@ -75,9 +109,9 @@ public class UserService implements UserDetailsService {
 
             List<UserRole> userRoles = (List<UserRole>) user.getUserRoles();
 
-            for(UserRole u : userRoles){
+            for (UserRole u : userRoles) {
                 List<Privilege> privileges = (List<Privilege>) u.getRole().getPrivileges();
-                for (Privilege p:privileges){
+                for (Privilege p : privileges) {
                     authorities.add(new SimpleGrantedAuthority(p.getAuthority()));
                 }
             }

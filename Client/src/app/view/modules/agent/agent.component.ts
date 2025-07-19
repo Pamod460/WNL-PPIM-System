@@ -15,10 +15,10 @@ import {MessageComponent} from "../../../util/dialog/message/message.component";
 import {AgentService} from "../../../service/agent/agent.service";
 import {District} from "../../../entity/District";
 import {Route} from "../../../entity/Route";
-import {AgentStatus} from "../../../entity/AgentStatus";
+import {Agentstatus} from "../../../entity/agentstatus";
 import {AgentStatusService} from "../../../service/agent/agent-status.service";
 import {DistrictService} from "../../../service/agent/district.service";
-import {RouteService} from "../../../service/agent/route.service";
+import {RouteService} from "../../../service/route/route.service";
 
 @Component({
   selector: 'app-agent',
@@ -73,7 +73,7 @@ export class AgentComponent implements OnInit {
   today: Date = new Date();
   districts: District[] = [];
   routes: Route[] = [];
-  agentStatuses: AgentStatus[] = [];
+  agentStatuses: Agentstatus[] = [];
 
 
   constructor(
@@ -107,9 +107,9 @@ export class AgentComponent implements OnInit {
       email: new FormControl('', [Validators.required, Validators.email]),
       doRegisterd: new FormControl('', [Validators.required]),
       description: new FormControl(''),
-      longitude: new FormControl(null),
-      latitude: new FormControl(null),
-      logger: new FormControl(null),
+      // longitude: new FormControl(null),
+      // latitude: new FormControl(null),
+      logger: new FormControl(),
       district: new FormControl(null, Validators.required),
       route: new FormControl(null, Validators.required),
       agentStatus: new FormControl(null, Validators.required)
@@ -136,7 +136,7 @@ export class AgentComponent implements OnInit {
     this.agentStatusService.getAllList().subscribe(
       {
         next:
-          (statuses: AgentStatus[]) => {
+          (statuses: Agentstatus[]) => {
             this.agentStatuses = statuses;
           }, error: error => {
           console.error('Error fetching agent statuses:', error);
@@ -167,6 +167,7 @@ export class AgentComponent implements OnInit {
       const authorities = this.authService.extractAuthorities(authoritiesArray);
       this.buttonStates(authorities);
     }
+    this.getLastAgentCode()
   }
 
   createView() {
@@ -507,10 +508,12 @@ export class AgentComponent implements OnInit {
     this.selectedrow = null;
     this.createForm();
     this.form.controls['description'].markAsPristine();
-    this.form.controls['doassignment'].markAsPristine();
+    this.form.controls['doRegisterd'].markAsPristine();
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
     });
+    console.log("Name",this.authService.getUsername())
+    this.form.get("logger")?.setValue(this.authService.getUsername());
     this.enableButtons(true, false, false);
   }
 
@@ -527,8 +530,8 @@ export class AgentComponent implements OnInit {
     }
   }
 
-  getLastEmpCode() {
-    this.agentService.getLastEmpCode().subscribe(ecode => {
+  getLastAgentCode() {
+    this.agentService.getLastAgentCode().subscribe(ecode => {
       console.log(ecode.code)
       this.lastEmpCode = ecode.code
       this.form.controls["number"].setValue(this.lastEmpCode)
@@ -536,35 +539,6 @@ export class AgentComponent implements OnInit {
 
   }
 
-  getBirthdayFromNIC(nic: string) {
-    let year: number, dayOfYear: number;
-    if (nic.length === 10 && /^[0-9]{9}[Vv]$/.test(nic)) {
-      // Old NIC format (79XXXXXXXV)
-      year = 1900 + parseInt(nic.substring(0, 2));
-      dayOfYear = parseInt(nic.substring(2, 5));
-    } else if (nic.length === 12 && /^[0-9]{12}$/.test(nic)) {
-      // New NIC format (200012345678)
-      year = parseInt(nic.substring(0, 4));
-      dayOfYear = parseInt(nic.substring(4, 7));
-    } else {
-      throw new Error("Invalid NIC format");
-    }
-    // Determine gender and adjust day of year for females
-    const gender = dayOfYear > 500 ? 'Female' : 'Male';
-    if (dayOfYear > 500) dayOfYear -= 500;
-    // Leap year check
-    const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
-    const daysInMonth = [31, isLeapYear ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    // Convert day of year to month and date
-    let month = 0;
-    while (dayOfYear > daysInMonth[month]) {
-      dayOfYear -= daysInMonth[month];
-      month++;
-    }
-    // Format date correctly
-    const birthDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayOfYear).padStart(2, '0')}`;
-    return {birthDate, gender};
-  }
 
   getColumnClass(columnIndex: number) {
     return this.tableUtils.getColumnSizeClass(this.data, this.binders, columnIndex, this.uiassist);

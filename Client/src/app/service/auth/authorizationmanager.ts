@@ -17,39 +17,75 @@ export class AuthorizationManager {
   private readonly localStorageUsreName = 'username';
   private readonly localStorageFullName = 'fullname';
 
-  // please define all local storage suitable for relevant Main Menu name like below
-  // Ex : Main Menu -> Report
-  //  Then LocalStorage -> 'localstorageReportMenus'
-
-  private readonly localStorageAdminMenus = 'admMenuState';
-  private readonly localStorageAcademicMenus = 'acdMenuState';
-  private readonly localStorageRegistrationMenus = 'regMenuState';
-  private readonly localStorageClassMenus = 'clsMenuState';
 
   Admin = [
-    {name: 'Employee', isVisible: false, routerLink: 'employee'},
-    {name: 'User', isVisible: false, routerLink: 'user'},
-    {name: 'Privilege', isVisible: false, routerLink: 'privilege'}
-    // { name: 'Operations', isVisible: false, routerLink: 'operation' }
+    {name: 'Employee', isVisible: false, routerLink: 'employee', icon: 'person'},
+    {name: 'User', isVisible: false, routerLink: 'user', icon: 'event_note'},
+    {name: 'Privilege', isVisible: false, routerLink: 'privilege', icon: 'assignment'}
+
   ];
 
   Inventory = [
-    {name: 'Material', isVisible: false, routerLink: 'material'},
-    {name: 'Product', isVisible: false, routerLink: 'product'},
-    {name: 'Paper', isVisible: false, routerLink: 'paper'},
+    {name: 'Material', isVisible: false, routerLink: 'material', icon: 'widgets'},
+    {name: 'Product', isVisible: false, routerLink: 'product', icon: 'widgets'},
+    {name: 'Paper', isVisible: false, routerLink: 'paper', icon: 'inventory'},
   ];
   Registration = [
-    {name: 'Supplier', isVisible: false, routerLink: 'supplier'},
-    {name: 'Agent', isVisible: false, routerLink: 'agent'},
-    {name: 'Vehicle', isVisible: false, routerLink: 'vehicle'},
+    {name: 'Supplier', isVisible: false, routerLink: 'supplier', icon: 'store'},
+    {name: 'Agent', isVisible: false, routerLink: 'agent', icon: 'person'},
   ]
+  Distribution = [
+    {name: 'Vehicle', isVisible: false, routerLink: 'vehicle', icon: 'directions_car'},
+    {name: 'Route', isVisible: false, routerLink: 'route', icon: 'map'},
+    {name: 'Distribution', isVisible: false, routerLink: 'distribution', icon: 'map'},
+  ]
+  PurchaseOrder = [
+    {name: 'Material POrder', isVisible: false, routerLink: 'materialpurchaseorder', icon: 'inventory'},
+    {name: 'Paper POrder', isVisible: false, routerLink: 'paperpurchaseorder', icon: 'description'}
+  ]
+  GRN = [
+    {name: 'Material GRN', isVisible: false, routerLink: 'materialgrn', icon: 'inventory'},
+    {name: 'Paper GRN', isVisible: false, routerLink: 'papergrn', icon: 'description'}
+  ]
+  Payment=[
+    {name: 'Supplier Payment', isVisible: false, routerLink: 'supplierpayment', icon: 'payment'},
+    {name: 'Agent Payment', isVisible: false, routerLink: 'agentpayment', icon: 'payment'},
+
+  ]
+
+  Production=[
+    {name: 'Agent Order', isVisible: false, routerLink: 'agentorder', icon: 'inventory'},
+    {name: 'Product Design', isVisible: false, routerLink: 'productdesign', icon: 'inventory'},
+    {name: 'Production Order', isVisible: false, routerLink: 'productionorder', icon: 'inventory'},
+  ]
+  Issues = [
+    {name: 'Paper Issue', isVisible: false, routerLink: 'paperissue', icon: 'inventory'},
+    {name: 'Material Issue', isVisible: false, routerLink: 'materialissue', icon: 'inventory'}
+  ];
+  Report = [
+    {name: 'Agents Report', isVisible: false, routerLink: 'agentsreport', icon: 'assignment'},
+    {name: 'Agents Order Report', isVisible: false, routerLink: 'agentcoutbyorders', icon: 'assignment'},
+    {name: 'Employees Report', isVisible: false, routerLink: 'employeesreport', icon: 'assignment'},
+    {name: 'Paper POrder Report', isVisible: false, routerLink: 'purchaseorderreport', icon: 'assignment'},
+    {name: 'POrder Summary Report', isVisible: false, routerLink: 'paperpordersummry', icon: 'assignment'},
+    {name: 'Inventory Level Report', isVisible: false, routerLink: 'materialinventory', icon: 'assignment'},
+  ];
 
 
   getNavListItem() {
     return [
       {Menu: 'ADMIN', MenuItems: this.Admin},
+      {Menu: 'REGISTRATION', MenuItems: this.Registration},
       {Menu: 'INVENTORY', MenuItems: this.Inventory},
-      {Menu: 'Registration', MenuItems: this.Registration}
+      {Menu: 'PURCHASE ORDER', MenuItems: this.PurchaseOrder},
+      {Menu: 'GRN', MenuItems: this.GRN},
+      {Menu: 'PRODUCTION', MenuItems: this.Production},
+      {Menu: 'ISSUES', MenuItems: this.Issues},
+      {Menu: 'DISTRIBUTION', MenuItems: this.Distribution},
+      {Menu: 'PAYMENTS', MenuItems: this.Payment},
+
+
+      {Menu: 'REPORTS', MenuItems: this.Report},
     ]
   }
 
@@ -70,15 +106,13 @@ export class AuthorizationManager {
     });
 
     menus.forEach(menuGroup => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      localStorage.setItem(this["localStorage" + menuGroup.Menu + "Menus"], JSON.stringify(menuGroup));
+
+      localStorage.setItem(menuGroup.Menu + "Menus", JSON.stringify(menuGroup));
     });
 
   }
 
   getAuth(username: string) {
-    console.log("username", username)
     if (username) {
       this.setFullName();
       this.setUsername(username);
@@ -197,9 +231,8 @@ export class AuthorizationManager {
     const menus = this.getNavListItem();
 
     menus.forEach(menuState => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      const localStorageState = localStorage.getItem(this['localStorage' + menuState.Menu + 'Menus']);
+
+      const localStorageState = localStorage.getItem(menuState.Menu + 'Menus');
       if (localStorageState) {
         menuState.Menu = JSON.parse(localStorageState);
       }
@@ -213,9 +246,8 @@ export class AuthorizationManager {
   clearMenuState(): void {
     const menus = this.getNavListItem();
     menus.forEach(menu => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      localStorage.removeItem(this['localStorage' + menu.Menu + 'Menus']);
+
+      localStorage.removeItem(menu.Menu + 'Menus');
     });
   }
 

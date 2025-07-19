@@ -1,10 +1,7 @@
 package lk.wnl.wijeya.controller;
 
 import lk.wnl.wijeya.dto.AgentDto;
-import lk.wnl.wijeya.dto.AgentStatusDto;
-import lk.wnl.wijeya.dto.AgentDto;
 import lk.wnl.wijeya.service.AgentService;
-import lk.wnl.wijeya.service.AgentStatusService;
 import lk.wnl.wijeya.util.StandardResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

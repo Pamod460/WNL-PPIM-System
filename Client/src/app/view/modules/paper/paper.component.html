@@ -1,52 +1,39 @@
 <app-common-layout>
   <div form>
     <form [formGroup]="form">
-      <!-- Code -->
-      <mat-form-field appearance="outline">
-        <mat-label>Code</mat-label>
-        <input matInput formControlName="code" required>
-      </mat-form-field>
-
-      <!-- Name -->
-      <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" required>
-      </mat-form-field>
-
-<!--      &lt;!&ndash; Quantity &ndash;&gt;-->
-<!--      <mat-form-field appearance="outline">-->
-<!--        <mat-label>Quantity</mat-label>-->
-<!--        <input matInput type="number" formControlName="quantity" required min="1">-->
-<!--      </mat-form-field>-->
-
-      <!-- Unit Price -->
-      <mat-form-field appearance="outline">
-        <mat-label>Unit Price</mat-label>
-        <input matInput type="number" formControlName="unitPrice" required min="0">
-      </mat-form-field>
-
-      <!-- Quantity on Hand -->
-      <mat-form-field appearance="outline">
-        <mat-label>Quantity on Hand</mat-label>
-        <input matInput type="number" formControlName="qoh" required min="0">
-      </mat-form-field>
-
-      <!-- Re-order Point -->
-      <mat-form-field appearance="outline">
-        <mat-label>Re-order Point</mat-label>
-        <input matInput type="number" formControlName="rop" required min="0">
-      </mat-form-field>
-
-      <!-- Paper Type -->
       <mat-form-field appearance="outline">
         <mat-label>Paper Type</mat-label>
-        <mat-select formControlName="paperType" required>
+        <mat-select formControlName="paperType">
           <mat-option [value]="null">Not Selected</mat-option>
           <mat-option *ngFor="let type of paperTypes" [value]="type">{{ type.name }}</mat-option>
         </mat-select>
       </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Code</mat-label>
+        <input matInput formControlName="code">
+      </mat-form-field>
 
-      <!-- Paper GSM -->
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Unit Price</mat-label>
+        <input matInput type="number" formControlName="unitPrice" min="0">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Quantity on Hand</mat-label>
+        <input matInput type="number" formControlName="qoh" min="0">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Re-order Point</mat-label>
+        <input matInput type="number" formControlName="rop" min="0">
+      </mat-form-field>
+
+
       <mat-form-field appearance="outline">
         <mat-label>Paper GSM</mat-label>
         <mat-select formControlName="paperGsm">
@@ -54,7 +41,6 @@
           <mat-option *ngFor="let gsm of paperGsms" [value]="gsm">{{ gsm.name }}</mat-option>
         </mat-select>
       </mat-form-field>
-
       <!-- Paper Size -->
       <mat-form-field appearance="outline">
         <mat-label>Paper Size</mat-label>
@@ -67,7 +53,7 @@
       <!-- Paper Color -->
       <mat-form-field appearance="outline">
         <mat-label>Paper Color</mat-label>
-        <mat-select formControlName="paperColor" required>
+        <mat-select formControlName="paperColor">
           <mat-option [value]="null">Not Selected</mat-option>
           <mat-option *ngFor="let color of paperColors" [value]="color">{{ color.name }}</mat-option>
         </mat-select>
@@ -76,7 +62,7 @@
       <!-- Paper Unit Type -->
       <mat-form-field appearance="outline">
         <mat-label>Paper Unit Type</mat-label>
-        <mat-select formControlName="paperUnitType" required>
+        <mat-select formControlName="paperUnitType">
           <mat-option [value]="null">Not Selected</mat-option>
           <mat-option *ngFor="let unit of paperUnitTypes" [value]="unit">{{ unit.name }}</mat-option>
         </mat-select>
@@ -85,7 +71,7 @@
       <!-- Paper Status -->
       <mat-form-field appearance="outline">
         <mat-label>Paper Status</mat-label>
-        <mat-select formControlName="paperStatus" required>
+        <mat-select formControlName="paperStatus">
           <mat-option [value]="null">Not Selected</mat-option>
           <mat-option *ngFor="let status of paperStatuses" [value]="status">{{ status.name }}</mat-option>
         </mat-select>
@@ -102,7 +88,7 @@
       <!-- Logger -->
       <mat-form-field appearance="outline" class="opacity-75">
         <mat-label>Created by</mat-label>
-        <input matInput formControlName="logger" required readonly>
+        <input matInput formControlName="logger" readonly>
       </mat-form-field>
 
       <!-- Description -->
@@ -111,7 +97,6 @@
         <textarea matInput formControlName="description"></textarea>
       </mat-form-field>
 
-      <!-- Buttons -->
       <div id="butpanel">
         <button type="button" class="btn btn-dark btn-lg" (click)="add()" [disabled]=" !enaadd || !hasInsertAuthority">
           Add
@@ -148,7 +133,6 @@
           <option *ngFor="let paperType of paperTypes" [value]="paperType.id">{{ paperType.name }}
           </option>
         </select>
-
         <button class="btn btn-dark" (click)="btnSearchMc()" style="border-radius: 0 0 0 0">
           <mat-icon style="padding-top: 7px">search</mat-icon>
         </button>

@@ -1,9 +1,7 @@
-.btn-colour{
+.btn-colour {
   background-color: #024e85;
 }
 
-
-/* Employee Form > Photo Panel  */
 #imgpanel {
   height: 120px;
   margin-bottom: 30px;
@@ -11,12 +9,12 @@
   margin-left: 100px;
 }
 
-#imgpanel img{
+#imgpanel img {
   height: 120px;
   width: 120px;
 }
 
-#selectbutton, #clearbutton{
+#selectbutton, #clearbutton {
   width: 150px;
   display: block;
   margin-left: 150px;
@@ -26,19 +24,18 @@
   text-align: center;
 }
 
-#selectbutton{
+#selectbutton {
   margin-top: -105px;
 }
 
-/* Employee Form > Button Panel  */
-#butpanel{
+#butpanel {
   width: auto;
   height: auto;
   margin: 10px 0 20px -5px;
   display: flex;
 }
 
-#butpanel button{
+#butpanel button {
   width: 118px;
   padding: 10px 20px 10px 20px;
   margin: 2px;
@@ -46,36 +43,36 @@
   color: white;
 }
 
-.selected-row{
-  background-color: #c9e6ff!important;
+.selected-row {
+  background-color: #c9e6ff !important;
 }
 
 .mat-row:hover {
-  background-color: inherit!important;
+  background-color: inherit !important;
 }
 
 button:disabled {
   opacity: 0.5;
 }
 
-.custom-breadcrumb{
+.custom-breadcrumb {
   width: 8rem;
   height: 3rem;
   margin: 15px 15px 0 30px;
 }
 
-.custom-breadcrumb div{
+.custom-breadcrumb div {
   font-weight: bold;
   font-size: x-large;
   margin-bottom: 10px;
   margin-left: 0; /* Keep some space on the left */
 }
 
-mat-icon{
+mat-icon {
   font-size: 20px;
 }
 
-a{
+a {
   text-decoration: none;
   color: black;
 }
@@ -86,12 +83,12 @@ a{
   font-size: 0.9rem; /* Adjust font size */
 }
 
-input{
+input {
   height: 45px;
   width: 10% !important;
 }
 
-.custom-card-content{
+.custom-card-content {
   display: flex;
   justify-content: space-between; /* Breadcrumb on the left, form on the right */
   align-items: center; /* Vertically align both breadcrumb and form */
@@ -111,7 +108,7 @@ input{
   width: auto;
 }
 
-mat-paginator{
+mat-paginator {
   margin-top: 15px;
 }
 
@@ -119,17 +116,18 @@ input[matInput] {
   width: 100% !important;
 }
 
-.designation-drop-down{
+.designation-drop-down {
   width: 8%;
   font-style: normal !important; /* Make it italic */
   font-size: 0.9rem !important; /* Adjust font size */
 }
 
-.gender-drop-down{
+.gender-drop-down {
   width: 5%;
   font-style: normal !important; /* Make it italic */
   font-size: 0.9rem !important; /* Adjust font size */
 }
+
 .search-form {
   width: 100%;
   padding: 16px 0;
@@ -140,7 +138,7 @@ input[matInput] {
   /*align-items: stretch;*/
   /*border-radius: 4px;*/
   /*overflow: hidden;*/
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .inputs-container {
@@ -231,6 +229,7 @@ input[matInput] {
     border-bottom-left-radius: 0 !important;
   }
 }
+
 ::ng-deep .toast-success {
   background-color: #25983f !important;
   color: #ffffff !important;

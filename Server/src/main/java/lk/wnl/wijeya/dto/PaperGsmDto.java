@@ -19,6 +19,4 @@ public class PaperGsmDto {
 
     private String name;
 
-    private Set<Paper> papers = new LinkedHashSet<>();
-
 }

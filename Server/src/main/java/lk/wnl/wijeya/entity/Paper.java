@@ -69,10 +69,10 @@ public class Paper {
     private PaperStatus paperStatus;
 
     @Column(name = "rop")
-    private Integer rop;
+    private BigDecimal rop;
 
     @Column(name = "qoh")
-    private Integer qoh;
+    private BigDecimal qoh;
 
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER, optional = false)

@@ -156,8 +156,6 @@ export class PrivilageComponent implements OnInit {
   clearAuthority(): void {
     const module = this.getRawValueOrDefault(this.form.controls['module']);
     const operation = this.getRawValueOrDefault(this.form.controls['operation']);
-    console.log(module + " -  module");
-    console.log(operation + " -  operation");
 
     if (!module && !operation) {
       this.form.controls['authority'].setValue("");

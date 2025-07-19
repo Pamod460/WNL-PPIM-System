@@ -29,8 +29,8 @@ public class SupplierDto {
     private String description;
     private SupplierStatus supplierstatus;
     private SupplierType suppliertype;
-    private Set<Supply> supplies;
-    private Set<PaperSupply> paperSupplies;
+    private Set<SupplyDto> supplies;
+    private Set<PaperSupplyDto> paperSupplies;
     private String regNo;
     private String bankName;
     private String bankBranch;

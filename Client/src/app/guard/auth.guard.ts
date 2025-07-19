@@ -10,12 +10,11 @@ export class AuthGuard implements CanActivate {
   constructor(private router: Router, private authorizationManager: AuthorizationManager) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    console.log("Checking access for:", state.url);
 
     const publicRoutes = ['/login', '/register', '/forgot-password'];
     if (publicRoutes.includes(state.url)) return true;
 
-    let isAuthenticated = this.authorizationManager.isUserAuthenticated();
+    const isAuthenticated = this.authorizationManager.isUserAuthenticated();
 
     if (isAuthenticated) return true;
 

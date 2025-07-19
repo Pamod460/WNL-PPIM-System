@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -28,8 +29,10 @@ private final MaterialService materialService;
 
        return materialService.getAllList();
 
-
-
+    }
+    @GetMapping(value = "/next", produces = "application/json")
+    public ResponseEntity<Map<String, String>> getNextCode(@RequestParam("textPart") String textPart) {
+        return materialService.getNextCode(textPart);
     }
 
     @PostMapping(produces = "application/json")

@@ -19,7 +19,7 @@ public class AgentDto {
     String number;
     @Pattern(regexp = "^(([\\d]{9}[vVxX])|([\\d]{12}))$", message = "Invalid NIC")
     String nic;
-    @Pattern(regexp = "^([A-Z][a-z]+)$", message = "Invalid Calligname")
+    @Pattern(regexp = "^([A-Z][a-z]*[.]?[\\s]?)*([A-Z][a-z]*)$", message = "Invalid Full Name")
     String fullName;
     @Pattern(regexp = "^((\\+94|0)(70|71|72|74|75|76|77|78)\\d{7})$", message = "Invalid Mobile Number")
     String mobile;

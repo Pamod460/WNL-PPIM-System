@@ -1,9 +1,7 @@
 package lk.wnl.wijeya.controller;
 
 import lk.wnl.wijeya.dto.AgentStatusDto;
-import lk.wnl.wijeya.dto.CountryDto;
 import lk.wnl.wijeya.service.AgentStatusService;
-import lk.wnl.wijeya.service.CountryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

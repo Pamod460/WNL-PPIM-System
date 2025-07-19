@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {MatDialog} from "@angular/material/dialog";
@@ -11,6 +11,7 @@ import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
+  // encapsulation: ViewEncapsulation.None
   // encapsulation: ViewEncapsulation.None
   // animations: [
   //   trigger('circleAnimation', [

@@ -3,24 +3,17 @@
   <div form>
     <form [formGroup]="form">
 
-      <!--      Logger-->
-      <mat-form-field appearance="outline" class="opacity-75">
-        <mat-label>Created by</mat-label>
-        <input matInput formControlName="logger" required readonly>
-      </mat-form-field>
-      <!-- Essential Business Details -->
+
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name">
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="me-3" style="width: 65%">
+      <mat-form-field appearance="outline" class="me-3" >
         <mat-label>Registration No</mat-label>
-        <input matInput readonly formControlName="regNo">
+        <input matInput readonly formControlName="regNo" >
       </mat-form-field>
-      <button type="button" class="btn btn-dark  pt-2 pb-2" (click)="getLastSupCode()"
-              [disabled]="disableGenerateNo">Generate Number
-      </button>
+
       <mat-form-field appearance="outline">
         <mat-label>Registration Date</mat-label>
         <input matInput [matDatepicker]="regdatePicker" formControlName="regdate">
@@ -28,7 +21,6 @@
         <mat-datepicker #regdatePicker></mat-datepicker>
       </mat-form-field>
 
-      <!-- Contact Details -->
       <mat-form-field appearance="outline">
         <mat-label>Telephone</mat-label>
         <input matInput formControlName="telephone">
@@ -49,7 +41,6 @@
         <textarea matInput formControlName="address"></textarea>
       </mat-form-field>
 
-      <!-- Key Contact Person Details -->
       <mat-form-field appearance="outline">
         <mat-label>Contact Person</mat-label>
         <input matInput formControlName="contactPerson">
@@ -59,8 +50,6 @@
         <mat-label>Contact Person Telephone</mat-label>
         <input matInput formControlName="contactPersonTelephone">
       </mat-form-field>
-
-      <!-- Additional Business Details -->
       <mat-form-field appearance="outline">
         <mat-label>Supplier Type</mat-label>
         <mat-select formControlName="suppliertype">
@@ -115,10 +104,18 @@
             </mat-list-option>
           </mat-selection-list>
         </div>
+        <div class="d-flex flex-column mx-auto my-auto">
 
-        <button (click)="openMaterialDialog()" class="btn btn-dark mx-auto btn-lg my-auto h-25 ">
-          {{ btnMaterialText }}
-        </button>
+          <button (click)="openMaterialDialog()" class="btn btn-dark mx-auto btn-lg my-auto h-25 ">
+            {{ btnMaterialText }}
+          </button>
+
+          <button (click)="resetMaterialList()" *ngIf="supplies.length>0" class="btn btn-dark mx-auto btn-lg mt-2 h-25">
+            Reset List
+          </button>
+        </div>
+
+
       </div>
       <ng-template #dialogTemplate>
         <app-checklist-dialog
@@ -141,10 +138,16 @@
             </mat-list-option>
           </mat-selection-list>
         </div>
+        <div class="d-flex flex-column mx-auto my-auto">
 
-        <button (click)="openPaperDialog()" class="btn btn-dark mx-auto btn-lg my-auto h-25 ">
-          {{ btnPaperText }}
-        </button>
+          <button (click)="openPaperDialog()" class="btn btn-dark mx-auto btn-lg my-auto h-25 ">
+            {{ btnPaperText }}
+          </button>
+          <button (click)="resetPaperList()" *ngIf="paperSupplies.length>0"
+                  class="btn btn-dark mx-auto btn-lg mt-2 h-25">
+            Reset List
+          </button>
+        </div>
       </div>
       <ng-template #dialogTemplate2>
         <app-checklist-dialog
@@ -168,7 +171,10 @@
           <mat-option *ngFor="let status of supplierStatuses" [value]="status">{{ status.name }}</mat-option>
         </mat-select>
       </mat-form-field>
-
+      <mat-form-field appearance="outline" class="opacity-75">
+        <mat-label>Created by</mat-label>
+        <input matInput formControlName="logger" required readonly>
+      </mat-form-field>
 
       <!-- Action Buttons -->
       <div id="butpanel">

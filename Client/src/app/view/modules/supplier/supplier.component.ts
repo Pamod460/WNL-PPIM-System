@@ -21,7 +21,7 @@ import {Supplier} from "../../../entity/Supplier";
 import {SupplierStatusService} from "../../../service/supplier/supplier-status.service";
 import {Supply} from "../../../entity/Supply";
 import {TableUtilsService} from "../../../service/Shared/table-utils.service";
-import {Country} from "../../../entity/Country";
+import {Country} from "../../../entity/country";
 import {map, Observable, startWith} from "rxjs";
 import {CountryService} from "../../../service/supplier/country.service";
 import {MaterialSubcategory} from "../../../entity/MaterialSubcategory";
@@ -207,10 +207,10 @@ export class SupplierComponent implements OnInit {
     });
 
 
-    this.regexService.get("users").subscribe((regs: []) => {
-      this.regexes = regs;
+    // this.regexService.get("supplier").subscribe((regs: []) => {
+    //   this.regexes = regs;
       this.createForm();
-    });
+    // });
 
     const authoritiesArray = this.authService.getAuthorities();
     if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
@@ -381,9 +381,10 @@ export class SupplierComponent implements OnInit {
       // @ts-ignore
       supplier.country = this.countries.filter(country => country.name === supplier.country)[0];
 
-      supplier.supplies = this.supplier.supplies;
+      // supplier.supplies = this.supplier.supplies;
       this.supplier = supplier;
-
+      this.supplier.supplies = this.supplies;
+      this.supplier.paperSupplies = this.paperSupplies;
       let supllierdata = "";
 
       supllierdata = supllierdata + "<br>Supplier Name is : " + this.supplier.name;
@@ -688,5 +689,13 @@ export class SupplierComponent implements OnInit {
     this.form.controls["paperSupplies"].clearValidators();
     this.form.controls["paperSupplies"].updateValueAndValidity();
     this.dialog.closeAll()
+  }
+
+  resetMaterialList() {
+    this.supplies = [];
+  }
+
+  resetPaperList() {
+    this.paperSupplies = [];
   }
 }

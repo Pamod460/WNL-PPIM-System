@@ -134,8 +134,10 @@ public class SupplierServiceIMPL implements SupplierService {
         if (supplierRepository.existsByAccontHolderAndBankAccNoAndIdNot(supplier.getAccontHolder(), supplier.getBankAccNo(), supplier.getId())) {
             throw new ResourceAlreadyExistException("Bank Account Already Exists");
         }
-        for (Supply s : supplier.getSupplies()) s.setSupplier(supplier);
-        for (PaperSupply ps : supplier.getPaperSupplies()) ps.setPaperSupplier(supplier);
+        if (!supplier.getSupplies().isEmpty())
+            for (Supply s : supplier.getSupplies()) s.setSupplier(supplier);
+        if (!supplier.getPaperSupplies().isEmpty())
+            for (PaperSupply ps : supplier.getPaperSupplies()) ps.setPaperSupplier(supplier);
 
         Supplier sup = supplierRepository.save(supplier);
         return ResponseEntity.status(HttpStatus.CREATED)

@@ -102,7 +102,7 @@ public class Supplier {
     private Set<PaperSupply> paperSupplies;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER      , optional = false)
     @JoinColumn(name = "created_by_id", nullable = false)
     private User createdBy;
 

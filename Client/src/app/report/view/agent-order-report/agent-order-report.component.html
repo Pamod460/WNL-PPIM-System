@@ -1,0 +1,30 @@
+<app-report *ngIf="isLoaded"
+            [title]="'Agents By Order'"
+            [data]="agentcoutbyorders"
+            [columns]="columns"
+            [headers]="headers"
+            [binders]="binders"
+            [matchedNavItem]="'Agents By Order'" [isStaticReport]="false">
+  <div form-slot>
+    <form [formGroup]="filterForm" class="d-flex w-100 h-100">
+      <mat-form-field appearance="outline" class="me-2 my-auto">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startDate" formControlName="startDate" readonly>
+        <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+        <mat-datepicker #startDate></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="me-2 my-auto">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="endDate" formControlName="endDate" readonly>
+        <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+        <mat-datepicker #endDate></mat-datepicker>
+      </mat-form-field>
+      <div class="mt-3 d-flex" >
+        <button (click)="btnSearchMc()" class="btn btn-dark me-2 h-50"><mat-icon>search</mat-icon></button>
+        <button class="btn btn-dark h-50" (click)="resetForm()"> Clear</button>
+      </div>
+
+    </form>
+  </div>
+</app-report>
+

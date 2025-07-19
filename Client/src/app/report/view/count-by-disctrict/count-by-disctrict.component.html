@@ -1,0 +1,106 @@
+
+
+<mat-grid-list [cols]="1" rowHeight="2rem">
+  <mat-grid-tile [colspan]="1" [rowspan]="3" class="grid-title">
+    <div class="d-flex w-100">
+      <app-custom-breadcrumb [matchedNavItem]="matchedNavItem" ></app-custom-breadcrumb>
+    </div>
+
+  </mat-grid-tile>
+  <mat-grid-tile [colspan]="1" [rowspan]="5" class="grid-title">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Interactive Panel</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="d-flex flex-row justify-content-between">
+        <h3 class="mt-3">Static Report - No Interactive Panel Available</h3>
+        <button class="my-auto btn btn-outline-primary d-flex align-items-center gap-1 p-3" (click)="downloadPDF()">
+          <mat-icon>print</mat-icon>
+          Print
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
+  <mat-grid-list [cols]="1" rowHeight="2rem" id="pdfContent">
+  <mat-grid-tile [colspan]="1" [rowspan]="12">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Table View</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-table [dataSource]="data">
+          <ng-container *ngFor="let column of columns; let i = index;" [matColumnDef]="column">
+            <mat-header-cell *matHeaderCellDef> {{ headers[i] }}</mat-header-cell>
+            <mat-cell *matCellDef="let element"> {{ element[binders[i]] }}</mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+        </mat-table>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Bar Chart</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+        <div class="w-100 d-flex justify-content-center align-items-center">
+          <div style="width: 500px; height: 400px;">
+            <canvas baseChart
+                    [data]="barChartData"
+                    [options]="barchartOptions"
+                    [type]="barChartType">
+            </canvas>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-grid-tile>
+
+
+  <mat-grid-tile [colspan]="1" [rowspan]="12">
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Pie Chat View</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+
+
+        <div class="w-100 d-flex justify-content-center align-items-center">
+          <div style="width: 500px; height: 400px;">
+            <canvas baseChart
+                    [data]="chartData"
+                    [options]="chartOptions"
+                    [type]="chartType">
+            </canvas>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Line Chart View</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="w-100 d-flex justify-content-center align-items-center">
+          <div style="width: 500px; height: 400px;">
+            <canvas baseChart
+                    [data]="lineChartData"
+                    [options]="linechartOptions"
+                    [type]="lineChartType">
+            </canvas>
+          </div>
+        </div>
+
+
+      </mat-card-content>
+    </mat-card>
+
+  </mat-grid-tile>
+
+</mat-grid-list>

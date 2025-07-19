@@ -1,0 +1,126 @@
+<div class="mt-5 w-100 cus-container">
+  <mat-card class="card">
+    <mat-card-header class="bg-body-secondary pb-3">
+      <mat-card-title>Agent Registration</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="registrationForm"  class="mt-5">
+        <div class="row">
+          <div class="col-md-6">
+            <!-- Full Name -->
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Full Name</mat-label>
+              <input matInput formControlName="fullName" placeholder="Enter your full name" />
+              <mat-error *ngIf="fullNameControl?.invalid && (fullNameControl?.touched || submitted)">
+                Full name is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <!-- Number (readonly) -->
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Registration Number</mat-label>
+              <input matInput readonly formControlName="number" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <!-- NIC -->
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>NIC</mat-label>
+              <input matInput formControlName="nic" placeholder="Enter your NIC" />
+              <mat-error *ngIf="nicControl?.invalid && (nicControl?.touched || submitted)">
+                Valid NIC is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <!-- Email -->
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Email</mat-label>
+              <input matInput type="email" formControlName="email" placeholder="Enter your email" />
+              <mat-error *ngIf="emailControl?.invalid && (emailControl?.touched || submitted)">
+                Valid email is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <!-- Mobile -->
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Mobile</mat-label>
+              <input matInput type="tel" formControlName="mobile" placeholder="Enter your mobile number" />
+              <mat-error *ngIf="mobileControl?.invalid && (mobileControl?.touched || submitted)">
+                Valid mobile number is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <!-- Land -->
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Land</mat-label>
+              <input matInput formControlName="land" placeholder="Enter your land number" />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Address -->
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Address</mat-label>
+          <textarea matInput formControlName="address" placeholder="Enter your address" rows="3"></textarea>
+          <mat-error *ngIf="addressControl?.invalid && (addressControl?.touched || submitted)">
+            Address is required.
+          </mat-error>
+        </mat-form-field>
+
+        <div class="row">
+          <div class="col-md-6">
+            <!-- District -->
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>District</mat-label>
+              <mat-select formControlName="district">
+                <mat-option [value]="null" selected>Not Selected</mat-option>
+                <mat-option *ngFor="let d of districts" [value]="d">{{ d.name }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="districtControl?.invalid && (districtControl?.touched || submitted)">
+                District is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="col-md-6">
+            <!-- Route -->
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Route</mat-label>
+              <mat-select formControlName="route">
+                <mat-option [value]="null" selected>Not Selected</mat-option>
+                <mat-option *ngFor="let r of routes" [value]="r">{{ r.name }}</mat-option>
+              </mat-select>
+              <mat-error *ngIf="routeControl?.invalid && (routeControl?.touched || submitted)">
+                Route is required.
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+
+<div class="w-100 d-flex justify-content-end">
+
+  <button class="btn btn-outline-secondary p-3 align-self-end me-2">Cancel</button>
+  <button class="btn btn-outline-dark p-3 align-self-end" (click)="onSubmit()">Register</button>
+
+</div>
+
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

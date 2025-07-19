@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin
 @RestController
@@ -16,26 +17,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PaperController {
 
-
     private final PaperService paperService;
 
     @GetMapping(produces = "application/json")
-    public List<PaperDto> get(@RequestParam HashMap<String, String> params) {
+    public List<PaperDto> getAll(@RequestParam HashMap<String, String> params) {
         return paperService.getAllList(params);
     }
 
     @GetMapping(path = "/list", produces = "application/json")
-    public List<PaperDto> get() {
+    public List<PaperDto> getAllList() {
         return paperService.getAllList();
+    }
+    @GetMapping(value = "/next", produces = "application/json")
+    public ResponseEntity<Map<String, String>> getNextCode(@RequestParam("textPart") String textPart) {
+        return paperService.getNextCode(textPart);
     }
 
     @PostMapping(produces = "application/json")
     public ResponseEntity<StandardResponse> save(@RequestBody PaperDto paperDto) {
+        System.out.println(paperDto.getDoIntroduced());
         return paperService.save(paperDto);
     }
 
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody PaperDto paperDto) {
+        System.out.println(paperDto.getDoIntroduced());
         return paperService.update(paperDto);
 
     }
@@ -43,7 +49,6 @@ public class PaperController {
     @DeleteMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return paperService.detele(id);
-
     }
 
 }

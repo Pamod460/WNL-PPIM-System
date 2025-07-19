@@ -3,22 +3,6 @@
   <div class="circle"></div>
   <div class="circle"></div>
   <div class="circle"></div>
-<!--    <div class="sine-wave-container">-->
-<!--      <div class="sine-wave"></div>-->
-<!--        <div class="snake-container">-->
-<!--          <div class="snake-part"></div>-->
-<!--          <div class="snake-part"></div>-->
-<!--          <div class="snake-part"></div>-->
-<!--          <div class="snake-part"></div>-->
-<!--          <div class="snake-part"></div>-->
-<!--        </div>-->
-
-<!--      </div>-->
-
-<!--  <div class="water-container">-->
-<!--    <div class="water"></div>-->
-<!--  </div>-->
-
 </div>
 
 <!--</div>-->
@@ -47,17 +31,16 @@
     <mat-card class="login-container">
       <mat-card-header style="color: #ffffff ;text-align: center;display: flex;justify-content: center; padding-bottom: -500px" >
         <mat-card-title >
-
           Sign In To Your Account
         </mat-card-title>
 
       </mat-card-header>
-      <mat-card-content class="p-0">
-        <div class="login-box">
-
-
-        <form [formGroup]="loginform" autocomplete="off">
-          <mat-form-field appearance="outline">
+      <mat-card-content class="p-0 ">
+        <div class="login-box d-flex flex-column">
+<!--<img src="assets/wnl_logo_3.png" class="w-25">-->
+<!--          autocomplete="off"?-->
+        <form [formGroup]="loginform" class="pt-5" >
+          <mat-form-field appearance="outline" >
             <mat-label>User Name</mat-label>
             <input matInput formControlName="username" autocomplete="off">
             <mat-error *ngIf="loginform.get('username')?.hasError('required') && loginform.get('username')?.touched" class="error-text">
@@ -73,18 +56,19 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" >
             <mat-label>Password</mat-label>
-            <input matInput type="password" formControlName="password" autocomplete="new-password">
+            <input matInput type="password" formControlName="password" >
           </mat-form-field>
+<!--          autocomplete="new-password"-->
           <div class="remember">
-
 
             <mat-checkbox color="primary" class="custom-checkbox">Remember Me</mat-checkbox>
           </div>
           <mat-card-actions align="end">
             <button btn-a mat-raised-button (click)="authenticate()">Login</button>
-            <button btn-b mat-raised-button (click)="signup()">Sign Up</button>
+            <div class=" w-100 d-flex justify-content-start"><p>Don't have an account yet? <a (click)="signup()">Sign Up</a></p> </div>
+            <button btn-b mat-raised-button routerLink="/public/welcome">Go to Agent Portal</button>
           </mat-card-actions>
         </form></div>
       </mat-card-content>

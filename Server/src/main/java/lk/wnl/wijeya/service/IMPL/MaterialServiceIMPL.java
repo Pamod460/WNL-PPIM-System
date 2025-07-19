@@ -15,8 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,7 +58,7 @@ public class MaterialServiceIMPL implements MaterialService {
         List<Material> materials = materialRepository.findAll();
         List<MaterialDto> materialsList = objectMapper.toMaterialDtoList(materials);
         materialsList = materialsList.stream().map(
-                mat -> new MaterialDto(mat.getId(), mat.getName(), mat.getUnitprice())
+                mat -> new MaterialDto(mat.getId(), mat.getName(), mat.getUnitPrice())
         ).collect(Collectors.toList());
         return materialsList;
     }
@@ -93,7 +96,64 @@ public class MaterialServiceIMPL implements MaterialService {
         Material material = materialRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Material Not Found"));
         materialRepository.delete(material);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new StandardResponse("Material Deleted Successfully", null));
+                .body(new StandardResponse("Material Deleted Successfully", material.getId()));
     }
 
+    @Override
+    public ResponseEntity<Map<String, String>> getNextCode(String textPart) {
+        Material lastMaterial = materialRepository.findTopByCodeStartingWithOrderByCodeDesc(textPart);
+
+        int nextNumber = 1;
+        if (lastMaterial != null && lastMaterial.getCode().length() > textPart.length()) {
+            try {
+                String numberPart = lastMaterial.getCode().substring(textPart.length());
+                nextNumber = Integer.parseInt(numberPart) + 1;
+            } catch (NumberFormatException e) {
+                nextNumber = 1;
+            }
+        }
+
+        String nextCode = textPart.toUpperCase() + String.format("%03d", nextNumber); // e.g., WP0001
+
+        Map<String, String> result = new HashMap<>();
+        result.put("code", nextCode);
+        return ResponseEntity.ok(result);
+    }
+
+    @Override
+    @Transactional
+    public void increaseQuantity(Integer id, BigDecimal quantity) {
+        if (quantity == null || quantity.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Quantity must be a non-negative value");
+        }
+
+        Material material = materialRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Material not found with ID: " + id));
+
+        BigDecimal newQuantity = material.getQuantity().add(quantity);
+        if (newQuantity.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalStateException("Quantity cannot be negative");
+        }
+
+        material.setQuantity(newQuantity);
+        materialRepository.save(material);
+    }
+    @Override
+    @Transactional
+    public void decreaseQuantity(Integer id, BigDecimal quantity) {
+        if (quantity == null || quantity.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Quantity must be a non-negative value");
+        }
+
+        Material material = materialRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Material not found with ID: " + id));
+
+        BigDecimal newQuantity = material.getQuantity().subtract(quantity);
+        if (newQuantity.compareTo(material.getRop()) < 0) {
+            throw new IllegalStateException("Quantity cannot be reduced below the reorder point: " + material.getRop());
+        }
+
+        material.setQuantity(newQuantity);
+        materialRepository.save(material);
+    }
 }
