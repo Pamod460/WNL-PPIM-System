@@ -623,6 +623,7 @@ this.supplierpayment.supplierPaymentGrns?.forEach(value => {
     } else if (value.value.id == 1) {
       this.paperGrnService.getAllList().subscribe(response => {
         this.grns = response;
+        this.grns=this.grns.filter(grn=>grn.paperGrnStatus.id==1)
       })
     }
   }

@@ -19,4 +19,6 @@ public interface ProductionOrderService {
     ResponseEntity<StandardResponse> detele(Integer id);
 
     ResponseEntity<Map<String, String>> getNextCode();
+
+    void updateProductionOrderStatus(Integer paperPOrderId, Integer statusId);
 }

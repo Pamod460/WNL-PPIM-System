@@ -9,6 +9,7 @@ import lk.wnl.wijeya.repository.MaterialIssueRepository;
 import lk.wnl.wijeya.repository.UserRepository;
 import lk.wnl.wijeya.service.MaterialIssueService;
 import lk.wnl.wijeya.service.MaterialService;
+import lk.wnl.wijeya.service.ProductionOrderService;
 import lk.wnl.wijeya.util.StandardResponse;
 import lk.wnl.wijeya.util.mapper.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ public class MaterialIssueServiceIMPL implements MaterialIssueService {
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
     private final MaterialService materialService;
+    private final ProductionOrderService productionOrderService;
 
     @Override
     public List<MaterialIssueDto> getAll() {
@@ -92,7 +94,7 @@ public class MaterialIssueServiceIMPL implements MaterialIssueService {
             materialService.decreaseQuantity(issuedMaterial.getMaterial().getId(), BigDecimal.valueOf(issuedMaterial.getQuantity()));
         }
 
-
+        productionOrderService.updateProductionOrderStatus(materialIssue.getProductionOrder().getId(), 2);
         MaterialIssue savedMaterialIssue = materialIssueRepository.save(materialIssue);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new StandardResponse(HttpStatus.CREATED.value(), "Material Issue Added Successfully",
