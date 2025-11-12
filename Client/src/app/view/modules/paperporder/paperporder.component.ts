@@ -278,7 +278,7 @@ export class PaperporderComponent implements OnInit {
         next:
           (statuses: PaperPorderStatus[]) => {
             this.paperPorderStatuses = statuses;
-            this.form.get("paperPorderStatus")?.setValue(this.paperPorderStatuses.find(m => m.id == 1))
+            // this.form.get("paperPorderStatus")?.setValue(this.paperPorderStatuses.find(m => m.id == 1))
           }, error: (error: any) => {
           console.error('Error fetching Paper POrder  statuses:', error);
         }

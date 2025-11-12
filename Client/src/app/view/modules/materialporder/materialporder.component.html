@@ -130,13 +130,13 @@
         </mat-form-field>
       </div>
       <div *ngIf="accRole">
-        <mat-label class="me-2">Accountant Approval</mat-label>
+        <mat-label class="me-2">Accounts Manager Approval</mat-label>
         <app-approve-button
           formControlName="accountentApproved"
           (approvalChange)="onApprovalChange($event)" class="ms-4" [disabled]="isDisabledAcApproval">
         </app-approve-button>
         <mat-form-field appearance="outline" class="mt-3">
-          <mat-label>Approved Accountant</mat-label>
+          <mat-label>Approved Accounts Manager</mat-label>
           <input matInput formControlName="approvedAccountantName" readonly>
         </mat-form-field>
       </div>
