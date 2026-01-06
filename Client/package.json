@@ -30,7 +30,7 @@
     "generate-password": "^1.7.1",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.3",
-    "jspdf": "^3.0.1",
+    "jspdf": "^4.0.0",
     "jwt-decode": "^4.0.0",
     "ng2-charts": "^4.1.1",
     "ngx-toastr": "^16.2.0",
