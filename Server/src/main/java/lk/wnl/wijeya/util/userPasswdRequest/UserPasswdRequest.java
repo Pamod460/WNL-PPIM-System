@@ -1,7 +1,12 @@
 package lk.wnl.wijeya.util.userPasswdRequest;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.Pattern;
 
+@Setter
+@Getter
 public class UserPasswdRequest {
 
     public String userName;
@@ -9,21 +14,5 @@ public class UserPasswdRequest {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Invalid Password")
     public String newPasswd;
 
-    public UserPasswdRequest(){}
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getNewPasswd() {
-        return newPasswd;
-    }
-
-    public void setNewPasswd(String newPasswd) {
-        this.newPasswd = newPasswd;
-    }
 }
