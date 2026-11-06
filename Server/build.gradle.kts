@@ -39,6 +39,7 @@ dependencies {
 
 	// Required for proper Lombok + MapStruct integration
 	annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
+	runtimeOnly("com.mysql:mysql-connector-j")
 
 	// Lombok (for test code)
 	testCompileOnly("org.projectlombok:lombok")

@@ -4,7 +4,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {ReportService} from "../../reportservice";
 import {ChartData, ChartOptions} from "chart.js";
 // @ts-ignore
-import * as html2pdf from 'html2pdf.js';
+import html2pdf from 'html2pdf.js';
 @Component({
   selector: 'app-count-by-disctrict',
   templateUrl: './count-by-disctrict.component.html',
@@ -141,9 +141,9 @@ export class CountByDisctrictComponent implements OnInit{
       const opt = {
         margin: 0.5,
         filename: 'document.pdf',
-        image: { type: 'jpeg', quality: 1 },
+        image: { type: 'jpeg' as const, quality: 1 },
         html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'in', format: 'a3', orientation: 'portrait' },
+        jsPDF: { unit: 'in', format: 'a3', orientation: 'portrait' as const },
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       };
 
