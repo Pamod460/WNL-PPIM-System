@@ -26,6 +26,7 @@ import {MaterialPorderMaterial} from "../../../entity/MaterialPorderMaterial";
 
 
 @Component({
+  standalone: false,
   selector: 'app-materialporder',
   templateUrl: './materialporder.component.html',
   styleUrls: ['./materialporder.component.css']

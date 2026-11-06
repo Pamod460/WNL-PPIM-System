@@ -18,6 +18,7 @@ import { AgentOrderStatus } from "../../entity/agentOrderStatus";
 import { AgentorderstatusService } from "../../service/agentorder/agentorderstatus.service";
 
 @Component({
+  standalone: false,
   selector: 'app-agent-order-public',
   templateUrl: './agent-order-public.component.html',
   styleUrls: ['./agent-order-public.component.css']

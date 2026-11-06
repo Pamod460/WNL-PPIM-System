@@ -5,6 +5,7 @@ import {MatMenuTrigger} from "@angular/material/menu";
 import {filter} from "rxjs/operators";
 
 @Component({
+  standalone: false,
   selector: 'app-mainwindow',
   templateUrl: './mainwindow.component.html',
   styleUrls: ['./mainwindow.component.css']

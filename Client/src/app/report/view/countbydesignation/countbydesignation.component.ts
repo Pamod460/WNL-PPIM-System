@@ -6,6 +6,7 @@ import {MatTableDataSource} from "@angular/material/table";
 declare let google: { charts: { load: (arg0: string, arg1: { packages: string[]; }) => void; setOnLoadCallback: (arg0: () => void) => void; }; visualization: { DataTable: new () => any; BarChart: new (arg0: any) => any; PieChart: new (arg0: any) => any; LineChart: new (arg0: any) => any; }; };
 
 @Component({
+  standalone: false,
   selector: 'app-designation',
   templateUrl: './countbydesignation.component.html',
   styleUrls: ['./countbydesignation.component.css']

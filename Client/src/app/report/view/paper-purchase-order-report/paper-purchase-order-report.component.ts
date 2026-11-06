@@ -6,6 +6,7 @@ import {CountByDesignation} from "../../entity/countbydesignation";
 import {DatePipe} from "@angular/common";
 
 @Component({
+  standalone: false,
   selector: 'app-purchase-order-report',
   templateUrl: './paper-purchase-order-report.component.html',
   styleUrls: ['./paper-purchase-order-report.component.css']

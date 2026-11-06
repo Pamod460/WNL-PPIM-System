@@ -28,6 +28,7 @@ import {PaperSizeService} from "../../../service/Paper/paper-size.service";
 
 
 @Component({
+  standalone: false,
   selector: 'app-paper',
   templateUrl: './paper.component.html',
   styleUrls: ['./paper.component.css']

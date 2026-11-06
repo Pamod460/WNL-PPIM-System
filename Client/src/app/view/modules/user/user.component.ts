@@ -24,6 +24,7 @@ import {UsrtypeService} from "../../../service/user/usrtype.service";
 import {ToastrService} from "ngx-toastr";
 
 @Component({
+  standalone: false,
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']

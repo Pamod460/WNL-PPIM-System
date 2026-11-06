@@ -6,6 +6,7 @@ import {ChartData, ChartOptions} from "chart.js";
 // @ts-ignore
 import html2pdf from 'html2pdf.js';
 @Component({
+  standalone: false,
   selector: 'app-count-by-disctrict',
   templateUrl: './count-by-disctrict.component.html',
   styleUrls: ['./count-by-disctrict.component.css']

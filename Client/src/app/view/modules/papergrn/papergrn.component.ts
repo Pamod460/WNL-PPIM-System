@@ -27,6 +27,7 @@ import {MaterialPorderMaterial} from "../../../entity/MaterialPorderMaterial";
 import {PaperPorderPaper} from "../../../entity/PaperPorderPaper";
 
 @Component({
+  standalone: false,
   selector: 'app-papergrn',
   templateUrl: './papergrn.component.html',
   styleUrls: ['./papergrn.component.css']

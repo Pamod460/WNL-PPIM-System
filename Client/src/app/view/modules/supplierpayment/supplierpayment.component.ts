@@ -34,6 +34,7 @@ import {Supplierpayment} from "../../../entity/supplierpayment";
 import {Supplierpaymentgrn} from "../../../entity/supplierpaymentgrn";
 
 @Component({
+  standalone: false,
   selector: 'app-supplierpayment',
   templateUrl: './supplierpayment.component.html',
   styleUrls: ['./supplierpayment.component.css']

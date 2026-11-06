@@ -18,6 +18,7 @@ import {AuthorizationManager} from "../../../service/auth/authorizationmanager";
 import {ToastrService} from "ngx-toastr";
 
 @Component({
+  standalone: false,
   selector: 'app-privileg',
   templateUrl: './privilage.component.html',
   styleUrls: ['./privilage.component.css']
