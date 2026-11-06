@@ -26,5 +26,5 @@ public interface UserService {
 
     Collection<UserRoleDto> getUserRoleByUsername(String username);
 
-    ResponseEntity<StandardResponse> updateUserPassword(UserPasswdRequest userPasswdRequest);
+    ResponseEntity<StandardResponse> updateUserPassword(String username, UserPasswdRequest userPasswdRequest);
 }

@@ -129,14 +129,24 @@ public class UserServiceIMPL implements UserService {
     }
 
     @Override
-    public ResponseEntity<StandardResponse> updateUserPassword(UserPasswdRequest userPasswdRequest) {
-        User existingUser = userRepository.findByUsername(userPasswdRequest.getUserName());
+    public ResponseEntity<StandardResponse> updateUserPassword(String username, UserPasswdRequest userPasswdRequest) {
+        User existingUser = userRepository.findByUsername(username);
 
         if (existingUser == null) {
             throw new ResourceNotFoundException("User does not exist");
         }
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+        if (!passwordEncoder.matches(userPasswdRequest.getCurrentPasswd(), existingUser.getPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new StandardResponse(HttpStatus.BAD_REQUEST.value(), "Current password is incorrect", null));
+        }
+        if (passwordEncoder.matches(userPasswdRequest.getNewPasswd(), existingUser.getPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new StandardResponse(HttpStatus.BAD_REQUEST.value(), "New password must be different from the current password", null));
+        }
+
         String hashPasswd = passwordEncoder.encode(userPasswdRequest.getNewPasswd());
 
         existingUser.setPassword(hashPasswd);

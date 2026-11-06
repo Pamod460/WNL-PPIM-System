@@ -34,6 +34,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(private userService: UserService, public authorizationManager: AuthorizationManager, private formBuilder: FormBuilder, private matDialog: MatDialog, private regexService: RegexService,) {
     this.updatePasswdForm = this.formBuilder.group({
+      "currentpasswd": new FormControl("", Validators.required),
       "newpasswd": new FormControl(),
       "confirmpasswd": new FormControl()
     });
@@ -86,14 +87,12 @@ export class ProfileComponent implements OnInit {
       confirmDialog.afterClosed().subscribe(result => {
         if (result) { // If user confirms, proceed with password update
           this.passwdChangeRequest = {
-            newPasswd: this.newPassword,
-            userName: this.authorizationManager.getUsername()
+            currentPasswd: this.updatePasswdForm.controls["currentpasswd"].value,
+            newPasswd: this.newPassword
           };
 
-          this.userService.updatePassword(this.passwdChangeRequest).subscribe(value => {
-            console.log(value);
-
-
+          this.userService.updatePassword(this.passwdChangeRequest).subscribe({
+           next: () => {
             const successMsg = this.matDialog.open(MessageComponent, {
               width: '500px',
               data: {
@@ -105,6 +104,16 @@ export class ProfileComponent implements OnInit {
             successMsg.afterClosed().subscribe(() => {
               this.authorizationManager.performLogout(); // Logs the user out after password update
             });
+           },
+           error: err => {
+             this.matDialog.open(MessageComponent, {
+               width: '500px',
+               data: {
+                 heading: "Password Not Updated",
+                 message: err.error?.message || "Could not update the password. Please try again."
+               }
+             });
+           }
           });
         }
       });
@@ -121,7 +130,9 @@ export class ProfileComponent implements OnInit {
 
       if (control.errors) {
 
-        if (this.regexes[controlName] != undefined) {
+        if (controlName === 'currentpasswd') {
+          errors = errors + "<br>Current Password is required";
+        } else if (this.regexes[controlName] != undefined) {
           errors = errors + "<br>" + this.regexes[controlName]['message'];
         } else {
           errors = errors + "<br>Invalid New Password";

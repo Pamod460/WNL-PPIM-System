@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.security.Principal;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -58,8 +61,10 @@ public class UserController {
     }
 
     @PutMapping("/user-passwd-update")
-    public ResponseEntity<StandardResponse> updateUserPasswd(@RequestBody UserPasswdRequest userPasswdRequest) {
-        return userService.updateUserPassword(userPasswdRequest);
+    public ResponseEntity<StandardResponse> updateUserPasswd(@Valid @RequestBody UserPasswdRequest userPasswdRequest,
+                                                             Principal principal) {
+        // Only the logged-in user can change their own password; the username in the body is ignored.
+        return userService.updateUserPassword(principal.getName(), userPasswdRequest);
     }
 
-}
+}
