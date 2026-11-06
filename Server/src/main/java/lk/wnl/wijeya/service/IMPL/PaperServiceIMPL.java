@@ -131,7 +131,7 @@ public class PaperServiceIMPL implements PaperService {
 
         BigDecimal newQuantity = paper.getQoh().add(quantity);
         if (newQuantity.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalStateException("Quantity cannot be negative");
+            throw new ResourceNotFoundException("Quantity cannot be negative");
         }
 
         paper.setQoh(newQuantity);
@@ -141,7 +141,7 @@ public class PaperServiceIMPL implements PaperService {
     @Transactional
     public void decreaseQuantity(Integer id, BigDecimal quantity) {
         if (quantity == null || quantity.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Quantity must be a non-negative value");
+            throw new ResourceNotFoundException("Quantity must be a non-negative value");
         }
 
         Paper paper = paperRepository.findById(id)
@@ -149,7 +149,7 @@ public class PaperServiceIMPL implements PaperService {
 
         BigDecimal newQuantity = paper.getQoh().subtract(quantity);
         if (newQuantity.compareTo(paper.getRop()) < 0) {
-            throw new IllegalStateException("Quantity cannot be reduced below the reorder point: " + paper.getRop());
+            throw new ResourceNotFoundException("Cannot be Issue Requested Quantity the reorder point is: " + paper.getRop());
         }
 
         paper.setQoh(newQuantity);

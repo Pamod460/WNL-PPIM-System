@@ -36,10 +36,19 @@ public class MaterialDto {
         this.name = name;
     }
 
+    public MaterialDto(Integer id, String name, BigDecimal quantity, BigDecimal rop, BigDecimal unitPrice) {
+        this.id = id;
+        this.name = name;
+        this.quantity = quantity;
+        this.rop = rop;
+        this.unitPrice = unitPrice;
+    }
 
     public MaterialDto(Integer id, String name, BigDecimal unitPrice) {
         this.id = id;
         this.name = name;
         this.unitPrice = unitPrice;
     }
+
+
 }

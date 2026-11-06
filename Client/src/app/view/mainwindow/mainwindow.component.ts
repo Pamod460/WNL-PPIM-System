@@ -63,7 +63,7 @@ export class MainwindowComponent implements OnInit, OnDestroy {
     this.userImage = this.authorizationManager.getUserProfile();
     // @ts-ignore
     this.activeRole = this.authorizationManager.getRoles()[0].name;
-
+    this.activeRole=this.activeRole =="Accountant"?"Account Manager":this.activeRole;
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => this.setActivePanelFromRoute());

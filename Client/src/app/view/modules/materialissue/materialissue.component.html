@@ -9,7 +9,7 @@
         <mat-label>Production Order</mat-label>
         <mat-select formControlName="productionOrder">
           <mat-option [value]="null" selected>Not Selected</mat-option>
-          <mat-option *ngFor="let order of productionOrders" [value]="order">
+          <mat-option *ngFor="let order of filterdProductionOrders" [value]="order">
             {{ order.orderNo }}
           </mat-option>
         </mat-select>

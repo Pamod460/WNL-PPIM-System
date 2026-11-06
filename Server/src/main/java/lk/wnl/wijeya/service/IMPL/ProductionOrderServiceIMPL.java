@@ -6,6 +6,7 @@ import lk.wnl.wijeya.entity.*;
 import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
 import lk.wnl.wijeya.exception.ResourceNotFoundException;
 import lk.wnl.wijeya.repository.ProductionOrderRepository;
+import lk.wnl.wijeya.repository.ProductionOrderStatusRepository;
 import lk.wnl.wijeya.repository.UserRepository;
 import lk.wnl.wijeya.service.ProductionOrderService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -29,6 +30,7 @@ public class ProductionOrderServiceIMPL implements ProductionOrderService {
 
     private final ObjectMapper objectMapper;
     private final ProductionOrderRepository productionOrderRepository;
+    private final ProductionOrderStatusRepository productionOrderStatusRepository;
     private final UserRepository userRepository;
     @Override
     public List<ProductionOrderDto> getAllList(HashMap<String, String> params) {
@@ -117,5 +119,19 @@ public class ProductionOrderServiceIMPL implements ProductionOrderService {
         Map<String, String> result = new HashMap<>();
         result.put("code", nextCode);
         return ResponseEntity.ok(result);
+    }
+
+    @Override
+    public void updateProductionOrderStatus(Integer paperPOrderId, Integer statusId) {
+
+        ProductionOrder paperPorder = productionOrderRepository.findById(paperPOrderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper POrder not found"));
+
+        ProductionOrderStatus status = productionOrderStatusRepository.findById(statusId)
+                .orElseThrow(() -> new ResourceNotFoundException("Status not found"));
+
+        paperPorder.setProductionOrderStatus(status);
+        productionOrderRepository.save(paperPorder);
+
     }
 }

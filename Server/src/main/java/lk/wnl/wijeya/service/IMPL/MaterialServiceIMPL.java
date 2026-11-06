@@ -57,8 +57,9 @@ public class MaterialServiceIMPL implements MaterialService {
     public List<MaterialDto> getAllList() {
         List<Material> materials = materialRepository.findAll();
         List<MaterialDto> materialsList = objectMapper.toMaterialDtoList(materials);
+
         materialsList = materialsList.stream().map(
-                mat -> new MaterialDto(mat.getId(), mat.getName(), mat.getUnitPrice())
+                mat -> new MaterialDto(mat.getId(), mat.getName(),mat.getQuantity(),mat.getRop(), mat.getUnitPrice())
         ).collect(Collectors.toList());
         return materialsList;
     }
@@ -124,7 +125,7 @@ public class MaterialServiceIMPL implements MaterialService {
     @Transactional
     public void increaseQuantity(Integer id, BigDecimal quantity) {
         if (quantity == null || quantity.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Quantity must be a non-negative value");
+            throw new ResourceNotFoundException("Quantity must be a non-negative value");
         }
 
         Material material = materialRepository.findById(id)
@@ -132,7 +133,7 @@ public class MaterialServiceIMPL implements MaterialService {
 
         BigDecimal newQuantity = material.getQuantity().add(quantity);
         if (newQuantity.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalStateException("Quantity cannot be negative");
+            throw new ResourceNotFoundException("Quantity cannot be negative");
         }
 
         material.setQuantity(newQuantity);
@@ -142,7 +143,7 @@ public class MaterialServiceIMPL implements MaterialService {
     @Transactional
     public void decreaseQuantity(Integer id, BigDecimal quantity) {
         if (quantity == null || quantity.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Quantity must be a non-negative value");
+            throw new ResourceNotFoundException("Quantity must be a non-negative value");
         }
 
         Material material = materialRepository.findById(id)
@@ -150,7 +151,7 @@ public class MaterialServiceIMPL implements MaterialService {
 
         BigDecimal newQuantity = material.getQuantity().subtract(quantity);
         if (newQuantity.compareTo(material.getRop()) < 0) {
-            throw new IllegalStateException("Quantity cannot be reduced below the reorder point: " + material.getRop());
+            throw new ResourceNotFoundException("Cannot be Issue Requested Quantity the reorder point is: " + material.getRop());
         }
 
         material.setQuantity(newQuantity);

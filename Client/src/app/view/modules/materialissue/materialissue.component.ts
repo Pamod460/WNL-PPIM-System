@@ -20,6 +20,7 @@ import {MessageComponent} from "../../../util/dialog/message/message.component";
 import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
 import {MaterialService} from "../../../service/material/material.service";
 import {ProductionorderService} from "../../../service/productionorder/productionorder.service";
+import {Productionorderstatus} from "../../../entity/productionorderstatus";
 
 @Component({
   selector: 'app-materialissue',
@@ -63,6 +64,7 @@ export class MaterialissueComponent implements OnInit {
   districts: District[] = [];
 
   materialList!: Material[];
+
   matchedNavItem = 'Material Issue';
   materialForm: FormGroup
   isInnerDataUpdated = false;
@@ -72,6 +74,7 @@ export class MaterialissueComponent implements OnInit {
   protected readonly document = document;
   materialPorders: MaterialPorder[] = [];
   productionOrders: Productionorder[] = [];
+   filterdProductionOrders: Productionorder[]=[];
 
   constructor(
     private materialIssueService: MaterialissueService,
@@ -233,7 +236,10 @@ export class MaterialissueComponent implements OnInit {
     this.materialService.getAllList().subscribe({
       next: (materials: Material[]) => {
         this.materialList = materials;
-        this.filteredMaterialList = this.materialList;
+        // @ts-ignore
+        this.filteredMaterialList = this.materialList.filter(mat=>Number.parseInt( mat.rop)< Number.parseInt( mat.quantity))
+
+        console.log(this.filteredMaterialList,this.materialList)
       }, error: (err: any) => {
         console.log(err);
       }
@@ -241,6 +247,7 @@ export class MaterialissueComponent implements OnInit {
 
     this.productionOrderService.getAll("").subscribe(response => {
       this.productionOrders = response;
+      this.filterdProductionOrders=this.productionOrders.filter(x=>x.productionOrderStatus.id==1)
     })
     const authoritiesArray = this.authService.getAuthorities();
     if (authoritiesArray !== undefined && Array.isArray(authoritiesArray)) {
@@ -408,6 +415,7 @@ export class MaterialissueComponent implements OnInit {
                 this.resetForm()
               })
             }, error: (error) => {
+
               this.toastrService.error(error.error.data.message)
             }
           });
