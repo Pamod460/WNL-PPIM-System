@@ -27,6 +27,7 @@ import {ProductdesignService} from "../../../service/productdesign/productdesign
 
 
 @Component({
+  standalone: false,
   selector: 'app-agentorder',
   templateUrl: './agentorder.component.html',
   styleUrls: ['./agentorder.component.css']

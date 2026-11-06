@@ -24,6 +24,7 @@ import {TableUtilsService} from "../../../service/Shared/table-utils.service";
 
 
 @Component({
+  standalone: false,
   selector: 'app-employee',
   templateUrl: './employee.component.html',
   styleUrls: ['./employee.component.css']

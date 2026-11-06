@@ -2,6 +2,7 @@ import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
+  standalone: false,
   selector: 'app-dialog',
   templateUrl: './confirm.component.html',
   styleUrls: ['./confirm.component.css']

@@ -32,6 +32,7 @@ import {PaperTypeService} from "../../../service/Paper/paper-type.service";
 
 
 @Component({
+  standalone: false,
   selector: 'app-supplier',
   templateUrl: './supplier.component.html',
   styleUrls: ['./supplier.component.css'],

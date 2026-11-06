@@ -27,6 +27,7 @@ import {Productdesign} from "../../../entity/productdesign";
 import {ProductdesignService} from "../../../service/productdesign/productdesign.service";
 
 @Component({
+  standalone: false,
   selector: 'app-distribution',
   templateUrl: './distribution.component.html',
   styleUrls: ['./distribution.component.css']

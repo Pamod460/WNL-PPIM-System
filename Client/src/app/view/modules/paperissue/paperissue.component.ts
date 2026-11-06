@@ -21,6 +21,7 @@ import {Productionorder} from "../../../entity/productionorder";
 import {ProductionorderService} from "../../../service/productionorder/productionorder.service";
 
 @Component({
+  standalone: false,
   selector: 'app-paperissue',
   templateUrl: './paperissue.component.html',
   styleUrls: ['./paperissue.component.css']

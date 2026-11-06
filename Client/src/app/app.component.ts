@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {AuthorizationManager} from "./service/auth/authorizationmanager";
 
 @Component({
+  standalone: false,
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']

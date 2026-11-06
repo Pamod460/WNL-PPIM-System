@@ -23,6 +23,7 @@ import {ProductionorderService} from "../../../service/productionorder/productio
 import {Productionorderstatus} from "../../../entity/productionorderstatus";
 
 @Component({
+  standalone: false,
   selector: 'app-materialissue',
   templateUrl: './materialissue.component.html',
   styleUrls: ['./materialissue.component.css']

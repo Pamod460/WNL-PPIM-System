@@ -7,6 +7,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {DatePipe} from "@angular/common";
 
 @Component({
+  standalone: false,
   selector: 'app-agent-order-report',
   templateUrl: './agent-order-report.component.html',
   styleUrls: ['./agent-order-report.component.css']

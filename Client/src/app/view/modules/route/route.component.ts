@@ -15,11 +15,11 @@ import {Route} from "../../../entity/Route";
 import {RouteService} from "../../../service/route/route.service";
 import {RouteStatus} from "../../../entity/RouteStatus'";
 import {RouteStatusService} from "../../../service/route/route-status.service";
-import formatters from "chart.js/dist/core/core.ticks";
 
 
 
 @Component({
+  standalone: false,
   selector: 'app-route',
   templateUrl: './route.component.html',
   styleUrls: ['./route.component.css']

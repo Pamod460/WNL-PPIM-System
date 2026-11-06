@@ -5,6 +5,7 @@ import {ReportInventoryItem} from "../../entity/ReportInventoryItem";
 import {query} from "@angular/animations";
 
 @Component({
+  standalone: false,
   selector: 'app-stock-level-report',
   templateUrl: './stock-level-report.component.html',
   styleUrls: ['./stock-level-report.component.css']
