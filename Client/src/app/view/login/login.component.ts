@@ -8,6 +8,7 @@ import {AuthorizationManager} from "../../service/auth/authorizationmanager";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 
 @Component({
+  standalone: false,
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],

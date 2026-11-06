@@ -23,6 +23,7 @@ import {MaterialcategoryService} from "../../../service/material/materialcategor
 import {TableUtilsService} from "../../../service/Shared/table-utils.service";
 
 @Component({
+  standalone: false,
   selector: 'app-material',
   templateUrl: './material.component.html',
   styleUrls: ['./material.component.css']

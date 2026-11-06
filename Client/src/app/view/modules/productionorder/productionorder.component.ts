@@ -20,6 +20,7 @@ import {ProductService} from "../../../service/product/product.service";
 import {Product} from "../../../entity/Product";
 
 @Component({
+  standalone: false,
   selector: 'app-productionorder',
   templateUrl: './productionorder.component.html',
   styleUrls: ['./productionorder.component.css']

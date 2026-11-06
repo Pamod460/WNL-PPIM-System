@@ -6,6 +6,7 @@ import {InventoryItem} from "../../../entity/InventoryItem";
 Chart.register(...registerables);
 
 @Component({
+  standalone: false,
   selector: 'app-inventory-rop-chart',
   templateUrl: './inventory-rop-chart.component.html',
   styleUrls: ['./inventory-rop-chart.component.css']

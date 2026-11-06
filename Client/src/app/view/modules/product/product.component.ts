@@ -30,6 +30,7 @@ import {ProductPaper} from "../../../entity/ProductPaper";
 
 
 @Component({
+  standalone: false,
   selector: 'app-product',
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.css']

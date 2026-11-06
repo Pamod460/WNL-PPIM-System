@@ -6,6 +6,7 @@ import {ReportService} from "../../reportservice";
 import {DatePipe} from "@angular/common";
 
 @Component({
+  standalone: false,
   selector: 'app-porder-summry-report',
   templateUrl: './porder-summry-report.component.html',
   styleUrls: ['./porder-summry-report.component.css']

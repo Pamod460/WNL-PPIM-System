@@ -10,6 +10,7 @@ import {Agent} from "../../entity/agent";
 import {RegexService} from "../../service/Shared/regex.service";
 
 @Component({
+  standalone: false,
   selector: 'app-agent-register',
   templateUrl: './agent-register.component.html',
   styleUrls: ['./agent-register.component.css']

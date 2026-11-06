@@ -21,6 +21,7 @@ import {DistrictService} from "../../../service/agent/district.service";
 import {RouteService} from "../../../service/route/route.service";
 
 @Component({
+  standalone: false,
   selector: 'app-agent',
   templateUrl: './agent.component.html',
   styleUrls: ['./agent.component.css']

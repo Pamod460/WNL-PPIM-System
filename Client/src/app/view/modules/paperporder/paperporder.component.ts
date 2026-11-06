@@ -26,6 +26,7 @@ import {MatPaginator} from "@angular/material/paginator";
 
 
 @Component({
+  standalone: false,
   selector: 'app-paperporder',
   templateUrl: './paperporder.component.html',
   styleUrls: ['./paperporder.component.css']

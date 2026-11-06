@@ -30,6 +30,7 @@ import {AgentpaymenttypeService} from "../../../service/agentpayment/agentpaymen
 import {PaymentstatusService} from "../../../service/supplierpayment/paymentstatus.service";
 
 @Component({
+  standalone: false,
   selector: 'app-agentpayment',
   templateUrl: './agentpayment.component.html',
   styleUrls: ['./agentpayment.component.css']

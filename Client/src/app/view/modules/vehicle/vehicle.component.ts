@@ -24,6 +24,7 @@ import {RegexService} from "../../../service/Shared/regex.service";
 import {TableUtilsService} from "../../../service/Shared/table-utils.service";
 
 @Component({
+  standalone: false,
     selector: 'app-vehicle',
     templateUrl: './vehicle.component.html',
     styleUrls: ['./vehicle.component.css']
