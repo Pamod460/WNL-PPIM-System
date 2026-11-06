@@ -2,7 +2,7 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {ChartData, ChartOptions} from "chart.js";
 // @ts-ignore
-import * as html2pdf from 'html2pdf.js';
+import html2pdf from 'html2pdf.js';
 import {MatGridListModule} from "@angular/material/grid-list";
 import {CustomBreadcrumbComponent} from "../layout/custom-breadcrumb/custom-breadcrumb.component";
 import {MatCardModule} from "@angular/material/card";
@@ -134,9 +134,9 @@ export class ReportComponent implements OnInit, OnChanges {
       const opt = {
         margin: 0.5,
         filename: 'report.pdf',
-        image: {type: 'jpeg', quality: 1},
+        image: {type: 'jpeg' as const, quality: 1},
         html2canvas: {scale: 2},
-        jsPDF: {unit: 'in', format: 'a3', orientation: 'landscape'},
+        jsPDF: {unit: 'in', format: 'a3', orientation: 'landscape' as const},
         pagebreak: {mode: ['avoid-all', 'css', 'legacy']}
       };
       html2pdf().set(opt).from(element).save();
