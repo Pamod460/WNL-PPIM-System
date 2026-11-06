@@ -334,26 +334,22 @@ export class AgentOrderPublicComponent implements OnInit {
     }
 
     const { agentNumber, nic } = this.aligibilityForm.getRawValue();
-    let query = `?number=${agentNumber}&nic=${nic}`;
 
-    this.agentService.getAll(query).subscribe({
-      next: (agents: Agent[]) => {
-        if (agents.length > 0) {
-          localStorage.setItem('agent', JSON.stringify(agents[0]));
-          this.isAligible = true;
-          this.form.get('agent')?.setValue(agents[0]);
-          this.toastrService.success('Agent verified successfully.');
-        } else {
-          this.isAligible = false;
-          localStorage.removeItem('agent');
-          this.form.get('agent')?.setValue(null);
-          this.showMessageDialog("Error", "No agent found with the provided Agent Number and NIC.");
-        }
+    this.agentService.verify(agentNumber, nic).subscribe({
+      next: (agent: Agent) => {
+        localStorage.setItem('agent', JSON.stringify(agent));
+        this.isAligible = true;
+        this.form.get('agent')?.setValue(agent);
+        this.toastrService.success('Agent verified successfully.');
       },
       error: (err: any) => {
         this.isAligible = false;
         localStorage.removeItem('agent');
         this.form.get('agent')?.setValue(null);
+        if (err.status === 404) {
+          this.showMessageDialog("Error", "No agent found with the provided Agent Number and NIC.");
+          return;
+        }
         this.toastrService.error('Error verifying agent: ' + err.message);
       }
     });

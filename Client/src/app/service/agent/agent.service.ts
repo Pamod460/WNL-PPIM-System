@@ -33,6 +33,10 @@ export class AgentService {
     return this.http.post<StandardResponse>(`${this.API_URL}`, agent);
   }
 
+  verify(number: string, nic: string) {
+    return this.http.post<Agent>(`${this.API_URL}/verify`, {number, nic});
+  }
+
   getLastAgentCode() {
     return this.http.get<{code:string}>(`${this.API_URL}/last`);
   }

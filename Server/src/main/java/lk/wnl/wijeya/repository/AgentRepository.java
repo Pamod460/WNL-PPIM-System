@@ -4,6 +4,8 @@ import lk.wnl.wijeya.entity.Agent;
 import lk.wnl.wijeya.entity.AgentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface AgentRepository extends JpaRepository<Agent,Integer> {
     boolean existsByNumber(String number);
 
@@ -22,4 +24,6 @@ public interface AgentRepository extends JpaRepository<Agent,Integer> {
     boolean existsByEmailAndIdNot(String email, Integer id);
 
     Agent findTopByOrderByIdDesc();
+
+    Optional<Agent> findByNumberIgnoreCaseAndNic(String number, String nic);
 }

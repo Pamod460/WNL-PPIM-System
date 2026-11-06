@@ -2,6 +2,7 @@ package lk.wnl.wijeya.service;
 
 import lk.wnl.wijeya.dto.AgentDto;
 import lk.wnl.wijeya.dto.AgentStatusDto;
+import lk.wnl.wijeya.dto.AgentVerifyRequest;
 import lk.wnl.wijeya.util.StandardResponse;
 import org.springframework.http.ResponseEntity;
 
@@ -22,4 +23,6 @@ public interface AgentService {
     ResponseEntity<StandardResponse> UpdateAgent(AgentDto agent);
 
     ResponseEntity<StandardResponse> deleteAgent(Integer id);
+
+    AgentDto verifyAgent(AgentVerifyRequest request);
 }

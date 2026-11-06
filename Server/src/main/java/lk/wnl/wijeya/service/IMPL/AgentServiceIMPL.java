@@ -1,6 +1,7 @@
 package lk.wnl.wijeya.service.IMPL;
 
 import lk.wnl.wijeya.dto.AgentDto;
+import lk.wnl.wijeya.dto.AgentVerifyRequest;
 import lk.wnl.wijeya.entity.Agent;
 import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
 import lk.wnl.wijeya.exception.ResourceNotFoundException;
@@ -124,5 +125,19 @@ public class AgentServiceIMPL implements AgentService {
 
         agentRepository.delete(agent);
         return new ResponseEntity<>(new StandardResponse(200, "Agent Deleted Successfully", null), HttpStatus.OK);
+    }
+
+    @Override
+    public AgentDto verifyAgent(AgentVerifyRequest request) {
+        if (request == null || request.getNumber() == null || request.getNic() == null
+                || request.getNumber().isBlank() || request.getNic().isBlank()) {
+            throw new ResourceNotFoundException("No agent found with the provided Agent Number and NIC.");
+        }
+        Agent agent = agentRepository
+                .findByNumberIgnoreCaseAndNic(request.getNumber().trim(), request.getNic().trim())
+                .orElseThrow(() -> new ResourceNotFoundException("No agent found with the provided Agent Number and NIC."));
+
+        // Return only what the public order page needs, never NIC/mobile/email/address.
+        return new AgentDto(agent.getId(), agent.getNumber(), null, agent.getFullName());
     }
 }

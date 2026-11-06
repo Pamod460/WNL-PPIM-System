@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -41,11 +42,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeHttpRequests(auth -> auth
                                 .antMatchers("/Admin").hasRole("ADMIN")
                                 .antMatchers("/").permitAll()
-                                .antMatchers("/reports/**").permitAll()
-                                .antMatchers("/products/**").permitAll()
-                                .antMatchers("/agentorders/**").permitAll()
-                                .antMatchers("/productdesigns/**").permitAll()
-                                .antMatchers("/agents/**").permitAll()
+                                // Public pages (agent self-registration and public agent order) only.
+                                // Everything else, including all PUT/DELETE calls, needs a valid JWT.
+                                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .antMatchers(HttpMethod.GET,
+                                        "/products", "/products/list",
+                                        "/productdesigns", "/productdesigns/list",
+                                        "/agentorders/next",
+                                        "/agentorderstatuses",
+                                        "/agents/last",
+                                        "/districts/list",
+                                        "/routes/list",
+                                        "/regexes/agent").permitAll()
+                                .antMatchers(HttpMethod.POST,
+                                        "/agents",
+                                        "/agents/verify",
+                                        "/agentorders").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .logout()

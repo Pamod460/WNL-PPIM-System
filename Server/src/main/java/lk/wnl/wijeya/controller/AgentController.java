@@ -1,6 +1,7 @@
 package lk.wnl.wijeya.controller;
 
 import lk.wnl.wijeya.dto.AgentDto;
+import lk.wnl.wijeya.dto.AgentVerifyRequest;
 import lk.wnl.wijeya.service.AgentService;
 import lk.wnl.wijeya.util.StandardResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,11 @@ public class AgentController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> add(@RequestBody AgentDto agentDto) {
         return agentService.saveAgent(agentDto);
+    }
+
+    @PostMapping(path = "/verify", produces = "application/json")
+    public AgentDto verify(@RequestBody AgentVerifyRequest request) {
+        return agentService.verifyAgent(request);
     }
 
     @PutMapping
