@@ -14,11 +14,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
+@Slf4j
 @Service
 public class UserService implements UserDetailsService {
+
+    private static final String ADMIN_ROLE = "Admin";
 
     final UserRepository userdao;
 
@@ -31,6 +35,14 @@ public class UserService implements UserDetailsService {
     private ModuleRepository moduleRepository;
     @Value("${jwt.secret}")
     private String secret;
+
+    @Value("${app.setup-admin.username:Admin}")
+    private String setupAdminUsername;
+
+    @Value("${app.setup-admin.password:}")
+    private String setupAdminPassword;
+
+    private String setupAdminPasswordHash;
  public List<RoleDto> getRoles(String token) {
         List<RoleDto> roles = new ArrayList<>();
 
@@ -69,62 +81,83 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        if (username.equals("Admin")) {
-            Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-
-            List<Module> modules = moduleRepository.findAll();
-            String[] operations = {"select", "insert", "update", "delete"};
-
-            for (Module module : modules) {
-                for (String op : operations) {
-                    String authority = module.getName().toLowerCase() + "-" + op;
-                    authorities.add(new SimpleGrantedAuthority(authority));
-                }
+        User user = userdao.findByUsername(username);
+        if (user == null) {
+            if (isSetupAdminLogin(username)) {
+                return setupAdmin();
             }
-
-            return org.springframework.security.core.userdetails.User
-                    .withUsername("Admin")
-                    .password(new BCryptPasswordEncoder().encode("Admin1234"))
-                    .authorities(authorities)
-                    .accountExpired(false)
-                    .accountLocked(false)
-                    .credentialsExpired(false)
-                    .disabled(false)
-                    .build();
-        } else {
-
-            User user = userdao.findByUsername(username);
-            if (user == null) {
-                throw new UsernameNotFoundException("User not found with username " + username);
-            }
-            String userStatus = user.getUserStatus().getName();
-            if (userStatus.equalsIgnoreCase("inactive")) {
-                throw new RuntimeException("Access Denied/This user account is inactive. Please contact the System Administrator for support.");
-            }
-            if (userStatus.equalsIgnoreCase("blocked")) {
-                throw new RuntimeException("Access Denied/This user account is blocked. Please contact the System Administrator for support.");
-            }
-
-            Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-
-            List<UserRole> userRoles = (List<UserRole>) user.getUserRoles();
-
-            for (UserRole u : userRoles) {
-                List<Privilege> privileges = (List<Privilege>) u.getRole().getPrivileges();
-                for (Privilege p : privileges) {
-                    authorities.add(new SimpleGrantedAuthority(p.getAuthority()));
-                }
-            }
-
-            return org.springframework.security.core.userdetails.User
-                    .withUsername(user.getUsername())
-                    .password(user.getPassword())
-                    .authorities(authorities)
-                    .accountExpired(false)
-                    .accountLocked(false)
-                    .credentialsExpired(false)
-                    .disabled(false)
-                    .build();
+            throw new UsernameNotFoundException("User not found with username " + username);
         }
+        String userStatus = user.getUserStatus().getName();
+        if (userStatus.equalsIgnoreCase("inactive")) {
+            throw new RuntimeException("Access Denied/This user account is inactive. Please contact the System Administrator for support.");
+        }
+        if (userStatus.equalsIgnoreCase("blocked")) {
+            throw new RuntimeException("Access Denied/This user account is blocked. Please contact the System Administrator for support.");
+        }
+
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        boolean isAdmin = false;
+
+        for (UserRole u : user.getUserRoles()) {
+            if (ADMIN_ROLE.equalsIgnoreCase(u.getRole().getName())) {
+                isAdmin = true;
+            }
+            for (Privilege p : u.getRole().getPrivileges()) {
+                authorities.add(new SimpleGrantedAuthority(p.getAuthority()));
+            }
+        }
+
+        // Users with the "Admin" role get every module/operation, like the old built-in
+        // Admin account did, but they are real DB users with a hashed password that can be
+        // changed, blocked or deactivated.
+        if (isAdmin) {
+            authorities.addAll(allModuleAuthorities());
+        }
+
+        return org.springframework.security.core.userdetails.User
+                .withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities(authorities)
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .disabled(false)
+                .build();
+    }
+
+    /**
+     * First-run setup login. Only works while the user table is completely empty AND a
+     * password has been supplied through the SETUP_ADMIN_PASSWORD environment variable
+     * (app.setup-admin.password). As soon as one real user exists it switches itself off.
+     */
+    private boolean isSetupAdminLogin(String username) {
+        return setupAdminPassword != null && !setupAdminPassword.isBlank()
+                && username.equals(setupAdminUsername)
+                && userdao.count() == 0;
+    }
+
+    private UserDetails setupAdmin() {
+        log.warn("Setup admin '{}' logged in because the user table is empty. "
+                + "Create a real user with the Admin role, then remove SETUP_ADMIN_PASSWORD.", setupAdminUsername);
+        if (setupAdminPasswordHash == null) {
+            setupAdminPasswordHash = new BCryptPasswordEncoder().encode(setupAdminPassword);
+        }
+        return org.springframework.security.core.userdetails.User
+                .withUsername(setupAdminUsername)
+                .password(setupAdminPasswordHash)
+                .authorities(allModuleAuthorities())
+                .build();
+    }
+
+    private Set<SimpleGrantedAuthority> allModuleAuthorities() {
+        Set<SimpleGrantedAuthority> authorities = new HashSet<>();
+        String[] operations = {"select", "insert", "update", "delete"};
+        for (Module module : moduleRepository.findAll()) {
+            for (String op : operations) {
+                authorities.add(new SimpleGrantedAuthority(module.getName().toLowerCase() + "-" + op));
+            }
+        }
+        return authorities;
     }
 }
