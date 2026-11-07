@@ -51,10 +51,7 @@ public class UserService implements UserDetailsService {
         }
 
         try {
-            Claims claims = Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(token)
-                    .getBody();
+            Claims claims = JwtTokenUtil.parseClaims(JwtTokenUtil.signingKey(secret), token);
 
             List<Map<String, Object>> rawRoles = claims.get("roles", List.class);
             if (rawRoles != null) {
@@ -67,7 +64,7 @@ public class UserService implements UserDetailsService {
             }
         } catch (ExpiredJwtException ex) {
             throw new RuntimeException("JWT token is expired", ex);
-        } catch (MalformedJwtException | SignatureException ex) {
+        } catch (JwtException ex) {
             throw new RuntimeException("JWT token is invalid", ex);
         } catch (Exception ex) {
             throw new RuntimeException("JWT processing error", ex);

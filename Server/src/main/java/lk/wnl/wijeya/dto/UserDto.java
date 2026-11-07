@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lk.wnl.wijeya.entity.Employee;
 import lk.wnl.wijeya.entity.UserRole;
 import lk.wnl.wijeya.entity.UserStatus;
@@ -20,6 +21,8 @@ public class UserDto {
     private Integer id;
     @Pattern(regexp = "^([a-zA-Z0-9_.-]+)$", message = "Invalid Username")
     private String username;
+    // Accepted in requests, never written to JSON responses (hides the BCrypt hash).
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Invalid Password")
     private String password;
     private Date docreated;

@@ -1,6 +1,7 @@
 package lk.wnl.wijeya.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,6 +29,8 @@ public class User {
     private String username;
     @Basic
     @Column(name = "password")
+    // Accepted in requests, never written to JSON responses (hides the BCrypt hash).
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$", message = "Invalid Password")
     private String password;
     @Basic

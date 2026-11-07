@@ -1,0 +1,13 @@
+# Copy this file to application-local.properties (same folder) and fill in your values.
+# application-local.properties is git-ignored, so your secrets stay on your machine.
+# Environment variables with the same names override these values.
+
+DB_URL=jdbc:mysql://localhost:3306/wnldb
+DB_USERNAME=root
+DB_PASSWORD=change-me
+
+# At least 64 bytes. Generate one with: openssl rand -base64 64
+JWT_SECRET=change-me-to-a-long-random-value-at-least-64-bytes-long-xxxxxxxxxxxxxxxxxxxxxxxx
+
+# Optional: first-run setup admin (only works while the user table is empty)
+#SETUP_ADMIN_PASSWORD=

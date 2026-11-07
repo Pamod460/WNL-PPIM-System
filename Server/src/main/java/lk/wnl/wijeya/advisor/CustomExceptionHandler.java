@@ -10,29 +10,38 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Map;
+
 @ControllerAdvice
 public class CustomExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<StandardResponse> handleResourceNotFoundException(ResourceNotFoundException exception){
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(404,"Error",exception), HttpStatus.NOT_FOUND
+                new StandardResponse(404,"Error",errorBody(exception)), HttpStatus.NOT_FOUND
         );
     }
 
     @ExceptionHandler(ResourceAlreadyExistException.class)
     public ResponseEntity<StandardResponse> handleResourceAlreadyExistException(ResourceAlreadyExistException exception){
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(302,"Error",exception), HttpStatus.FOUND
+                new StandardResponse(302,"Error",errorBody(exception)), HttpStatus.FOUND
         );
     }
 
         @ExceptionHandler(CustomAccessDeniedException.class)
     public ResponseEntity<StandardResponse> handleAccessDeniedException(CustomAccessDeniedException exception) {
-        System.out.println("🔴 CustomExceptionHandler Caught AccessDeniedException");
         return new ResponseEntity<>(
                 new StandardResponse(403, "Access Denied", exception.getMessage()),
                 HttpStatus.FORBIDDEN
         );
+    }
+
+    /**
+     * Only the message goes back to the client (it reads error.data.message).
+     * Serializing the exception itself leaked the stack trace and class names.
+     */
+    private static Map<String, String> errorBody(Exception exception) {
+        return Map.of("message", exception.getMessage() == null ? "" : exception.getMessage());
     }
 }

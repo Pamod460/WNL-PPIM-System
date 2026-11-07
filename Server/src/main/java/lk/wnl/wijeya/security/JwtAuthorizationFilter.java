@@ -1,9 +1,12 @@
 package lk.wnl.wijeya.security;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -35,12 +38,20 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return;
         }
         String token = authorizationHeader.replace("Bearer ", "");
-        String username = jwtTokenUtil.extractUsername(token);
-
-        UserDetails userDetails = userService.loadUserByUsername(username);
-
-        if (!jwtTokenUtil.validateToken(token, userDetails)) {
-            chain.doFilter(request, response);
+        UserDetails userDetails;
+        try {
+            String username = jwtTokenUtil.extractUsername(token);
+            userDetails = userService.loadUserByUsername(username);
+            if (!jwtTokenUtil.validateToken(token, userDetails)) {
+                rejectToken(response, "JWT expired or invalid. Please log in again.");
+                return;
+            }
+        } catch (ExpiredJwtException e) {
+            rejectToken(response, "JWT expired. Please log in again.");
+            return;
+        } catch (JwtException | IllegalArgumentException | UsernameNotFoundException e) {
+            // Bad signature (e.g. token signed with an old key), malformed token, or deleted user.
+            rejectToken(response, "JWT expired or invalid. Please log in again.");
             return;
         }
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
@@ -48,5 +59,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         chain.doFilter(request, response);
+    }
+
+    /** 401 tells the Angular interceptor to drop the stored token and go to the login page. */
+    private static void rejectToken(HttpServletResponse response, String message) throws IOException {
+        SecurityContextHolder.clearContext();
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"code\":401,\"message\":\"" + message + "\",\"data\":{\"message\":\"" + message + "\"}}");
     }
 }

@@ -57,3 +57,6 @@ Client/cypress.config.ts
 Client/cypress
 Client/package-lock.json
 Client/package-lock.json
+
+# Local secrets (Server)
+Server/src/main/resources/application-local.properties
