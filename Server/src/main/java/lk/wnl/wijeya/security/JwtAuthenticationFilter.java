@@ -1,6 +1,7 @@
 package lk.wnl.wijeya.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,9 +52,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException failed) throws IOException {
         SecurityContextHolder.clearContext();
+        response.setContentType("application/json");
+        if (failed.getCause() instanceof DataAccessException) {
+            // Database problem, not a login problem: don't send SQL details to the browser.
+            logger.error("Login failed because of a database error", failed);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            new ObjectMapper().writeValue(response.getWriter(),
+                    Map.of("code", 500, "message", "Login is unavailable right now. Please try again later."));
+            return;
+        }
         String message = failed.getMessage() == null ? "Bad credentials" : failed.getMessage();
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setContentType("application/json");
         // The login page reads error.error.message ("Bad credentials" or "Heading/Details").
         new ObjectMapper().writeValue(response.getWriter(), Map.of("code", 401, "message", message));
     }

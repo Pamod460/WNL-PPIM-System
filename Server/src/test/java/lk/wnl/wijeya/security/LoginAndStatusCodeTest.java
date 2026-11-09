@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -79,6 +80,15 @@ class LoginAndStatusCodeTest {
         mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON).content(login("old", "x")))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value(startsWith("Access Denied/This user account is inactive")));
+    }
+
+    @Test
+    void databaseErrorDuringLoginHidesSqlDetails() throws Exception {
+        when(userService.loadUserByUsername("kamal")).thenThrow(
+                new InvalidDataAccessResourceUsageException("could not extract ResultSet; SQL [select ...]"));
+        mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON).content(login("kamal", "x")))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.message").value("Login is unavailable right now. Please try again later."));
     }
 
     @Test

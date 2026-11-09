@@ -1,13 +1,17 @@
 plugins {
 	java
 	war
-	id("org.springframework.boot") version "2.7.10"
-	id("io.spring.dependency-management") version "1.0.15.RELEASE"
+	id("org.springframework.boot") version "2.7.18"
+	id("io.spring.dependency-management") version "1.1.4"
 }
 
 group = "lk.wsam"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_11
+
+// Boot 2.7.18 manages MySQL Connector/J 8.0.33, which has CVE-2023-22102; 8.4.0 is the
+// current LTS line and still supports MySQL 5.7/8.x.
+extra["mysql.version"] = "8.4.0"
 
 repositories {
 	mavenCentral()
@@ -18,7 +22,7 @@ dependencies {
 	//implementation("io.springfox:springfox-swagger2:2.9.2")
 	//implementation("io.springfox:springfox-swagger-ui:2.9.2")
 
-	implementation ("org.springdoc:springdoc-openapi-ui:1.7.0")
+	implementation ("org.springdoc:springdoc-openapi-ui:1.8.0")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -41,7 +45,6 @@ dependencies {
 
 	// Required for proper Lombok + MapStruct integration
 	annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
-	runtimeOnly("com.mysql:mysql-connector-j")
 
 	// Lombok (for test code)
 	testCompileOnly("org.projectlombok:lombok")
