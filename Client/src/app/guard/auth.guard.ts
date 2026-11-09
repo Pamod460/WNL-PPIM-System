@@ -14,9 +14,9 @@ export class AuthGuard implements CanActivate {
     const publicRoutes = ['/login', '/register', '/forgot-password'];
     if (publicRoutes.includes(state.url)) return true;
 
-    const isAuthenticated = this.authorizationManager.isUserAuthenticated();
-
-    if (isAuthenticated) return true;
+    // isUserAuthenticated() returns an Observable, which is always truthy, so it let
+    // everyone through. Check the stored token instead.
+    if (this.authorizationManager.getToken()) return true;
 
     this.router.navigate(["/login"], { queryParams: { redirectUrl: state.url } });
     return false;

@@ -34,6 +34,7 @@ dependencies {
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
+	testRuntimeOnly("com.h2database:h2")
 	developmentOnly ("org.springframework.boot:spring-boot-devtools")
 	// MapStruct
 	implementation("org.mapstruct:mapstruct:1.6.3")
