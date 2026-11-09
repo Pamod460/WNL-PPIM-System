@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.SupplierDto;
 import lk.wnl.wijeya.service.SupplierService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -37,17 +38,20 @@ public class SupplierController {
         return supplierService.getAll(params);
     }
 
+    @PreAuthorize("hasAuthority('supplier-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> add(@RequestBody SupplierDto supplierDto) {
         return supplierService.save(supplierDto);
     }
 
+    @PreAuthorize("hasAuthority('supplier-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody SupplierDto supplierDto) {
         return supplierService.update(supplierDto);
     }
 
+    @PreAuthorize("hasAuthority('supplier-delete')")
     @DeleteMapping("/{id}")
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return supplierService.delete(id);

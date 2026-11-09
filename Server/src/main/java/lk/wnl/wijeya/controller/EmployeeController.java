@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.EmployeeDto;
 import lk.wnl.wijeya.service.EmployeeService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -34,18 +35,21 @@ public class EmployeeController {
         return employeeService.getLastEmployeeCode();
     }
 
+    @PreAuthorize("hasAuthority('employee-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> add(@RequestBody EmployeeDto employeeDto) {
         return employeeService.saveEmployee(employeeDto);
     }
 
+    @PreAuthorize("hasAuthority('employee-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody EmployeeDto employee) {
         return employeeService.UpdateEmployee(employee);
 
     }
 
+    @PreAuthorize("hasAuthority('employee-delete')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {

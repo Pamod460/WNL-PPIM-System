@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.ProductionOrderDto;
 import lk.wnl.wijeya.service.ProductionOrderService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -35,6 +36,7 @@ public class ProductionOrderController {
 
     }
 
+    @PreAuthorize("hasAuthority('production order-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody ProductionOrderDto productionOrderDto) {
         return productionOrderService.update(productionOrderDto);
@@ -42,11 +44,13 @@ public class ProductionOrderController {
 
 
 
+    @PreAuthorize("hasAuthority('production order-insert')")
     @PostMapping
     public ResponseEntity<StandardResponse> save(@RequestBody ProductionOrderDto productionOrderDto) {
         return productionOrderService.save(productionOrderDto);
     }
 
+    @PreAuthorize("hasAuthority('production order-delete')")
     @DeleteMapping("/{id}")
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return productionOrderService.detele(id);

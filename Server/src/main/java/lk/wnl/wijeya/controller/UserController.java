@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.EmployeeDto;
 import lk.wnl.wijeya.dto.UserDto;
 import lk.wnl.wijeya.dto.UserRoleDto;
@@ -27,24 +28,28 @@ public class UserController {
     private final UserService userService;
 
 
+    @PreAuthorize("hasAnyAuthority('user-select', 'user-insert', 'user-update', 'user-delete')")
     @GetMapping(path = "/list", produces = "application/json")
     public List<UserDto> get(@RequestParam HashMap<String, String> params) {
         return userService.getAllUser(params);
     }
 
 
+    @PreAuthorize("hasAuthority('user-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> add(@RequestBody UserDto userDTO) {
         return userService.saveUser(userDTO);
     }
 
+    @PreAuthorize("hasAuthority('user-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody UserDto userDTO) {
         return userService.updateUser(userDTO);
     }
 
 
+    @PreAuthorize("hasAuthority('user-delete')")
     @DeleteMapping("/{username}")
     public ResponseEntity<StandardResponse> delete(@PathVariable String username) {
         return userService.deleteUser(username);
@@ -67,4 +72,4 @@ public class UserController {
         return userService.updateUserPassword(principal.getName(), userPasswdRequest);
     }
 
-}
+}

@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.AgentDto;
 import lk.wnl.wijeya.dto.AgentVerifyRequest;
 import lk.wnl.wijeya.service.AgentService;
@@ -48,12 +49,14 @@ public class AgentController {
         return agentService.verifyAgent(request);
     }
 
+    @PreAuthorize("hasAuthority('agent-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody AgentDto agent) {
         return agentService.UpdateAgent(agent);
 
     }
 
+    @PreAuthorize("hasAuthority('agent-delete')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {

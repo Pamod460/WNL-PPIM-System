@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.AgentPaymentDto;
 import lk.wnl.wijeya.service.AgentPaymentService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -24,18 +25,21 @@ public class AgentPaymentController {
         return agentPaymentService.getAllAgentPayments(params);
     }
 
+    @PreAuthorize("hasAuthority('agent payment-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> add(@RequestBody AgentPaymentDto agentPaymentDto) {
         return agentPaymentService.saveAgentPayment(agentPaymentDto);
     }
 
+    @PreAuthorize("hasAuthority('agent payment-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody AgentPaymentDto agentPaymentDto) {
         return agentPaymentService.UpdateAgentPayment(agentPaymentDto);
 
     }
 
+    @PreAuthorize("hasAuthority('agent payment-delete')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {

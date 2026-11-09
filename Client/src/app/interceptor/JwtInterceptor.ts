@@ -24,14 +24,13 @@ export class JwtInterceptor implements HttpInterceptor {
 
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401 || (error.status === 500 && error.error.message.includes("JWT expired"))) {
+        if (error.status === 401 || (error.status === 500 && error.error?.message?.includes("JWT expired"))) {
           // Token is invalid or expired
           this.authorizationManager.removeToken();
           this.router.navigate(['/login']); // Redirect to login page
-        } else if (error.status === 403) {
-          // Forbidden: User lacks permission
-          this.router.navigate(['/login']); // Redirect to an access denied page
         }
+        // 403 = logged in but missing the privilege for this action: keep the user on the page,
+        // the component shows error.error.data.message.
         return throwError(() => error);
       })
     );

@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.MaterialPorderDto;
 import lk.wnl.wijeya.service.MaterialPorderService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -38,18 +39,21 @@ public class MaterialPorderController {
         return materialPorderService.getNextCode(textPart);
     }
 
+    @PreAuthorize("hasAuthority('material porder-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> add(@RequestBody MaterialPorderDto materialPorderDto) {
         return materialPorderService.saveMaterialPorder(materialPorderDto);
     }
 
+    @PreAuthorize("hasAuthority('material porder-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody MaterialPorderDto materialPorderDto) {
         return materialPorderService.UpdateMaterialPorder(materialPorderDto);
 
     }
 
+    @PreAuthorize("hasAuthority('material porder-delete')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {

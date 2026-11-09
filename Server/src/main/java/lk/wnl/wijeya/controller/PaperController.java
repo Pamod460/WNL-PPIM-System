@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.PaperDto;
 import lk.wnl.wijeya.service.PaperService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -33,12 +34,14 @@ public class PaperController {
         return paperService.getNextCode(textPart);
     }
 
+    @PreAuthorize("hasAuthority('paper-insert')")
     @PostMapping(produces = "application/json")
     public ResponseEntity<StandardResponse> save(@RequestBody PaperDto paperDto) {
         System.out.println(paperDto.getDoIntroduced());
         return paperService.save(paperDto);
     }
 
+    @PreAuthorize("hasAuthority('paper-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody PaperDto paperDto) {
         System.out.println(paperDto.getDoIntroduced());
@@ -46,6 +49,7 @@ public class PaperController {
 
     }
 
+    @PreAuthorize("hasAuthority('paper-delete')")
     @DeleteMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return paperService.detele(id);

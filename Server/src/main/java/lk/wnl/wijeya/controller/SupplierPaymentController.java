@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.SupplierPaymentDto;
 import lk.wnl.wijeya.service.SupplierPaymentService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -28,18 +29,21 @@ public class SupplierPaymentController {
         return supplierPaymentService.getNextCode();
     }
 
+    @PreAuthorize("hasAuthority('supplier payment-insert')")
     @PostMapping(produces = "application/json")
     public ResponseEntity<StandardResponse> save(@RequestBody SupplierPaymentDto supplierPaymentDto) {
         return supplierPaymentService.save(supplierPaymentDto);
 
     }
 
+    @PreAuthorize("hasAuthority('supplier payment-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody SupplierPaymentDto supplierPaymentDto) {
         return supplierPaymentService.update(supplierPaymentDto);
 
     }
 
+    @PreAuthorize("hasAuthority('supplier payment-delete')")
     @DeleteMapping(path = "/{id}", produces = "application/json")
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return  supplierPaymentService.delete(id);

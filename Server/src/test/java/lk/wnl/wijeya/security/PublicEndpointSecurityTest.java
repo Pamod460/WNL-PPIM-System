@@ -105,8 +105,8 @@ class PublicEndpointSecurityTest {
     // ---- logged-in users still work ----
 
     @Test
-    @WithMockUser
-    void authenticatedUserCanListAgents() throws Exception {
+    @WithMockUser(authorities = "agent-delete")
+    void authenticatedUserWithPrivilegeCanListAndDeleteAgents() throws Exception {
         mockMvc.perform(get("/agents")).andExpect(status().isOk());
         mockMvc.perform(delete("/agents/1")).andExpect(status().isCreated());
     }

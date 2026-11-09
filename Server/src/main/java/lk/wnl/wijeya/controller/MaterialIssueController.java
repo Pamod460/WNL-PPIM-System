@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.MaterialIssueDto;
 import lk.wnl.wijeya.entity.MaterialIssue;
 import lk.wnl.wijeya.service.MaterialIssueService;
@@ -37,18 +38,21 @@ public class MaterialIssueController {
         return materialIssueService.getNextCode();
     }
 
+    @PreAuthorize("hasAuthority('material issue-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> add(@RequestBody MaterialIssueDto MaterialIssueDto) {
         return materialIssueService.saveMaterialIssue(MaterialIssueDto);
     }
 
+    @PreAuthorize("hasAuthority('material issue-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody MaterialIssueDto MaterialIssue) {
         return materialIssueService.UpdateMaterialIssue(MaterialIssue);
 
     }
 
+    @PreAuthorize("hasAuthority('material issue-delete')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {

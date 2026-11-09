@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.ProductDesignDto;
 import lk.wnl.wijeya.service.ProductDesignService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -33,6 +34,7 @@ public class ProductDesignController {
 //
 //    }
 
+    @PreAuthorize("hasAuthority('product design-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody ProductDesignDto productDesignDto) {
         return productDesignService.update(productDesignDto);
@@ -40,11 +42,13 @@ public class ProductDesignController {
 
 
 
+    @PreAuthorize("hasAuthority('product design-insert')")
     @PostMapping
     public ResponseEntity<StandardResponse> save(@RequestBody ProductDesignDto productDesignDto) {
         return productDesignService.save(productDesignDto);
     }
 
+    @PreAuthorize("hasAuthority('product design-delete')")
     @DeleteMapping("/{id}")
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return productDesignService.detele(id);

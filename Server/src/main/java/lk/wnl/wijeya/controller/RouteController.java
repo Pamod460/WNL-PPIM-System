@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.RouteDto;
 import lk.wnl.wijeya.service.RouteService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -34,18 +35,21 @@ public class RouteController {
         return routeService.getLastRouteCode(name);
     }
 
+    @PreAuthorize("hasAuthority('route-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> add(@RequestBody RouteDto agentDto) {
         return routeService.save(agentDto);
     }
 
+    @PreAuthorize("hasAuthority('route-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody RouteDto agent) {
         return routeService.Update(agent);
 
     }
 
+    @PreAuthorize("hasAuthority('route-delete')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {

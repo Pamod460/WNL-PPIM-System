@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.DistributionDto;
 import lk.wnl.wijeya.service.DistributionService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -36,18 +37,21 @@ public class DistributionController {
         return distributionService.getNextCode();
     }
 
+    @PreAuthorize("hasAuthority('distribution-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> add(@RequestBody DistributionDto distributionDto) {
         return distributionService.saveDistribution(distributionDto);
     }
 
+    @PreAuthorize("hasAuthority('distribution-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody DistributionDto distributionDto) {
         return distributionService.UpdateDistribution(distributionDto);
 
     }
 
+    @PreAuthorize("hasAuthority('distribution-delete')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {

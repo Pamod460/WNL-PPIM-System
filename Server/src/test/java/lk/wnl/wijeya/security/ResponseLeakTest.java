@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @WebMvcTest(controllers = UserController.class)
 @Import(WebSecurityConfig.class)
-@WithMockUser
+@WithMockUser(authorities = "user-select")
 class ResponseLeakTest {
 
     @Autowired private MockMvc mockMvc;

@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.PrivilegeDto;
 import lk.wnl.wijeya.repository.PrivilegeRepository;
 import lk.wnl.wijeya.entity.Privilege;
@@ -26,24 +27,28 @@ public class PrivilegeController {
 private final PrivilegeService privilegeService;
 
 
+    @PreAuthorize("hasAnyAuthority('privilege-select', 'privilege-insert', 'privilege-update', 'privilege-delete')")
     @GetMapping(produces = "application/json")
     public List<Privilege> get(@RequestParam HashMap<String, String> params) {
         return privilegeService.getAll(params);
 
     }
 
+    @PreAuthorize("hasAuthority('privilege-insert')")
     @PostMapping
     public ResponseEntity<StandardResponse> add(@RequestBody PrivilegeDto privilege) {
         return privilegeService.save(privilege);
 
     }
 
+    @PreAuthorize("hasAuthority('privilege-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody PrivilegeDto privilegeDto) {
         return privilegeService.update(privilegeDto);
 
     }
 
+    @PreAuthorize("hasAuthority('privilege-delete')")
     @DeleteMapping("/{id}")
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return privilegeService.delete(id);

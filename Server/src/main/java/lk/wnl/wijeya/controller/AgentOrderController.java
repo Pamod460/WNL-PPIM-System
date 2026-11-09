@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.AgentOrderDto;
 import lk.wnl.wijeya.service.AgentOrderService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -43,12 +44,14 @@ public class AgentOrderController {
         return agentOrderService.saveAgentOrder(agentOrderDto);
     }
 
+    @PreAuthorize("hasAuthority('agent order-update')")
     @PutMapping
     public ResponseEntity<StandardResponse> update(@RequestBody AgentOrderDto agentOrder) {
         return agentOrderService.UpdateAgentOrder(agentOrder);
 
     }
 
+    @PreAuthorize("hasAuthority('agent order-delete')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {

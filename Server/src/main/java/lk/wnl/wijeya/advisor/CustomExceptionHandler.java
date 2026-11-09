@@ -7,6 +7,7 @@ import lk.wnl.wijeya.exception.ResourceNotFoundException;
 import lk.wnl.wijeya.util.StandardResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -33,6 +34,16 @@ public class CustomExceptionHandler {
     public ResponseEntity<StandardResponse> handleAccessDeniedException(CustomAccessDeniedException exception) {
         return new ResponseEntity<>(
                 new StandardResponse(403, "Access Denied", exception.getMessage()),
+                HttpStatus.FORBIDDEN
+        );
+    }
+
+    /** Thrown by @PreAuthorize when the logged-in user lacks the privilege for this action. */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<StandardResponse> handleSpringAccessDenied(AccessDeniedException exception) {
+        return new ResponseEntity<>(
+                new StandardResponse(403, "Access Denied",
+                        Map.of("message", "You do not have permission to perform this action.")),
                 HttpStatus.FORBIDDEN
         );
     }
