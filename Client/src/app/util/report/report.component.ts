@@ -6,7 +6,7 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {CustomBreadcrumbComponent} from "../layout/custom-breadcrumb/custom-breadcrumb.component";
 import {MatCardModule} from "@angular/material/card";
 import {MatIconModule} from "@angular/material/icon";
-import {NgChartsModule} from "ng2-charts";
+import {BaseChartDirective} from "ng2-charts";
 import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
@@ -19,7 +19,7 @@ import {NgForOf, NgIf} from "@angular/common";
     MatCardModule,
     MatIconModule,
     MatTableModule,
-    NgChartsModule,
+    BaseChartDirective,
     NgForOf,
     NgIf
   ],

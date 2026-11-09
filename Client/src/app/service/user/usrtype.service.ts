@@ -1,3 +1,4 @@
+import {environment} from "../../../environments/environment";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Usrtype} from "../../entity/usrtype";
@@ -12,7 +13,7 @@ export class UsrtypeService {
 
    getAllList(){
 
-   return  this.http.get<Usrtype[]>('http://localhost:8080/usrtypes/list');
+   return  this.http.get<Usrtype[]>(environment.api_url + '/usrtypes/list');
 
   }
 

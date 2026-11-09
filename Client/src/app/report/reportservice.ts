@@ -1,3 +1,4 @@
+import {environment} from "../../environments/environment";
 import {CountByDesignation} from "./entity/countbydesignation";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
@@ -17,7 +18,7 @@ export class ReportService {
 
   async countByDesignation(): Promise<CountByDesignation[]> {
 
-    const countbydesignations = await this.http.get<CountByDesignation[]>('http://localhost:8080/reports/countbydesignation').toPromise();
+    const countbydesignations = await this.http.get<CountByDesignation[]>(environment.api_url + '/reports/countbydesignation').toPromise();
     if (countbydesignations == undefined) {
       return [];
     }
@@ -26,24 +27,24 @@ export class ReportService {
 
   countByDistrict() {
 
-    return this.http.get<CountByDistrict[]>('http://localhost:8080/reports/countbydistrict');
+    return this.http.get<CountByDistrict[]>(environment.api_url + '/reports/countbydistrict');
   }
 
   agentCoutbyOrders(query: string) {
-    return this.http.get<AgentCoutByorders[]>('http://localhost:8080/reports/agentcoutbyorders' + query);
+    return this.http.get<AgentCoutByorders[]>(environment.api_url + '/reports/agentcoutbyorders' + query);
   }
 
   purchaseOrderCount(query: string) {
-    return this.http.get<PurchaseOrderCount[]>('http://localhost:8080/reports/purchaseordercount' + query);
+    return this.http.get<PurchaseOrderCount[]>(environment.api_url + '/reports/purchaseordercount' + query);
   }
 
   getPaperpurchaseOrdersummry(query: string) {
-    return this.http.get<[{ supplier: string, totalExpectedCost: number, orderCount: number }]>('http://localhost:8080/reports/paperpordersummry' + query);
+    return this.http.get<[{ supplier: string, totalExpectedCost: number, orderCount: number }]>(environment.api_url + '/reports/paperpordersummry' + query);
 
   }
 
   getMaterialInventory(query:string) {
-    return this.http.get<ReportInventoryItem[]>('http://localhost:8080/reports/material' + query);
+    return this.http.get<ReportInventoryItem[]>(environment.api_url + '/reports/material' + query);
 
   }
 }

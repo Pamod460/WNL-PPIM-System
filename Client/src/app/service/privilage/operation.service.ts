@@ -1,3 +1,4 @@
+import {environment} from "../../../environments/environment";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Operation} from "../../entity/operation";
@@ -13,14 +14,14 @@ export class OperationService {
 
 
   getAll(query: string) {
-    return this.http.get<Operation[]>('http://localhost:8080/operations' + query);
+    return this.http.get<Operation[]>(environment.api_url + '/operations' + query);
 
   }
 
 
    getAllListByModule(id: number) {
 
-   return  this.http.get<Array<Operation>>('http://localhost:8080/operations/list/' + id);
+   return  this.http.get<Array<Operation>>(environment.api_url + '/operations/list/' + id);
 
   }
 }

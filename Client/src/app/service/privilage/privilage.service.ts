@@ -1,3 +1,4 @@
+import {environment} from "../../../environments/environment";
 import {Employee} from "../../entity/employee";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
@@ -15,22 +16,22 @@ export class PrivilageService {
 
    delete(id: number){
 
-    return this.http.delete<StandardResponse>('http://localhost:8080/privileges/' + id);
+    return this.http.delete<StandardResponse>(environment.api_url + '/privileges/' + id);
   }
 
    update(privilage: Privilege){
-    return this.http.put<StandardResponse>('http://localhost:8080/privileges', privilage);
+    return this.http.put<StandardResponse>(environment.api_url + '/privileges', privilage);
   }
 
 
    getAll(query:string) {
- return   this.http.get<Privilege[]>('http://localhost:8080/privileges'+query);
+ return   this.http.get<Privilege[]>(environment.api_url + '/privileges'+query);
 
   }
 
 
    add(privilege: Privilege){
-    return this.http.post<StandardResponse>('http://localhost:8080/privileges', privilege);
+    return this.http.post<StandardResponse>(environment.api_url + '/privileges', privilege);
   }
 
 

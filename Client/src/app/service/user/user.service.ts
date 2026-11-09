@@ -1,3 +1,4 @@
+import {environment} from "../../../environments/environment";
 import {Employee} from "../../entity/employee";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
@@ -15,30 +16,30 @@ export class UserService {
   }
 
   delete(username: string) {
-    return this.http.delete<StandardResponse>('http://localhost:8080/users/' + username);
+    return this.http.delete<StandardResponse>(environment.api_url + '/users/' + username);
   }
 
   update(user: User) {
 
-    return this.http.put<StandardResponse>('http://localhost:8080/users', user);
+    return this.http.put<StandardResponse>(environment.api_url + '/users', user);
   }
 
   getAll(query: string) {
-    return this.http.get<User[]>('http://localhost:8080/users/list' + query);
+    return this.http.get<User[]>(environment.api_url + '/users/list' + query);
   }
 
   add(user: User) {
-    return this.http.post<StandardResponse>('http://localhost:8080/users', user);
+    return this.http.post<StandardResponse>(environment.api_url + '/users', user);
   }
 
   getEmployeeByUserName(username: string) {
-    return this.http.get<Employee>('http://localhost:8080/users/empbyuser/' + username);
+    return this.http.get<Employee>(environment.api_url + '/users/empbyuser/' + username);
 
   }
 
 
   updatePassword(passwdChangeRequest: PasswdChangeRequest) {
-    return this.http.put<any>('http://localhost:8080/users/user-passwd-update', passwdChangeRequest);
+    return this.http.put<any>(environment.api_url + '/users/user-passwd-update', passwdChangeRequest);
   }
 }
 

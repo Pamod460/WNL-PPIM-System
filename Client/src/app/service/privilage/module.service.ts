@@ -1,3 +1,4 @@
+import {environment} from "../../../environments/environment";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Module} from "../../entity/module";
@@ -12,7 +13,7 @@ export class ModuleService {
   }
 
   getAllList() {
-    return this.http.get<Module[]>('http://localhost:8080/modules/list');
+    return this.http.get<Module[]>(environment.api_url + '/modules/list');
 
   }
 

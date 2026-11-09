@@ -1,3 +1,4 @@
+import {environment} from "../../../environments/environment";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Userstatus} from "../../entity/userstatus";
@@ -13,7 +14,7 @@ export class UserstatusService {
 
   getAllList() {
 
-    return this.http.get<Userstatus[]>('http://localhost:8080/userstatuses/list')
+    return this.http.get<Userstatus[]>(environment.api_url + '/userstatuses/list')
 
   }
 

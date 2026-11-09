@@ -1,3 +1,4 @@
+import {environment} from "../../../environments/environment";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Role} from "../../entity/role";
@@ -12,7 +13,7 @@ export class RoleService {
   }
 
   getAllList() {
-    return this.http.get<Role[]>('http://localhost:8080/roles/list');
+    return this.http.get<Role[]>(environment.api_url + '/roles/list');
   }
 
 }

@@ -80,7 +80,7 @@ import { DistributionComponent } from './view/modules/distribution/distribution.
 import { AgentpaymentComponent } from './view/modules/agentpayment/agentpayment.component';
 import {ApproveButtonComponent} from "./util/approve-button/approve-button.component";
 import { SortPipe } from './util/layout/pipe/sort.pipe';
-import {NgChartsModule} from "ng2-charts";
+import {BaseChartDirective, provideCharts, withDefaultRegisterables} from "ng2-charts";
 import {CustomBreadcrumbComponent} from "./util/layout/custom-breadcrumb/custom-breadcrumb.component";
 import {ReportComponent} from "./util/report/report.component";
 import { LandingPageComponent } from './public/landing-page/landing-page.component';
@@ -191,7 +191,7 @@ import { SupplierPaymentReportComponent } from './report/view/supplier-payment-r
     ImageUploaderComponent,
     FileUploadModule,
     ApproveButtonComponent,
-    NgChartsModule,
+    BaseChartDirective,
     CustomBreadcrumbComponent,
     ReportComponent,
 
@@ -200,7 +200,8 @@ import { SupplierPaymentReportComponent } from './report/view/supplier-payment-r
     EmployeeService,
     DatePipe,
     AuthorizationManager,
-    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
+    provideCharts(withDefaultRegisterables())
   ],
   exports: [
 
