@@ -2,6 +2,8 @@ package lk.wnl.wijeya.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -13,6 +15,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
@@ -38,10 +41,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             return auth;
 
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse login request", e);
-        } catch (AuthenticationException e2) {
-            throw new RuntimeException(e2.getMessage());
+            throw new BadCredentialsException("Invalid login request");
         }
+        // AuthenticationException (bad password, unknown, inactive or blocked user) now reaches
+        // unsuccessfulAuthentication below and becomes a 401 instead of a 500.
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                              AuthenticationException failed) throws IOException {
+        SecurityContextHolder.clearContext();
+        String message = failed.getMessage() == null ? "Bad credentials" : failed.getMessage();
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        // The login page reads error.error.message ("Bad credentials" or "Heading/Details").
+        new ObjectMapper().writeValue(response.getWriter(), Map.of("code", 401, "message", message));
     }
 
     @Override

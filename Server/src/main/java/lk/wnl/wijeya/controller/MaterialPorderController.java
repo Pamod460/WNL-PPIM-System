@@ -55,7 +55,6 @@ public class MaterialPorderController {
 
     @PreAuthorize("hasAuthority('material porder-delete')")
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return materialPorderService.deleteMaterialPorder(id);
     }

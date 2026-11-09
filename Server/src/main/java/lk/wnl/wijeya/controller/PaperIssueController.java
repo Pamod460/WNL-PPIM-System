@@ -53,7 +53,6 @@ public class PaperIssueController {
 
     @PreAuthorize("hasAuthority('paper issue-delete')")
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return paperIssueService.deletePaperIssue(id);
     }

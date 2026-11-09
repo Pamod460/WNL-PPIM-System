@@ -53,7 +53,6 @@ public class DistributionController {
 
     @PreAuthorize("hasAuthority('distribution-delete')")
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return distributionService.deleteDistribution(id);
     }

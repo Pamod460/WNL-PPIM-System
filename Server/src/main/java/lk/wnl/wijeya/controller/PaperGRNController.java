@@ -52,7 +52,6 @@ public class PaperGRNController {
 
     @PreAuthorize("hasAuthority('paper grn-delete')")
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return paperGrnService.deletePaperGrn(id);
     }

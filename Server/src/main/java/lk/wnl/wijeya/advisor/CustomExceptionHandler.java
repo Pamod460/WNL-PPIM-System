@@ -26,7 +26,7 @@ public class CustomExceptionHandler {
     @ExceptionHandler(ResourceAlreadyExistException.class)
     public ResponseEntity<StandardResponse> handleResourceAlreadyExistException(ResourceAlreadyExistException exception){
         return new ResponseEntity<StandardResponse>(
-                new StandardResponse(302,"Error",errorBody(exception)), HttpStatus.FOUND
+                new StandardResponse(409,"Error",errorBody(exception)), HttpStatus.CONFLICT
         );
     }
 

@@ -54,7 +54,6 @@ public class MaterialIssueController {
 
     @PreAuthorize("hasAuthority('material issue-delete')")
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return materialIssueService.deleteMaterialIssue(id);
     }

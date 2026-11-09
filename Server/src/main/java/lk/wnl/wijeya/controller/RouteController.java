@@ -51,7 +51,6 @@ public class RouteController {
 
     @PreAuthorize("hasAuthority('route-delete')")
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return routeService.delete(id);
     }

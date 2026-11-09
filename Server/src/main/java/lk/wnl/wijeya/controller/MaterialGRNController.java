@@ -54,7 +54,6 @@ public class MaterialGRNController {
 
     @PreAuthorize("hasAuthority('material grn-delete')")
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return materialGrnService.deleteMaterialGrn(id);
     }

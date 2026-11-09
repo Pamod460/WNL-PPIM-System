@@ -53,7 +53,6 @@ public class AgentOrderController {
 
     @PreAuthorize("hasAuthority('agent order-delete')")
     @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<StandardResponse> delete(@PathVariable Integer id) {
         return agentOrderService.deleteAgentOrder(id);
     }
