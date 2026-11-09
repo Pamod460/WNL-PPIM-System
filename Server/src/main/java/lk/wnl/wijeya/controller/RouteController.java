@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.RouteDto;
 import lk.wnl.wijeya.service.RouteService;
@@ -38,13 +39,13 @@ public class RouteController {
     @PreAuthorize("hasAuthority('route-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> add(@RequestBody RouteDto agentDto) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody RouteDto agentDto) {
         return routeService.save(agentDto);
     }
 
     @PreAuthorize("hasAuthority('route-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody RouteDto agent) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody RouteDto agent) {
         return routeService.Update(agent);
 
     }

@@ -31,7 +31,7 @@ public class EmployeeDto {
     private String address;
     @Pattern(regexp = "^((\\+94|0)(70|71|72|74|75|76|77|78)\\d{7})$", message = "Invalid Mobile Number")
     private String mobile;
-    @Pattern(regexp = "^(0(11|21|23|24|25|26|27|31|32|33|34|35|36|37|38|41|45|51|52|54|55|57|61|63|65|66|67|71|81|91)-?[0-9]{7}?)$", message = "Invalid Land Phone Number")
+    @Pattern(regexp = "^(0(11|21|23|24|25|26|27|31|32|33|34|35|36|37|38|41|45|51|52|54|55|57|61|63|65|66|67|71|81|91)-?[0-9]{7}?)?$", message = "Invalid Land Phone Number")
     private String land;
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Invalid Email")
     private String email;

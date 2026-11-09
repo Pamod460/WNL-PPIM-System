@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
@@ -22,13 +24,16 @@ public class VehicleDto {
     @Pattern(regexp = "^[A-Z]{2,3}-\\d{4}$", message = "Invalid Number")
     private String number;
     private LocalDate doAttached;
-    @Pattern(regexp = "^\\d{4}$", message = "Invalid YOM")
+    @Min(value = 1900, message = "Invalid YOM")
+    @Max(value = 2100, message = "Invalid YOM")
     private Integer yom;
-    @Pattern(regexp = "^\\d{3,5}$", message = "Invalid Capacity")
+    @Min(value = 100, message = "Invalid Capacity")
+    @Max(value = 99999, message = "Invalid Capacity")
     private Integer capacity;
     @Pattern(regexp = "^.*$", message = "Invalid Description")
     private String description;
-    @Pattern(regexp = "^\\d{0,7}$", message = "Invalid Current Meter Reading")
+    @Min(value = 0, message = "Invalid Current Meter Reading")
+    @Max(value = 9999999, message = "Invalid Current Meter Reading")
     private Integer curruntMeterReading;
     private LocalDate lastRegDate;
     private VehicleStatus vehicleStatus;

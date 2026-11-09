@@ -38,13 +38,13 @@ public class UserController {
     @PreAuthorize("hasAuthority('user-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> add(@RequestBody UserDto userDTO) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody UserDto userDTO) {
         return userService.saveUser(userDTO);
     }
 
     @PreAuthorize("hasAuthority('user-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody UserDto userDTO) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody UserDto userDTO) {
         return userService.updateUser(userDTO);
     }
 
@@ -72,4 +72,4 @@ public class UserController {
         return userService.updateUserPassword(principal.getName(), userPasswdRequest);
     }
 
-}
+}

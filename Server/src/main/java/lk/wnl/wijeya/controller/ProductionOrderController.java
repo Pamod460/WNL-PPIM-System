@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.ProductionOrderDto;
 import lk.wnl.wijeya.service.ProductionOrderService;
@@ -38,7 +39,7 @@ public class ProductionOrderController {
 
     @PreAuthorize("hasAuthority('production order-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody ProductionOrderDto productionOrderDto) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody ProductionOrderDto productionOrderDto) {
         return productionOrderService.update(productionOrderDto);
     }
 
@@ -46,7 +47,7 @@ public class ProductionOrderController {
 
     @PreAuthorize("hasAuthority('production order-insert')")
     @PostMapping
-    public ResponseEntity<StandardResponse> save(@RequestBody ProductionOrderDto productionOrderDto) {
+    public ResponseEntity<StandardResponse> save(@Valid @RequestBody ProductionOrderDto productionOrderDto) {
         return productionOrderService.save(productionOrderDto);
     }
 

@@ -475,7 +475,7 @@ export class EmployeeComponent implements OnInit {
           if (result) {
             //console.log("EmployeeService.update()");
             this.employee = this.form.getRawValue();
-            if (this.employee.land !== undefined || this.employee.land === "") {
+            if (this.employee.land === undefined || this.employee.land === "") {
               this.employee.land = null;
             }
 

@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.PaperPorderDto;
 import lk.wnl.wijeya.service.PaperPorderService;
@@ -40,13 +41,13 @@ public class PaperPorderController {
     @PreAuthorize("hasAuthority('paper porder-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> add(@RequestBody PaperPorderDto paperPorderDto) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody PaperPorderDto paperPorderDto) {
         return paperPorderService.savePaperPorder(paperPorderDto);
     }
 
     @PreAuthorize("hasAuthority('paper porder-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody PaperPorderDto paperPorderDto) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody PaperPorderDto paperPorderDto) {
         return paperPorderService.UpdatePaperPorder(paperPorderDto);
 
     }

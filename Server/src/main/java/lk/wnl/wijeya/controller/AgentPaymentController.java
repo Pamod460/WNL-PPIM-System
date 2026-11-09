@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.AgentPaymentDto;
 import lk.wnl.wijeya.service.AgentPaymentService;
@@ -28,13 +29,13 @@ public class AgentPaymentController {
     @PreAuthorize("hasAuthority('agent payment-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> add(@RequestBody AgentPaymentDto agentPaymentDto) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody AgentPaymentDto agentPaymentDto) {
         return agentPaymentService.saveAgentPayment(agentPaymentDto);
     }
 
     @PreAuthorize("hasAuthority('agent payment-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody AgentPaymentDto agentPaymentDto) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody AgentPaymentDto agentPaymentDto) {
         return agentPaymentService.UpdateAgentPayment(agentPaymentDto);
 
     }

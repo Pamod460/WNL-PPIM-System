@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.EmployeeDto;
 import lk.wnl.wijeya.service.EmployeeService;
@@ -38,13 +39,13 @@ public class EmployeeController {
     @PreAuthorize("hasAuthority('employee-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> add(@RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody EmployeeDto employeeDto) {
         return employeeService.saveEmployee(employeeDto);
     }
 
     @PreAuthorize("hasAuthority('employee-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody EmployeeDto employee) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody EmployeeDto employee) {
         return employeeService.UpdateEmployee(employee);
 
     }
@@ -55,4 +56,4 @@ public class EmployeeController {
         return employeeService.deleteEmployee(id);
     }
 
-}
+}

@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MaterialGRNServiceIMPL implements MaterialGRNService {
     private final MaterialGRNRepository materialGRNRepository;
@@ -104,9 +106,9 @@ public class MaterialGRNServiceIMPL implements MaterialGRNService {
         materialPoder.getMaterialGrnMaterials().forEach(m -> {
             this.materialService.increaseQuantity(m.getMaterial().getId(), BigDecimal.valueOf(m.getQuantity()));
         });
-        materialPorderService.updatePorderReceivingStatus(materialGrnDto.getMaterialPorder().getId());
-
         MaterialGrn savedMGrn = materialGRNRepository.save(materialPoder);
+        // After the save, so this GRN's quantities are counted in the PO's received total.
+        materialPorderService.updatePorderReceivingStatus(materialGrnDto.getMaterialPorder().getId());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new StandardResponse("GRN Added Successfully", new MaterialGrnDto(savedMGrn.getId(), savedMGrn.getCode())));

@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.PrivilegeDto;
 import lk.wnl.wijeya.repository.PrivilegeRepository;
@@ -36,14 +37,14 @@ private final PrivilegeService privilegeService;
 
     @PreAuthorize("hasAuthority('privilege-insert')")
     @PostMapping
-    public ResponseEntity<StandardResponse> add(@RequestBody PrivilegeDto privilege) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody PrivilegeDto privilege) {
         return privilegeService.save(privilege);
 
     }
 
     @PreAuthorize("hasAuthority('privilege-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody PrivilegeDto privilegeDto) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody PrivilegeDto privilegeDto) {
         return privilegeService.update(privilegeDto);
 
     }

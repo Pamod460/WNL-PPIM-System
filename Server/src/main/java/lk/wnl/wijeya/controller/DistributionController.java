@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.DistributionDto;
 import lk.wnl.wijeya.service.DistributionService;
@@ -40,13 +41,13 @@ public class DistributionController {
     @PreAuthorize("hasAuthority('distribution-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> add(@RequestBody DistributionDto distributionDto) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody DistributionDto distributionDto) {
         return distributionService.saveDistribution(distributionDto);
     }
 
     @PreAuthorize("hasAuthority('distribution-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody DistributionDto distributionDto) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody DistributionDto distributionDto) {
         return distributionService.UpdateDistribution(distributionDto);
 
     }

@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.MaterialPorderDto;
 import lk.wnl.wijeya.service.MaterialPorderService;
@@ -42,13 +43,13 @@ public class MaterialPorderController {
     @PreAuthorize("hasAuthority('material porder-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> add(@RequestBody MaterialPorderDto materialPorderDto) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody MaterialPorderDto materialPorderDto) {
         return materialPorderService.saveMaterialPorder(materialPorderDto);
     }
 
     @PreAuthorize("hasAuthority('material porder-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody MaterialPorderDto materialPorderDto) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody MaterialPorderDto materialPorderDto) {
         return materialPorderService.UpdateMaterialPorder(materialPorderDto);
 
     }

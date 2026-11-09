@@ -4,7 +4,7 @@ import lk.wnl.wijeya.dto.PaperDto;
 import lk.wnl.wijeya.util.StandardResponse;
 import org.springframework.http.ResponseEntity;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;

@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.MaterialDto;
 import lk.wnl.wijeya.service.MaterialService;
@@ -38,14 +39,14 @@ private final MaterialService materialService;
 
     @PreAuthorize("hasAuthority('material-insert')")
     @PostMapping(produces = "application/json")
-    public ResponseEntity<StandardResponse> save(@RequestBody MaterialDto materialDto) {
+    public ResponseEntity<StandardResponse> save(@Valid @RequestBody MaterialDto materialDto) {
    return      materialService.save(materialDto);
 
     }
 
     @PreAuthorize("hasAuthority('material-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody MaterialDto materialDto) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody MaterialDto materialDto) {
         return materialService.update(materialDto);
 
     }

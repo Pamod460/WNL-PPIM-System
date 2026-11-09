@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.AgentOrderDto;
 import lk.wnl.wijeya.service.AgentOrderService;
@@ -40,13 +41,13 @@ public class AgentOrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> add(@RequestBody AgentOrderDto agentOrderDto) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody AgentOrderDto agentOrderDto) {
         return agentOrderService.saveAgentOrder(agentOrderDto);
     }
 
     @PreAuthorize("hasAuthority('agent order-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody AgentOrderDto agentOrder) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody AgentOrderDto agentOrder) {
         return agentOrderService.UpdateAgentOrder(agentOrder);
 
     }

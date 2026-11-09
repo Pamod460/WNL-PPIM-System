@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.AgentDto;
 import lk.wnl.wijeya.dto.AgentVerifyRequest;
@@ -40,18 +41,18 @@ public class AgentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> add(@RequestBody AgentDto agentDto) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody AgentDto agentDto) {
         return agentService.saveAgent(agentDto);
     }
 
     @PostMapping(path = "/verify", produces = "application/json")
-    public AgentDto verify(@RequestBody AgentVerifyRequest request) {
+    public AgentDto verify(@Valid @RequestBody AgentVerifyRequest request) {
         return agentService.verifyAgent(request);
     }
 
     @PreAuthorize("hasAuthority('agent-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody AgentDto agent) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody AgentDto agent) {
         return agentService.UpdateAgent(agent);
 
     }

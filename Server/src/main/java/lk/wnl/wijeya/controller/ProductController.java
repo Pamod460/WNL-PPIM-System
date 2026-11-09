@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.ProductDto;
 import lk.wnl.wijeya.service.ProductService;
@@ -38,7 +39,7 @@ public class ProductController {
 
     @PreAuthorize("hasAuthority('product-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody ProductDto productDto) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody ProductDto productDto) {
         return productService.update(productDto);
     }
 
@@ -46,7 +47,7 @@ public class ProductController {
 
     @PreAuthorize("hasAuthority('product-insert')")
     @PostMapping
-    public ResponseEntity<StandardResponse> save(@RequestBody ProductDto productDto) {
+    public ResponseEntity<StandardResponse> save(@Valid @RequestBody ProductDto productDto) {
         return productService.save(productDto);
     }
 

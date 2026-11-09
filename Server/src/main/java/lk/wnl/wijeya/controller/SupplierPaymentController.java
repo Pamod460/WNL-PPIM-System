@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.SupplierPaymentDto;
 import lk.wnl.wijeya.service.SupplierPaymentService;
@@ -31,14 +32,14 @@ public class SupplierPaymentController {
 
     @PreAuthorize("hasAuthority('supplier payment-insert')")
     @PostMapping(produces = "application/json")
-    public ResponseEntity<StandardResponse> save(@RequestBody SupplierPaymentDto supplierPaymentDto) {
+    public ResponseEntity<StandardResponse> save(@Valid @RequestBody SupplierPaymentDto supplierPaymentDto) {
         return supplierPaymentService.save(supplierPaymentDto);
 
     }
 
     @PreAuthorize("hasAuthority('supplier payment-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody SupplierPaymentDto supplierPaymentDto) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody SupplierPaymentDto supplierPaymentDto) {
         return supplierPaymentService.update(supplierPaymentDto);
 
     }

@@ -1,5 +1,6 @@
 package lk.wnl.wijeya.controller;
 
+import javax.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import lk.wnl.wijeya.dto.PaperGrnDto;
 import lk.wnl.wijeya.service.PaperGRNService;
@@ -39,13 +40,13 @@ public class PaperGRNController {
     @PreAuthorize("hasAuthority('paper grn-insert')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<StandardResponse> add(@RequestBody PaperGrnDto paperGrnDto) {
+    public ResponseEntity<StandardResponse> add(@Valid @RequestBody PaperGrnDto paperGrnDto) {
         return paperGrnService.savePaperGrn(paperGrnDto);
     }
 
     @PreAuthorize("hasAuthority('paper grn-update')")
     @PutMapping
-    public ResponseEntity<StandardResponse> update(@RequestBody PaperGrnDto paperGrnDto) {
+    public ResponseEntity<StandardResponse> update(@Valid @RequestBody PaperGrnDto paperGrnDto) {
         return paperGrnService.UpdatePaperGrn(paperGrnDto);
 
     }
