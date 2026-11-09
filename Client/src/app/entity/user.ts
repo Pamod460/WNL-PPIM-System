@@ -1,6 +1,6 @@
 import {Employee} from "./employee";
 import {Userstatus} from "./userstatus";
-import {UserRole} from "./userRole";
+import {UserRole} from "./userrole";
 import {Usrtype} from "./usrtype";
 
 export class User{

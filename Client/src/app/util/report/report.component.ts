@@ -2,7 +2,6 @@ import {Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core'
 import {MatTableDataSource, MatTableModule} from "@angular/material/table";
 import {ChartData, ChartOptions} from "chart.js";
 // @ts-ignore
-import html2pdf from 'html2pdf.js';
 import {MatGridListModule} from "@angular/material/grid-list";
 import {CustomBreadcrumbComponent} from "../layout/custom-breadcrumb/custom-breadcrumb.component";
 import {MatCardModule} from "@angular/material/card";
@@ -128,7 +127,7 @@ export class ReportComponent implements OnInit, OnChanges {
     }
   }
 
-  downloadPDF() {
+  async downloadPDF() {
     const element = document.getElementById('pdfContent');
     if (element) {
       const opt = {
@@ -139,6 +138,8 @@ export class ReportComponent implements OnInit, OnChanges {
         jsPDF: {unit: 'in', format: 'a3', orientation: 'landscape' as const},
         pagebreak: {mode: ['avoid-all', 'css', 'legacy']}
       };
+      // Loaded on demand: html2pdf.js (+ jsPDF/html2canvas) is ~2 MB and only needed for PDF export.
+      const html2pdf = (await import('html2pdf.js')).default;
       html2pdf().set(opt).from(element).save();
     }
   }

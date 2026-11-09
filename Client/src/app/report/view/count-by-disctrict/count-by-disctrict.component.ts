@@ -4,7 +4,6 @@ import {MatTableDataSource} from "@angular/material/table";
 import {ReportService} from "../../reportservice";
 import {ChartData, ChartOptions} from "chart.js";
 // @ts-ignore
-import html2pdf from 'html2pdf.js';
 @Component({
   standalone: false,
   selector: 'app-count-by-disctrict',
@@ -136,7 +135,7 @@ export class CountByDisctrictComponent implements OnInit{
     const colors = ['#4dc9f6', '#f67019', '#f53794', '#537bc4', '#acc236', '#166a8f', '#00a950', '#58595b'];
     return Array.from({length: count}, (_, i) => colors[i % colors.length]);
   }
-  downloadPDF() {
+  async downloadPDF() {
     const element = document.getElementById('pdfContent');
     if (element) {
       const opt = {
@@ -148,6 +147,8 @@ export class CountByDisctrictComponent implements OnInit{
         pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
       };
 
+      // Loaded on demand: html2pdf.js (+ jsPDF/html2canvas) is ~2 MB and only needed for PDF export.
+      const html2pdf = (await import('html2pdf.js')).default;
       html2pdf().set(opt).from(element).save();
     }
   }

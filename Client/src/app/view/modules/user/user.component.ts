@@ -17,7 +17,7 @@ import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
 import {MatDialog} from "@angular/material/dialog";
 import {RegexService} from "../../../service/Shared/regex.service";
 import {MessageComponent} from "../../../util/dialog/message/message.component";
-import {UserRole} from "../../../entity/userRole";
+import {UserRole} from "../../../entity/userrole";
 import {AuthorizationManager} from "../../../service/auth/authorizationmanager";
 import {Usrtype} from "../../../entity/usrtype";
 import {UsrtypeService} from "../../../service/user/usrtype.service";

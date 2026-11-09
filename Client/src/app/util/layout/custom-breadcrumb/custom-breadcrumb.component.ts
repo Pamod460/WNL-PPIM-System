@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {DatePipe, NgForOf, NgIf} from "@angular/common";
+import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, NavigationEnd, Router, RouterLink} from "@angular/router";
 
 import {filter} from 'rxjs/operators';
@@ -14,7 +14,6 @@ import {CapitalizePipe} from "../pipe/capitalize.pipe";
   imports: [
     NgForOf,
     NgIf,
-    DatePipe,
     MatIconModule,
     MatToolbarModule,
     RouterLink,

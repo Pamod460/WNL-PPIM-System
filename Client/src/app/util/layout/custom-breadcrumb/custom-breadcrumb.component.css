@@ -11,7 +11,7 @@
 }
 
 .text-sm .content-header {
-  //padding: 10px .5rem
+  /* padding: 10px .5rem */
 }
 
 .content-header h1 {
@@ -20,18 +20,18 @@
 }
 
 .text-sm .content-header h1 {
-  //font-size: 1.5rem
+  /* font-size: 1.5rem */
 }
 
 .content-header .breadcrumb {
   background-color: transparent;
-  //line-height: 1.8rem;
+  /* line-height: 1.8rem; */
   margin-bottom: 0;
   padding: 0
 }
 
 .text-sm .content-header .breadcrumb {
-  //line-height: 1.5rem
+  /* line-height: 1.5rem */
 }
 a{
   text-decoration: none;

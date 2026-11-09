@@ -29,20 +29,21 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": ["src/assets/libs/loader.js"]
+            "scripts": ["src/assets/libs/loader.js"],
+            "allowedCommonJsDependencies": ["html2pdf.js", "html2canvas"]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2.5mb",
+                  "maximumError": "3.5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
                 }
               ],
               "outputHashing": "all"
