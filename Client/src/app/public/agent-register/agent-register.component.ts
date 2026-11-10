@@ -72,7 +72,6 @@ export class AgentRegisterComponent implements OnInit {
     )
 
     this.regexService.get('agent').subscribe((regs: []) => {
-      console.log(regs)
       this.regexes = regs;
       this.createForm();
     });
@@ -132,7 +131,6 @@ export class AgentRegisterComponent implements OnInit {
   onSubmit(): void {
     this.registrationForm.get('logger')?.setValue("Agent")
     this.registrationForm.get('agentStatus')?.setValue({id: 1, name: 'Active'});
-    console.log(this.registrationForm.getRawValue());
     this.submitted = true;
     if (this.registrationForm.valid) {
       this.agentService.add(this.registrationForm.value).subscribe({

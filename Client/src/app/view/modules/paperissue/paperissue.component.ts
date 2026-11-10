@@ -226,7 +226,6 @@ export class PaperissueComponent implements OnInit {
     this.createView();
     this.createForm();
     // this.regexService.get('paperissue').subscribe((regs: []) => {
-    //   console.log(regs)
     //   this.regexes = regs;
     //
     // });
@@ -235,7 +234,6 @@ export class PaperissueComponent implements OnInit {
         this.paperList = papers;
         this.filteredPaperList = this.paperList;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
 
@@ -313,7 +311,6 @@ export class PaperissueComponent implements OnInit {
         this.data = new MatTableDataSource(this.PaperIssues);
         this.data.paginator = this.paginator;
       }, error: (error: any) => {
-        console.log(error);
       }
     });
 
@@ -499,7 +496,6 @@ export class PaperissueComponent implements OnInit {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("PaperIssueService.update()");
             this.paperIssue = this.form.getRawValue();
             // @ts-ignore
             this.innerdata.forEach((i) => delete i.id);

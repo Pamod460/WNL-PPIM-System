@@ -202,7 +202,6 @@ export class EmployeeComponent implements OnInit {
           }
           // @ts-ignore
           if (controlName == "dobirth" || controlName == "doassignment")
-            console.log(value);
             value = this.datePipe.transform(new Date(value), 'yyyy-MM-dd');
 
           if (this.oldemployee != undefined && control.valid) {
@@ -244,7 +243,6 @@ export class EmployeeComponent implements OnInit {
         this.data = new MatTableDataSource(this.employees);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     });
 
@@ -296,7 +294,6 @@ export class EmployeeComponent implements OnInit {
   }
 
   selectImage(e: any): void {
-    console.log(e.target.files[0]);
     if (e.target.files) {
       const reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
@@ -473,7 +470,6 @@ export class EmployeeComponent implements OnInit {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("EmployeeService.update()");
             this.employee = this.form.getRawValue();
             if (this.employee.land === undefined || this.employee.land === "") {
               this.employee.land = null;
@@ -582,7 +578,6 @@ export class EmployeeComponent implements OnInit {
 
   getLastEmpCode() {
     this.employeeService.getLastEmpCode().subscribe(ecode => {
-      console.log(ecode.code)
       this.lastEmpCode = ecode.code
       this.form.controls["number"].setValue(this.lastEmpCode)
     });

@@ -168,7 +168,6 @@ export class MaterialporderComponent implements OnInit {
     const expectedLineCost = quantity * unitPrice;
     this.grandTotal += expectedLineCost
     this.form.get("expectedCost")?.setValue(this.grandTotal);
-    console.log(this.inndata);
     const newEntry = new MaterialPorderMaterial(
       this.id,
       this.inndata.material,
@@ -272,7 +271,6 @@ export class MaterialporderComponent implements OnInit {
         this.materialList = materials;
         this.filteredMaterialList = this.materialList;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.materialPorderStatusService.getAllList().subscribe(
@@ -366,7 +364,6 @@ export class MaterialporderComponent implements OnInit {
         this.data = new MatTableDataSource(this.MaterialPorders);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     });
 
@@ -594,7 +591,6 @@ export class MaterialporderComponent implements OnInit {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("MaterialPorderService.update()");
             this.materialPorder = this.form.getRawValue();
             // @ts-ignore
             this.innerdata.forEach((i) => delete i.id);

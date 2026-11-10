@@ -136,7 +136,6 @@ export class MaterialgrnComponent implements OnInit {
 
   addToTable() {
     this.inndata = this.materialForm.getRawValue();
-    console.log(this.inndata)
     if (!this.inndata.material || this.inndata.quantity == 0) {
       this.showMessageDialog("Errors - Material Grn Add", "Please Add Required Details");
       return;
@@ -248,7 +247,6 @@ export class MaterialgrnComponent implements OnInit {
         this.materialList = materials;
         this.filteredMaterialList = this.materialList;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.materialPorderService.getAllList().subscribe(response => {
@@ -341,7 +339,6 @@ export class MaterialgrnComponent implements OnInit {
         this.data = new MatTableDataSource(this.MaterialGrns);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     });
 
@@ -528,7 +525,6 @@ export class MaterialgrnComponent implements OnInit {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("MaterialGrnService.update()");
             this.materialGrn = this.form.getRawValue();
             // @ts-ignore
             this.innerdata.forEach((i) => delete i.id);
@@ -665,7 +661,6 @@ export class MaterialgrnComponent implements OnInit {
       this.materialForm.get("material")?.setValue(materialPorderMaterial.material);
       this.materialForm.get("quantity")?.setValue(materialPorderMaterial.quantity);
       this.materialForm.get("lineCost")?.setValue(materialPorderMaterial.expectedLineCost);
-      console.log(this.materialForm.getRawValue(),materialPorderMaterial)
       this.addToTable()
     })
   }

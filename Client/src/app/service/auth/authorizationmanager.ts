@@ -124,7 +124,6 @@ export class AuthorizationManager {
               this.setEmployee(employee);
               this.setUserProfile();
             }, error: err => {
-              console.log(err)
             }
           });
         this.setUserProfile();
@@ -132,7 +131,6 @@ export class AuthorizationManager {
           const authorities = this.extractAuthorities(authoritiesArray);
           this.enableMenus(authorities);
         } else {
-          console.log('Authorities are undefined or not an array');
         }
 
       } catch (error) {

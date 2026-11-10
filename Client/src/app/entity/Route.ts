@@ -1,4 +1,4 @@
-import {RouteStatus} from "./RouteStatus'";
+import {RouteStatus} from "./RouteStatus";
 
 export class Route{
   id!: number;

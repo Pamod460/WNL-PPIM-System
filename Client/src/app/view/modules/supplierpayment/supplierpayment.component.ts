@@ -162,7 +162,6 @@ export class SupplierpaymentComponent implements OnInit {
     this.createForm();
     this.getNextCode();
     // this.regexService.get('materialporder').subscribe((regs: []) => {
-    //   console.log(regs)
     //   this.regexes = regs;
     //   this.createForm();
     // });
@@ -171,7 +170,6 @@ export class SupplierpaymentComponent implements OnInit {
         this.materialList = materials;
         this.filteredMaterialList = this.materialList;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.materialPorderStatusService.getAllList().subscribe(
@@ -281,7 +279,6 @@ export class SupplierpaymentComponent implements OnInit {
         this.data = new MatTableDataSource(this.supplierPayments);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     });
 
@@ -486,7 +483,6 @@ this.supplierpayment.supplierPaymentGrns?.forEach(value => {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("MaterialPorderService.update()");
             this.supplierpayment = this.form.getRawValue();
             // @ts-ignore
             this.innerdata.forEach((i) => delete i.id);

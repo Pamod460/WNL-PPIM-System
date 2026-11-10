@@ -271,7 +271,6 @@ export class PaperporderComponent implements OnInit {
         this.paperList = papers;
         this.filteredPaperList = this.paperList;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.paperPorderStatusService.getAllList().subscribe(
@@ -363,7 +362,6 @@ export class PaperporderComponent implements OnInit {
         this.data = new MatTableDataSource(this.PaperPorders);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     });
 
@@ -584,7 +582,6 @@ export class PaperporderComponent implements OnInit {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("PaperPorderService.update()");
             this.paperPorder = this.form.getRawValue();
             // @ts-ignore
             this.innerdata.forEach((i) => delete i.id);

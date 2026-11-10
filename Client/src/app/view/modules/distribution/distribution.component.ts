@@ -147,7 +147,6 @@ export class DistributionComponent implements OnInit {
 
   addToTable() {
     this.inndata = this.productForm.getRawValue();
-    console.log(this.inndata.quantity)
     // Validate product input
     if (!this.inndata.product || this.inndata.quantity == 0) {
       this.showMessageDialog("Errors - Product POrder Add", "Please Add Required Details");
@@ -159,7 +158,6 @@ export class DistributionComponent implements OnInit {
     const lineTotal = quantity * unitPrice;
     this.grandTotal += lineTotal
     this.form.get("grandTotal")?.setValue(this.grandTotal);
-    console.log(this.inndata.productDesign)
     const newEntry = new AgentOrderProduct(
       this.id,
       this.inndata.product,
@@ -256,7 +254,6 @@ export class DistributionComponent implements OnInit {
     this.createView();
 
     // this.regexService.get('agentOrder').subscribe((regs: []) => {
-    //   console.log(regs)
     //   this.regexes = regs;
     this.createForm();
     // });
@@ -265,7 +262,6 @@ export class DistributionComponent implements OnInit {
         this.productList = products;
         this.filteredProductList = this.productList;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.productDesignService.getAllListNameId().subscribe(response=>{
@@ -363,7 +359,6 @@ export class DistributionComponent implements OnInit {
         this.data = new MatTableDataSource(this.distributions);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     });
 
@@ -548,7 +543,6 @@ export class DistributionComponent implements OnInit {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("AgentOrderService.update()");
             this.distribution = this.form.getRawValue();
             // @ts-ignore
             this.innerdata.forEach((i) => delete i.id);

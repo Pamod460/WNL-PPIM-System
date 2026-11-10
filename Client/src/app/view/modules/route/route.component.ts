@@ -13,7 +13,7 @@ import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
 import {MessageComponent} from "../../../util/dialog/message/message.component";
 import {Route} from "../../../entity/Route";
 import {RouteService} from "../../../service/route/route.service";
-import {RouteStatus} from "../../../entity/RouteStatus'";
+import {RouteStatus} from "../../../entity/RouteStatus";
 import {RouteStatusService} from "../../../service/route/route-status.service";
 
 
@@ -171,7 +171,6 @@ export class RouteComponent implements OnInit {
   getNextCode(name:string) {
 
     this.routeService.getNextCode(name).subscribe(ecode => {
-      console.log(ecode.code)
       this.routeNumber = ecode.code
       this.form.controls["routeNumber"].setValue(this.routeNumber)
     });

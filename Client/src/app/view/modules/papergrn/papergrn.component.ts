@@ -144,7 +144,6 @@ export class PapergrnComponent implements OnInit {
 
   addToTable() {
     this.inndata = this.paperForm.getRawValue();
-    console.log(this.inndata)
     if (!this.inndata.paper || this.inndata.quantity == 0) {
       this.showMessageDialog("Errors - Paper Grn Add", "Please Add Required Details");
       return;
@@ -256,7 +255,6 @@ export class PapergrnComponent implements OnInit {
         this.paperList = papers;
         this.filteredPaperList = this.paperList;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.paperPorderService.getAllList().subscribe(response => {
@@ -349,7 +347,6 @@ export class PapergrnComponent implements OnInit {
         this.data = new MatTableDataSource(this.PaperGrns);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     });
 
@@ -534,7 +531,6 @@ export class PapergrnComponent implements OnInit {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("PaperGrnService.update()");
             this.paperGrn = this.form.getRawValue();
             // @ts-ignore
             this.innerdata.forEach((i) => delete i.id);
@@ -668,9 +664,7 @@ export class PapergrnComponent implements OnInit {
     selectedPorder.paperPorderPapers?.forEach((materialPorderMaterial:PaperPorderPaper) => {
       this.paperForm.get("paper")?.setValue(materialPorderMaterial.paper);
       this.paperForm.get("quantity")?.setValue(materialPorderMaterial.quentity);
-      console.log(materialPorderMaterial.expectedLineCost,materialPorderMaterial.quentity)
       this.paperForm.get("lineCost")?.setValue(materialPorderMaterial.expectedLineCost);
-      console.log(this.paperForm.getRawValue(),materialPorderMaterial)
       this.addToTable()
       // this.paperForm.reset()
     })

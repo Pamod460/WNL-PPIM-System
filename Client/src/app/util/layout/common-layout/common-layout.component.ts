@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, DestroyRef, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatCardModule} from "@angular/material/card";
@@ -15,6 +15,8 @@ import {CustomBreadcrumbComponent} from "../custom-breadcrumb/custom-breadcrumb.
   styleUrls: ['./common-layout.component.css']
 })
 export class CommonLayoutComponent implements OnInit {
+  // Stops the timer when the user leaves the page (it kept running for every page visited).
+  private readonly destroyRef = inject(DestroyRef);
   @Input() formCol: number = 4
   @Input() searchCol: number = 8
   @Input() viewCol: number = 8
@@ -45,9 +47,10 @@ export class CommonLayoutComponent implements OnInit {
   }
 
   loadTime() {
-    setInterval(() => {
+    const timer = setInterval(() => {
       this.currentTime = new Date();
     }, 1000); // Update every 1 second
+    this.destroyRef.onDestroy(() => clearInterval(timer));
   }
 
   updateTitle(): void {

@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild, DestroyRef, inject} from '@angular/core';
 import {Chart, ChartConfiguration, ChartType, registerables} from 'chart.js';
 import {InventoryItem} from "../../../entity/InventoryItem";
 
@@ -12,6 +12,9 @@ Chart.register(...registerables);
   styleUrls: ['./inventory-rop-chart.component.css']
 })
 export class InventoryRopChartComponent implements OnInit, OnChanges {
+  // One blink timer at a time, stopped when the dashboard closes.
+  private blinkTimer?: ReturnType<typeof setInterval>;
+  private readonly destroyRef = inject(DestroyRef);
   @ViewChild('inventoryChart', {static: true}) inventoryChart!: ElementRef<HTMLCanvasElement>;
   private chart!: Chart;
   @Input() inventoryData: InventoryItem[] = [];
@@ -125,9 +128,10 @@ export class InventoryRopChartComponent implements OnInit, OnChanges {
   }
 
   private startBlinkingAnimation() {
+    clearInterval(this.blinkTimer);
     if (this.criticalItems.length > 0) {
       let isRed = true;
-      setInterval(() => {
+      this.blinkTimer = setInterval(() => {
         if (this.chart) {
           const newColor = isRed ? '#ff9999' : '#ff4444';
           this.chart.data.datasets[0].backgroundColor = [
@@ -143,6 +147,7 @@ export class InventoryRopChartComponent implements OnInit, OnChanges {
           isRed = !isRed;
         }
       }, 500); // Blink every 500ms
+      this.destroyRef.onDestroy(() => clearInterval(this.blinkTimer));
     }
   }
 }

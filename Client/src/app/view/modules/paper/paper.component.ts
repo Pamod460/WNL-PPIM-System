@@ -141,7 +141,6 @@ isModify = false;
       next: (paperstatuses: PaperStatus[]) => {
         this.paperStatuses = paperstatuses;
       }, error: (err) => {
-        console.log(err);
       }
     })
 
@@ -149,35 +148,30 @@ isModify = false;
       next: (unittypes: PaperUnitType[]) => {
         this.paperUnitTypes = unittypes;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.paperColorService.getAll().subscribe({
       next: (paperColors: PaperColor[]) => {
         this.paperColors = paperColors;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.paperGsmService.getAll().subscribe({
       next: (paperGsms: PaperGsm[]) => {
         this.paperGsms = paperGsms;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.paperSizeService.getAll().subscribe({
       next: (paperSizes: PaperSize[]) => {
         this.paperSizes = paperSizes;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.paperTypeService.getAll().subscribe({
       next: (paperTypes: PaperType[]) => {
         this.paperTypes = paperTypes;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
 
@@ -237,7 +231,6 @@ isModify = false;
     // this.form.controls['dointroduced'].setValue(new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()));
     // this.disableGenerateNo = false;
     // this.form.controls["papercategory"].valueChanges.subscribe(value => {
-    //   console.log(value)
     //   this.paperSubcategories = this.allPaperSubcategories.filter(msc =>
     //     msc.papercategory?.id === value?.id
     //   );
@@ -265,7 +258,6 @@ isModify = false;
         this.data = new MatTableDataSource(papers);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     })
   }

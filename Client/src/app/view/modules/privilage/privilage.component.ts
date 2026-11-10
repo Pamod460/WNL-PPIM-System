@@ -333,7 +333,6 @@ export class PrivilageComponent implements OnInit {
     //@ts-expect-error
     this.privilage.operation = this.operations.find(o => o.id === this.privilage.operation.id)
 
-    console.log(this.privilage.operation.name);
 
     this.form.patchValue(this.privilage);
     this.form.markAsPristine();

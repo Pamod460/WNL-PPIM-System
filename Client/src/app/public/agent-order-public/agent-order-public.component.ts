@@ -125,7 +125,6 @@ export class AgentOrderPublicComponent implements OnInit {
     this.form.get("logger")?.setValue('Agent'); // Replace with actual auth service if available
 // @ts-ignore
     this.form.get("agent")?.setValue(JSON.parse(localStorage.getItem('agent')))
-    console.log( this.form.get("agent")?.value)
     // Get next order number
     this.getNextCode();
   }
@@ -138,7 +137,6 @@ export class AgentOrderPublicComponent implements OnInit {
 
   addToTable() {
     this.inndata = this.productForm.getRawValue();
-    console.log(this.inndata.quantity);
     // Validate product input
     if (!this.inndata.product || this.inndata.quantity === 0) {
       this.showMessageDialog("Errors - Product Add", "Please Add Required Details");

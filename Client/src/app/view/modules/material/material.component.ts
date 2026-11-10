@@ -138,22 +138,18 @@ export class MaterialComponent implements OnInit {
       next: (materialstatuses: Materialstatus[]) => {
         this.materialStatuses = materialstatuses;
       }, error: (err) => {
-        console.log(err);
       }
     })
     this.materialsubcategoryService.getAll("").subscribe({
       next: (materialsubcategories: MaterialSubcategory[]) => {
-        console.log(materialsubcategories)
         this.allMaterialSubcategories = materialsubcategories;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.unittypeService.getAll("").subscribe({
       next: (unittypes: Unittype[]) => {
         this.unitTypes = unittypes;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
 
@@ -162,7 +158,6 @@ export class MaterialComponent implements OnInit {
         next: (materialcategories: MaterialCategory[]) => {
           this.materialCategories = materialcategories;
         }, error: (err: any) => {
-          console.log(err);
         }
       }
     )
@@ -223,7 +218,6 @@ export class MaterialComponent implements OnInit {
     this.form.controls['dointroduced'].setValue(new Date(this.today.getFullYear(), this.today.getMonth(), this.today.getDate()));
     this.disableGenerateNo = false;
     this.form.controls["materialCategory"].valueChanges.subscribe(value => {
-      console.log(value)
       this.materialSubcategories = this.allMaterialSubcategories.filter(msc =>
         msc.materialCategory?.id === value?.id
       );
@@ -232,7 +226,6 @@ export class MaterialComponent implements OnInit {
   }
 
   enableButtons(add: boolean, upd: boolean, del: boolean): void {
-    console.log('btn ', add, upd, del)
     this.enaadd = add;
     this.enaupd = upd;
     this.enadel = del;
@@ -242,7 +235,6 @@ export class MaterialComponent implements OnInit {
     this.hasInsertAuthority = authorities.some(authority => authority.module === 'material' && authority.operation === 'insert');
     this.hasUpdateAuthority = authorities.some(authority => authority.module === 'material' && authority.operation === 'update');
     this.hasDeleteAuthority = authorities.some(authority => authority.module === 'material' && authority.operation === 'delete');
-    console.log(this.hasInsertAuthority, this.hasUpdateAuthority, this.hasDeleteAuthority)
   }
 
   loadTable(query: string) {
@@ -252,7 +244,6 @@ export class MaterialComponent implements OnInit {
         this.data = new MatTableDataSource(materials);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     })
   }

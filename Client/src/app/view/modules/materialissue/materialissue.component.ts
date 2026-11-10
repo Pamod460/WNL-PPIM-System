@@ -230,7 +230,6 @@ export class MaterialissueComponent implements OnInit {
     this.createView();
     this.createForm();
     // this.regexService.get('materialissue').subscribe((regs: []) => {
-    //   console.log(regs)
     //   this.regexes = regs;
     //
     // });
@@ -240,9 +239,7 @@ export class MaterialissueComponent implements OnInit {
         // @ts-ignore
         this.filteredMaterialList = this.materialList.filter(mat=>Number.parseInt( mat.rop)< Number.parseInt( mat.quantity))
 
-        console.log(this.filteredMaterialList,this.materialList)
       }, error: (err: any) => {
-        console.log(err);
       }
     })
 
@@ -321,7 +318,6 @@ export class MaterialissueComponent implements OnInit {
         this.data = new MatTableDataSource(this.MaterialIssues);
         this.data.paginator = this.paginator;
       }, error: (error: any) => {
-        console.log(error);
       }
     });
 
@@ -508,7 +504,6 @@ export class MaterialissueComponent implements OnInit {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("MaterialIssueService.update()");
             this.materialIssue = this.form.getRawValue();
             // @ts-ignore
             this.innerdata.forEach((i) => delete i.id);

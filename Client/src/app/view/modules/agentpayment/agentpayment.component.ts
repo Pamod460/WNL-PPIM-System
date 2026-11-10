@@ -236,7 +236,6 @@ export class AgentpaymentComponent implements OnInit {
         this.data = new MatTableDataSource(this.agentPaments);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     });
 
@@ -385,7 +384,6 @@ export class AgentpaymentComponent implements OnInit {
       this.checkPaymentForm.patchValue(this.agentPayment.cheqPayments[0]);
     }
 
-    console.log(this.agentPayment)
     this.form.patchValue(this.agentPayment);
     this.form.markAsPristine();
   }
@@ -434,7 +432,6 @@ export class AgentpaymentComponent implements OnInit {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("MaterialPorderService.update()");
             this.agentPayment = this.form.getRawValue();
             // @ts-ignore
             this.innerdata.forEach((i) => delete i.id);

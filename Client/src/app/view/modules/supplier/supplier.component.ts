@@ -609,7 +609,6 @@ export class SupplierComponent implements OnInit {
 
   getLastSupCode() {
     this.supplierService.getLastSupCode().subscribe(ecode => {
-      console.log(ecode.code)
       this.lastSupCode = ecode.code
       this.form.controls["regNo"].setValue(this.lastSupCode)
     });
@@ -643,7 +642,6 @@ export class SupplierComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.dialog.closeAll()
-        console.log(result)
         // this.addMaterials(result);
       }
     });
@@ -679,7 +677,6 @@ export class SupplierComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.dialog.closeAll()
-        console.log(result)
         // this.addMaterials(result);
       }
     });

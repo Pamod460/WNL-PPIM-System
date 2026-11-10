@@ -20,7 +20,6 @@ export class MaterialissueService {
 
   getAll(query: string) {
     const res = this.http.get<MaterialIssue[]>(`${this.API_URL}` + query);
-    console.log(res)
     return res;
   }
 

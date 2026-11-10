@@ -159,7 +159,6 @@ export class ProductComponent implements OnInit {
 
     this.materialForm.get("quantity")?.valueChanges.subscribe(value => {
       const material = this.materialForm.get("material")?.value;
-      console.log(material)
       if (material && value > 0) {
         this.updatePrices(value);
       } else {
@@ -168,7 +167,6 @@ export class ProductComponent implements OnInit {
     })
     this.paperForm.get("quantity")?.valueChanges.subscribe(value => {
       const paper = this.paperForm.get("paper")?.value;
-      console.log(paper)
       if (paper && value > 0) {
         this.updatePaperPrices(value);
       } else {
@@ -181,7 +179,6 @@ export class ProductComponent implements OnInit {
     const totalMaterialCost = this.productMaterials.reduce((sum, m) => sum + m.lineCost, 0);
     // @ts-ignore
     const totalPaperCost = this.productPapers.reduce((sum, p) => sum + p.lineCost, 0);
-    // console.log("Total Material Cost: ", this.productMaterials);
     const totalCost = totalMaterialCost + totalPaperCost;
     return totalCost / 100;
   }
@@ -206,7 +203,6 @@ export class ProductComponent implements OnInit {
     const unitPrice = material.unitPrice || 0;
     const lineTotal = unitPrice * quantity;
     this.materialForm.get("lineCost")?.setValue(lineTotal);
-    console.log(this.getUnitcost())
   }
 
   updatePaperPrices(quantity: number) {
@@ -232,22 +228,18 @@ export class ProductComponent implements OnInit {
       next: (productStatuses: ProductStatus[]) => {
         this.productStatuses = productStatuses;
       }, error: (err) => {
-        console.log(err);
       }
     })
     this.productFrequencyService.getAll().subscribe({
       next: (productFrequencies: ProductFrequency[]) => {
         this.productFrequencies = productFrequencies;
       }, error: (err) => {
-        console.log(err);
       }
     })
     this.productCategoryService.getAll().subscribe({
       next: (productCategories: ProductCategory[]) => {
-        console.log(productCategories)
         this.productCategories = productCategories;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.materialService.getAllList().subscribe({
@@ -255,7 +247,6 @@ export class ProductComponent implements OnInit {
         this.materialList = materials;
         this.filteredMaterialList = [...materials];
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.paperService.getAllList().subscribe({
@@ -263,7 +254,6 @@ export class ProductComponent implements OnInit {
         this.paperList = papers;
         this.filteredPaperList = [...papers];
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     // this.regexService.get('product').subscribe((regs: []) => {
@@ -277,7 +267,6 @@ export class ProductComponent implements OnInit {
       this.buttonStates(authorities);
     }
     // this.form.valueChanges.subscribe((materials: any[]) => {
-    //   console.log(materials);
     // });
   }
 

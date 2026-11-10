@@ -146,7 +146,6 @@ export class AgentorderComponent implements OnInit{
 
   addToTable() {
     this.inndata = this.productForm.getRawValue();
-    console.log(this.inndata.quantity)
     // Validate product input
     if (!this.inndata.product || this.inndata.quantity == 0) {
       this.showMessageDialog("Errors - Product  Add", "Please Add Required Details");
@@ -255,7 +254,6 @@ export class AgentorderComponent implements OnInit{
     this.createForm();
 
     // this.regexService.get('agentOrder').subscribe((regs: []) => {
-    //   console.log(regs)
     //   this.regexes = regs;
     //   this.createForm();
     // });
@@ -264,7 +262,6 @@ export class AgentorderComponent implements OnInit{
         this.productList = products;
         this.filteredProductList = this.productList;
       }, error: (err: any) => {
-        console.log(err);
       }
     })
     this.productDesignService.getAll("").subscribe(response=>{
@@ -366,7 +363,6 @@ export class AgentorderComponent implements OnInit{
         this.data = new MatTableDataSource(this.AgentOrders);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     });
 
@@ -550,7 +546,6 @@ export class AgentorderComponent implements OnInit{
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("AgentOrderService.update()");
             this.agentOrder = this.form.getRawValue();
             // @ts-ignore
             this.innerdata.forEach((i) => delete i.id);

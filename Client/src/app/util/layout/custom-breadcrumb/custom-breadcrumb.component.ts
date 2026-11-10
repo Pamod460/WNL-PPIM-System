@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, DestroyRef, inject} from '@angular/core';
 import {NgForOf, NgIf} from "@angular/common";
 import {ActivatedRoute, NavigationEnd, Router, RouterLink} from "@angular/router";
 
@@ -22,6 +22,8 @@ import {CapitalizePipe} from "../pipe/capitalize.pipe";
   styleUrls: ['./custom-breadcrumb.component.css']
 })
 export class CustomBreadcrumbComponent implements OnInit {
+  // Stops the timer when the user leaves the page (it kept running for every page visited).
+  private readonly destroyRef = inject(DestroyRef);
   item: any[] = [];
   @Input() matchedNavItem='';
   public currentTime: Date = new Date();
@@ -43,9 +45,10 @@ export class CustomBreadcrumbComponent implements OnInit {
   }
 
   loadTime() {
-    setInterval(() => {
+    const timer = setInterval(() => {
       this.currentTime = new Date();
     }, 1000); // Update every 1 second
+    this.destroyRef.onDestroy(() => clearInterval(timer));
   }
 
   updateBreadcrumbs(): void {

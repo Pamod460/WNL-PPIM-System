@@ -130,7 +130,6 @@ export class AgentComponent implements OnInit {
     this.createView();
 
     this.regexService.get('agent').subscribe((regs: []) => {
-      console.log(regs)
       this.regexes = regs;
       this.createForm();
     });
@@ -238,7 +237,6 @@ export class AgentComponent implements OnInit {
         this.data = new MatTableDataSource(this.agents);
         this.data.paginator = this.paginator;
       }, error: (error) => {
-        console.log(error);
       }
     });
 
@@ -429,7 +427,6 @@ export class AgentComponent implements OnInit {
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("AgentService.update()");
             this.agent = this.form.getRawValue();
             if (this.agent.land !== undefined || this.agent.land === "") {
               // @ts-ignore
@@ -513,7 +510,6 @@ export class AgentComponent implements OnInit {
     Object.values(this.form.controls).forEach(control => {
       control.markAsTouched();
     });
-    console.log("Name",this.authService.getUsername())
     this.form.get("logger")?.setValue(this.authService.getUsername());
     this.enableButtons(true, false, false);
   }
@@ -533,7 +529,6 @@ export class AgentComponent implements OnInit {
 
   getLastAgentCode() {
     this.agentService.getLastAgentCode().subscribe(ecode => {
-      console.log(ecode.code)
       this.lastEmpCode = ecode.code
       this.form.controls["number"].setValue(this.lastEmpCode)
     });

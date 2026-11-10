@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef, AfterViewInit, DestroyRef, inject} from '@angular/core';
 import {DashboardService} from "../../service/dashboaed/dashboard.service";
 import {InventoryItem} from "../../entity/InventoryItem";
 
@@ -18,6 +18,8 @@ interface ContactDetail {
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, AfterViewInit {
+  // Stops the timer when the user leaves the page (it kept running for every page visited).
+  private readonly destroyRef = inject(DestroyRef);
 
   @ViewChild('pieChart', { static: false }) pieChartRef!: ElementRef<HTMLCanvasElement>;
 
@@ -96,9 +98,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.updateDateTime();
-    setInterval(() => {
+    const timer = setInterval(() => {
       this.updateDateTime();
     }, 1000);
+    this.destroyRef.onDestroy(() => clearInterval(timer));
   }
 
   ngAfterViewInit(): void {
@@ -120,7 +123,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
   }
 
   onSeeMoreDetails(section: string): void {
-    console.log(`See more details clicked for: ${section}`);
     // Implement navigation or modal logic here
   }
 
