@@ -6,7 +6,12 @@ import lk.wnl.wijeya.entity.AgentOrderProduct;
 import lk.wnl.wijeya.entity.Distribution;
 import lk.wnl.wijeya.exception.ResourceAlreadyExistException;
 import lk.wnl.wijeya.exception.ResourceNotFoundException;
+import lk.wnl.wijeya.entity.Agent;
+import lk.wnl.wijeya.entity.Product;
 import lk.wnl.wijeya.repository.AgentOrderRepository;
+import lk.wnl.wijeya.repository.AgentRepository;
+import lk.wnl.wijeya.repository.ProductRepository;
+import lk.wnl.wijeya.security.CurrentUser;
 import lk.wnl.wijeya.repository.UserRepository;
 import lk.wnl.wijeya.service.AgentOrderService;
 import lk.wnl.wijeya.util.StandardResponse;
@@ -17,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -32,6 +38,8 @@ public class AgentOrderServiceIMPL implements AgentOrderService {
     private final AgentOrderRepository agentOrderRepository;
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
+    private final AgentRepository agentRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public List<AgentOrderDto> getAll() {
@@ -81,9 +89,14 @@ public class AgentOrderServiceIMPL implements AgentOrderService {
         if (agentOrderRepository.existsByOrderNumber(agentOrder.getOrderNumber())) {
             throw new ResourceAlreadyExistException("Number Already Exists");
         }
+        if (CurrentUser.isAnonymous()) {
+            // Public order page: the agent must prove who they are again, here on the server.
+            agentOrder.setAgent(verifiedAgent(agentOrderDto.getAgent()));
+        }
         for (AgentOrderProduct product : agentOrder.getAgentOrderProducts()) {
             product.setAgentOrder(agentOrder);
         }
+        priceFromProducts(agentOrder);
 
         AgentOrder savedAgentOrder = agentOrderRepository.save(agentOrder);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -94,8 +107,9 @@ public class AgentOrderServiceIMPL implements AgentOrderService {
     @Override
     public ResponseEntity<StandardResponse> UpdateAgentOrder(AgentOrderDto agentOrderDto) {
         AgentOrder agentOrder = objectMapper.toAgentOrder(agentOrderDto);
-        agentOrderRepository.findById(agentOrder.getId()).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
-        agentOrder.setCreatedBy(userRepository.findByUsername(agentOrderDto.getLogger()));
+        AgentOrder existing = agentOrderRepository.findById(agentOrder.getId()).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+        // Keep whoever placed the order; editing it doesn't make the editor the creator.
+        agentOrder.setCreatedBy(existing.getCreatedBy());
         if (agentOrderRepository.existsByOrderNumberAndIdNot(agentOrder.getOrderNumber(), agentOrder.getId())) {
             throw new ResourceAlreadyExistException("Number Already Exists");
         }
@@ -103,6 +117,7 @@ public class AgentOrderServiceIMPL implements AgentOrderService {
         for (AgentOrderProduct product : agentOrder.getAgentOrderProducts()) {
             product.setAgentOrder(agentOrder);
         }
+        priceFromProducts(agentOrder);
 
         AgentOrder savedAgentOrder = agentOrderRepository.save(agentOrder);
         return ResponseEntity.ok(new StandardResponse(200, "Order Updated Successfully", new AgentOrderDto(savedAgentOrder.getId(), savedAgentOrder.getOrderNumber())));
@@ -114,5 +129,33 @@ public class AgentOrderServiceIMPL implements AgentOrderService {
 
         agentOrderRepository.delete(agentOrder);
         return new ResponseEntity<>(new StandardResponse(200, "Order Deleted Successfully", null), HttpStatus.OK);
+    }
+
+    private Agent verifiedAgent(Agent sent) {
+        if (sent == null || sent.getNumber() == null || sent.getNic() == null) {
+            throw new ResourceNotFoundException("Please verify your agent number and NIC before ordering.");
+        }
+        return agentRepository.findByNumberIgnoreCaseAndNic(sent.getNumber().trim(), sent.getNic().trim())
+                .orElseThrow(() -> new ResourceNotFoundException("No agent found with the provided Agent Number and NIC."));
+    }
+
+    /** Line totals and the grand total come from the products' agent prices, not from the browser. */
+    private void priceFromProducts(AgentOrder order) {
+        BigDecimal grandTotal = BigDecimal.ZERO;
+        for (AgentOrderProduct line : order.getAgentOrderProducts()) {
+            if (line.getQuantity() == null || line.getQuantity() <= 0) {
+                throw new ResourceNotFoundException("Each product needs a quantity of at least 1.");
+            }
+            if (line.getProduct() == null || line.getProduct().getId() == null) {
+                throw new ResourceNotFoundException("Each order line needs a product.");
+            }
+            Product product = productRepository.findById(line.getProduct().getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+            BigDecimal price = product.getAgentPrice() == null ? BigDecimal.ZERO : product.getAgentPrice();
+            BigDecimal lineTotal = price.multiply(BigDecimal.valueOf(line.getQuantity()));
+            line.setLineTotal(lineTotal);
+            grandTotal = grandTotal.add(lineTotal);
+        }
+        order.setGrandTotal(grandTotal);
     }
 }

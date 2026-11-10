@@ -335,9 +335,11 @@ export class AgentOrderPublicComponent implements OnInit {
 
     this.agentService.verify(agentNumber, nic).subscribe({
       next: (agent: Agent) => {
-        localStorage.setItem('agent', JSON.stringify(agent));
+        // The server checks the number and NIC again when the order is placed.
+        const verified = {...agent, number: agentNumber, nic};
+        localStorage.setItem('agent', JSON.stringify(verified));
         this.isAligible = true;
-        this.form.get('agent')?.setValue(agent);
+        this.form.get('agent')?.setValue(verified);
         this.toastrService.success('Agent verified successfully.');
       },
       error: (err: any) => {
