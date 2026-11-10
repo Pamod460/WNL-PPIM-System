@@ -8,7 +8,9 @@ import lk.wnl.wijeya.exception.ResourceNotFoundException;
 import lk.wnl.wijeya.repository.PaperIssueRepository;
 import lk.wnl.wijeya.repository.UserRepository;
 import lk.wnl.wijeya.service.PaperIssueService;
+import lk.wnl.wijeya.service.PaperService;
 import lk.wnl.wijeya.util.StandardResponse;
+import lk.wnl.wijeya.util.StockLines;
 import lk.wnl.wijeya.util.mapper.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +35,7 @@ public class PaperIssueServiceIMPL implements PaperIssueService {
     private final PaperIssueRepository paperIssueRepository;
     private final ObjectMapper objectMapper;
     private final UserRepository userRepository;
+    private final PaperService paperService;
 
     @Override
     public List<PaperIssueDto> getAll() {
@@ -83,6 +87,8 @@ public class PaperIssueServiceIMPL implements PaperIssueService {
 
         for (IssuedPaper issuedPaper : paperIssue.getIssuedPapers()) {
             issuedPaper.setPaperIssue(paperIssue);
+            // Issuing paper takes it out of stock (same reorder-point rule as materials).
+            paperService.decreaseQuantity(issuedPaper.getPaper().getId(), BigDecimal.valueOf(issuedPaper.getQuantity()));
         }
         PaperIssue savedPaperIssue = paperIssueRepository.save(paperIssue);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -102,6 +108,11 @@ public class PaperIssueServiceIMPL implements PaperIssueService {
         for (IssuedPaper issuedPaper : paperIssue.getIssuedPapers()) {
             issuedPaper.setPaperIssue(paperIssue);
         }
+        Map<Integer, Integer> change = StockLines.difference(issuedTotals(paperIssue), issuedTotals(extPaperIssue));
+        change.forEach((paperId, qty) -> {
+            if (qty > 0) paperService.decreaseQuantity(paperId, BigDecimal.valueOf(qty));
+            else paperService.adjustQuantity(paperId, BigDecimal.valueOf(-qty));
+        });
         PaperIssue savedPaperIssue = paperIssueRepository.save(paperIssue);
         return ResponseEntity.ok(new StandardResponse(200, "PaperIssue Updated Successfully", new PaperIssueDto(savedPaperIssue.getId(), savedPaperIssue.getCode())));
     }
@@ -110,7 +121,15 @@ public class PaperIssueServiceIMPL implements PaperIssueService {
     public ResponseEntity<StandardResponse> deletePaperIssue(Integer id) {
         PaperIssue PaperIssue = paperIssueRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("PaperIssue Not Found"));
 
+        issuedTotals(PaperIssue).forEach((paperId, qty) ->
+                paperService.adjustQuantity(paperId, BigDecimal.valueOf(qty)));
         paperIssueRepository.delete(PaperIssue);
         return new ResponseEntity<>(new StandardResponse(200, "PaperIssue Deleted Successfully", null), HttpStatus.OK);
+    }
+
+    private static Map<Integer, Integer> issuedTotals(PaperIssue issue) {
+        return StockLines.totals(issue.getIssuedPapers(),
+                line -> line.getPaper() == null ? null : line.getPaper().getId(),
+                IssuedPaper::getQuantity);
     }
 }

@@ -155,4 +155,19 @@ public class PaperServiceIMPL implements PaperService {
         paper.setQoh(newQuantity);
         paperRepository.save(paper);
     }
+
+    @Override
+    @Transactional
+    public void adjustQuantity(Integer id, BigDecimal delta) {
+        if (delta == null || delta.signum() == 0) return;
+        Paper paper = paperRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paper not found with ID: " + id));
+        BigDecimal newQuantity = paper.getQoh().add(delta);
+        if (newQuantity.signum() < 0) {
+            throw new ResourceAlreadyExistException("Not enough stock of " + paper.getName()
+                    + " to undo this change (only " + paper.getQoh() + " left).");
+        }
+        paper.setQoh(newQuantity);
+        paperRepository.save(paper);
+    }
 }

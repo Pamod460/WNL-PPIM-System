@@ -11,6 +11,7 @@ import lk.wnl.wijeya.service.MaterialIssueService;
 import lk.wnl.wijeya.service.MaterialService;
 import lk.wnl.wijeya.service.ProductionOrderService;
 import lk.wnl.wijeya.util.StandardResponse;
+import lk.wnl.wijeya.util.StockLines;
 import lk.wnl.wijeya.util.mapper.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -114,6 +115,12 @@ public class MaterialIssueServiceIMPL implements MaterialIssueService {
         for (IssuedMaterial issuedMaterial : materialIssue.getIssuedMaterials()) {
             issuedMaterial.setMaterialIssue(materialIssue);
         }
+        // Issue more -> take more stock (reorder-point rule applies); issue less -> put stock back.
+        Map<Integer, Integer> change = StockLines.difference(issuedTotals(materialIssue), issuedTotals(extMaterialIssue));
+        change.forEach((materialId, qty) -> {
+            if (qty > 0) materialService.decreaseQuantity(materialId, BigDecimal.valueOf(qty));
+            else materialService.adjustQuantity(materialId, BigDecimal.valueOf(-qty));
+        });
 
         MaterialIssue savedMaterialIssue = materialIssueRepository.save(materialIssue);
         return ResponseEntity.ok(new StandardResponse(200, "Material Issue Updated Successfully", new MaterialIssueDto(savedMaterialIssue.getId(), savedMaterialIssue.getCode())));
@@ -123,7 +130,16 @@ public class MaterialIssueServiceIMPL implements MaterialIssueService {
     public ResponseEntity<StandardResponse> deleteMaterialIssue(Integer id) {
         MaterialIssue MaterialIssue = materialIssueRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Material Issue Not Found"));
 
+        // Deleting an issue returns the materials to stock.
+        issuedTotals(MaterialIssue).forEach((materialId, qty) ->
+                materialService.adjustQuantity(materialId, BigDecimal.valueOf(qty)));
         materialIssueRepository.delete(MaterialIssue);
         return new ResponseEntity<>(new StandardResponse(200, "Material Issue Deleted Successfully", null), HttpStatus.OK);
+    }
+
+    private static Map<Integer, Integer> issuedTotals(MaterialIssue issue) {
+        return StockLines.totals(issue.getIssuedMaterials(),
+                line -> line.getMaterial() == null ? null : line.getMaterial().getId(),
+                IssuedMaterial::getQuantity);
     }
 }

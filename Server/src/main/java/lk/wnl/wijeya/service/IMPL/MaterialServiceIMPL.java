@@ -157,4 +157,19 @@ public class MaterialServiceIMPL implements MaterialService {
         material.setQuantity(newQuantity);
         materialRepository.save(material);
     }
+
+    @Override
+    @Transactional
+    public void adjustQuantity(Integer id, BigDecimal delta) {
+        if (delta == null || delta.signum() == 0) return;
+        Material material = materialRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Material not found with ID: " + id));
+        BigDecimal newQuantity = material.getQuantity().add(delta);
+        if (newQuantity.signum() < 0) {
+            throw new ResourceAlreadyExistException("Not enough stock of " + material.getName()
+                    + " to undo this change (only " + material.getQuantity() + " left).");
+        }
+        material.setQuantity(newQuantity);
+        materialRepository.save(material);
+    }
 }

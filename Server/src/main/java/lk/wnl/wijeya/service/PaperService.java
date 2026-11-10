@@ -27,4 +27,7 @@ public interface PaperService {
 
     @Transactional
     void decreaseQuantity(Integer id, BigDecimal quantity);
+
+    /** Adds delta (may be negative) to stock, e.g. to reverse an edited or deleted GRN/issue. Stock may not go below zero. */
+    void adjustQuantity(Integer id, BigDecimal delta);
 }

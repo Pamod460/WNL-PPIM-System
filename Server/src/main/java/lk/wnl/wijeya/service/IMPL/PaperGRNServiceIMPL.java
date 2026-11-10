@@ -8,8 +8,10 @@ import lk.wnl.wijeya.exception.ResourceNotFoundException;
 import lk.wnl.wijeya.repository.PaperGRNRepository;
 import lk.wnl.wijeya.repository.UserRepository;
 import lk.wnl.wijeya.service.PaperGRNService;
+import lk.wnl.wijeya.service.PaperPorderService;
 import lk.wnl.wijeya.service.PaperService;
 import lk.wnl.wijeya.util.StandardResponse;
+import lk.wnl.wijeya.util.StockLines;
 import lk.wnl.wijeya.util.mapper.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +35,8 @@ public class PaperGRNServiceIMPL implements PaperGRNService {
     private final PaperGRNRepository paperGRNRepository;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
-private final PaperService paperService;
+    private final PaperService paperService;
+    private final PaperPorderService paperPorderService;
 
     @Override
     public List<PaperGrnDto> getAll() {
@@ -80,6 +83,8 @@ private final PaperService paperService;
         paperService.increaseQuantity(m.getPaper().getId(), BigDecimal.valueOf(m.getQuantity()));
         };
         PaperGrn savedMGrn = paperGRNRepository.save(paperPoder);
+        // Same as material GRNs: mark the PO partly / fully received.
+        updatePorderStatus(savedMGrn);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(new StandardResponse("Purchase Order Added Successfully", new PaperGrnDto(savedMGrn.getId(), savedMGrn.getCode())));
@@ -97,10 +102,14 @@ private final PaperService paperService;
         }
         for (PaperGrnPaper m : paperGrn.getPaperGrnPapers())
             m.setPaperGrn(paperGrn);
-
-
+        // Read the old quantities before saving: the save copies the new lines onto the loaded GRN.
+        Map<Integer, Integer> before = receivedTotals(extPaperGrn);
+        Map<Integer, Integer> after = receivedTotals(paperGrn);
+        StockLines.difference(after, before).forEach((paperId, change) ->
+                paperService.adjustQuantity(paperId, BigDecimal.valueOf(change)));
 
         PaperGrn updatedMPOder = paperGRNRepository.save(paperGrn);
+        updatePorderStatus(updatedMPOder);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new StandardResponse(HttpStatus.OK.value(), "Paper Updated Successfully",
                         new PaperGrnDto(updatedMPOder.getId(), updatedMPOder.getCode())));
@@ -111,7 +120,10 @@ private final PaperService paperService;
     @Override
     public ResponseEntity<StandardResponse> deletePaperGrn(Integer id) {
         PaperGrn paperGrn = paperGRNRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Purchase Order Not Found"));
+        receivedTotals(paperGrn).forEach((paperId, qty) ->
+                paperService.adjustQuantity(paperId, BigDecimal.valueOf(-qty)));
         paperGRNRepository.delete(paperGrn);
+        updatePorderStatus(paperGrn);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new StandardResponse(HttpStatus.OK.value(), "Purchase Order Deleted Successfully", null));
 
@@ -138,5 +150,17 @@ private final PaperService paperService;
         Map<String, String> result = new HashMap<>();
         result.put("code", nextCode);
         return ResponseEntity.ok(result);
+    }
+
+    private static Map<Integer, Integer> receivedTotals(PaperGrn grn) {
+        return StockLines.totals(grn.getPaperGrnPapers(),
+                line -> line.getPaper() == null ? null : line.getPaper().getId(),
+                PaperGrnPaper::getQuantity);
+    }
+
+    private void updatePorderStatus(PaperGrn grn) {
+        if (grn.getPaperPorder() != null && grn.getPaperPorder().getId() != null) {
+            paperPorderService.updatePorderReceivingStatus(grn.getPaperPorder().getId());
+        }
     }
 }

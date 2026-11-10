@@ -13,6 +13,7 @@ import lk.wnl.wijeya.service.MaterialGRNService;
 import lk.wnl.wijeya.service.MaterialPorderService;
 import lk.wnl.wijeya.service.MaterialService;
 import lk.wnl.wijeya.util.StandardResponse;
+import lk.wnl.wijeya.util.StockLines;
 import lk.wnl.wijeya.util.mapper.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -125,7 +126,13 @@ public class MaterialGRNServiceIMPL implements MaterialGRNService {
             throw new ResourceAlreadyExistException("Code Already Exists");
         }
         for (MaterialGrnMaterial m : materialGrn.getMaterialGrnMaterials()) m.setMaterialGrn(materialGrn);
+        // Read the old quantities before saving: the save copies the new lines onto the loaded GRN.
+        Map<Integer, Integer> before = receivedTotals(extMaterialGrn);
+        Map<Integer, Integer> after = receivedTotals(materialGrn);
+        StockLines.difference(after, before).forEach((materialId, change) ->
+                materialService.adjustQuantity(materialId, BigDecimal.valueOf(change)));
         MaterialGrn updatedMGrn = materialGRNRepository.save(materialGrn);
+        updatePorderStatus(updatedMGrn);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new StandardResponse(HttpStatus.OK.value(), "Material Updated Successfully",
                         new MaterialGrnDto(updatedMGrn.getId(), updatedMGrn.getCode())));
@@ -139,10 +146,26 @@ public class MaterialGRNServiceIMPL implements MaterialGRNService {
         if (supplierPaymentRepository.existsBySupplierPaymentGrns_MaterialGrn(materialGrn)) {
             throw new ResourceAlreadyExistException("Cannot delete GRN because a payment has already been made.");
         }
+        // Take the received stock back out, then recount what the PO has received.
+        receivedTotals(materialGrn).forEach((materialId, qty) ->
+                materialService.adjustQuantity(materialId, BigDecimal.valueOf(-qty)));
         materialGRNRepository.delete(materialGrn);
+        updatePorderStatus(materialGrn);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new StandardResponse(HttpStatus.OK.value(), "GRN Deleted Successfully", null));
 
 
+    }
+
+    private static Map<Integer, Integer> receivedTotals(MaterialGrn grn) {
+        return StockLines.totals(grn.getMaterialGrnMaterials(),
+                line -> line.getMaterial() == null ? null : line.getMaterial().getId(),
+                MaterialGrnMaterial::getQuantity);
+    }
+
+    private void updatePorderStatus(MaterialGrn grn) {
+        if (grn.getMaterialPorder() != null && grn.getMaterialPorder().getId() != null) {
+            materialPorderService.updatePorderReceivingStatus(grn.getMaterialPorder().getId());
+        }
     }
 }
